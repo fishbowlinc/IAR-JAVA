@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>home page</title>
+<link rel="stylesheet" type="text/css" href="css/home.css">
+</head>
+<body>
+	<div class="fixed-header">
+		<div class="container">
+			<nav>
+				<a href="#">Home</a> <a href="#">About</a> <a href="#">Products</a>
+				<a th:href="@{/report}">Reports</a> <a href="#">Contact Us</a> <a
+					th:href="@{/app-logout}" style="float: right"><strong>Logout</strong></a>
+			</nav>
+		</div>
+	</div>
+	<div class="container">
+		<p>Welcome to fishbowl in app reporting application</p>
+	</div>
+	<div class="fixed-footer">
+		<div class="container">Copyright &copy; 2019 Fishbowl.inc</div>
+	</div>
+</body>
+</html>
