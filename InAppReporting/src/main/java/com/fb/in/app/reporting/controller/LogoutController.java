@@ -3,9 +3,10 @@
  */
 package com.fb.in.app.reporting.controller;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * @author SKumar7
@@ -13,10 +14,10 @@ import org.springframework.web.servlet.view.RedirectView;
  */
 @Controller
 public class LogoutController {
-	private static final String sisense_logout_url = "http://10.200.10.21:8081/api/auth/logout";
+	private static final String Logout_Url = "http://10.200.10.21:8081/api/v1/authentication/logout";
 
-	@GetMapping("/app-logout")
-	public RedirectView processRequest() {
-		return new RedirectView(sisense_logout_url);
+	@RequestMapping("/logout")
+	public String getReport(HttpServletResponse httpServletResponse) {
+		return "redirect:" + Logout_Url;
 	}
 }

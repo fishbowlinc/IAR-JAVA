@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -18,11 +19,12 @@ public class SisenseUtil {
 	private static HttpURLConnection con;
 
 	public static void logoutFromSisense() throws IOException {
-		String url = "http://10.200.10.21:8081/api/v1/authentication/logout";
+		String url = "http://10.200.10.21:8081/api/auth/logout";
 		try {
 			URL myurl = new URL(url);
 			con = (HttpURLConnection) myurl.openConnection();
 			con.setRequestMethod("GET");
+			
 			StringBuilder content;
 			try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
 				String line;
@@ -47,7 +49,7 @@ public class SisenseUtil {
 		headerParams.put("typ", "JWT");
 		headerParams.put("alg", "HS256");
 		JwtBuilder builder = Jwts.builder().setSubject(subject).setIssuedAt(now).setAudience("fishbowl")
-				.setHeaderParams(headerParams).signWith(signatureAlgorithm, b);
+				.setId(UUID.randomUUID().toString()).setHeaderParams(headerParams).signWith(signatureAlgorithm, b);
 
 		return builder.compact();
 	}

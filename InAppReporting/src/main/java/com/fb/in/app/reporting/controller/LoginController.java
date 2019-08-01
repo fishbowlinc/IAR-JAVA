@@ -47,7 +47,7 @@ public class LoginController {
 			return "index";
 		} else {
 			String token = JwtUtil.generateToken(signingKey, username);
-			CookieUtil.create(response, jwtTokenCookieName, token, false, -1, "10.40.0.72");
+			CookieUtil.create(response, jwtTokenCookieName, token, false, -1, "10.40.0.87");
 			return "home";
 		}
 	}
