@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link href="css/sisense.css" type="text/css" rel="stylesheet" />
+<title>Fishbowl SSO - Login</title>
+</head>
+<body>
+	<form method="post" th:action="@{/login}">
+		<div id="header">
+			<div id="headerTop">
+				<div class="header-logo">
+					<img src="images/fishbowl-logo-header.png" />
+				</div>
+			</div>
+		</div>
+		<div id="pageContent">
+			<div id="loginArea">
+
+				<div id="CPH_Login_pnlLogin" class="formStyle">
+					<ul>
+						<li><label for="CPH_Login_UserName"
+							id="CPH_Login_UserNameLabel" class="label">*User Name:</label></li>
+						<li><input name="uname" type="text" maxlength="128"
+							id="CPH_Login_UserName" class="loginTextBox" /> <span
+							id="CPH_Login_UserNameRequired" title="User Name is required."
+							style="visibility: hidden;">User Name is required.</span></li>
+						<li><label for="CPH_Login_Password"
+							id="CPH_Login_PasswordLabel" class="label">*Password:</label></li>
+						<li><input name="pass" type="password" maxlength="50"
+							id="CPH_Login_Password" class="loginTextBox" /> <span
+							id="CPH_Login_PasswordRequired" title="Password is required."
+							style="visibility: hidden;">Password is required.</span></li>
+						<li><span id="CPH_Login_lblLoginErr" class="loginErrMsg"></span></li>
+						<li><a href="ResetPassword.aspx"
+							id="CPH_Login_ResetPasswordBtn" class="label">Forgot your
+								password?</a><span class="requiredBlurb">*Required</span></li>
+						<li class="submitRow"><input type="submit"
+							name="ctl00$CPH_Login$btnAddBlackout" value="Login"
+							id="CPH_Login_btnAddBlackout" class="primaryBtn blueBtn loginBtn" /></li>
+					</ul>
+					<div>
+						<p style="color: red" th:text="${error}" />
+					</div>
+					<div class="alerts applicationAlert" style="display: block;">
+
+						<span class="warningText"> If you're having trouble logging
+							in, <b><u>please clear your browser's cache and cookies.</u></b>
+							<a
+							href="http://enterprisehelp.fishbowl.com/index.php/Instructions_on_clearing_your_browser%27s_cache_and_cookies"
+							target="_new">Click here </a> for more help on how to do this.
+
+						</span>
+						<div class="clear"></div>
+					</div>
+
+				</div>
+				<div class="login-trouble">
+					<h4>Having Trouble?</h4>
+					<div>
+						If you need assistance, <a
+							href="http://www.fishbowl.com/company/contact_fishbowl/contact_fishbowl"
+							id="contactUs_Lnk">contact us</a>.
+					</div>
+				</div>
+
+			</div>
+			<div class="clear"></div>
+		</div>
+	</form>
+</body>
+</html>

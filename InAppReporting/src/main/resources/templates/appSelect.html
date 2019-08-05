@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link href="css/sisense.css" type="text/css" rel="stylesheet" />
+<title>Fishbowl App Select</title>
+</head>
+<body>
+	<div id="header">
+		<div id="headerTop"></div>
+		<div id="headerBottom">
+			<a id="aFishbowlLogo"> <img src="images/blank.gif" id="fbLogo"
+				class="colLeft" /></a>
+			<div class="colRight logout">
+				<form action="/app-logout" method="get">
+					<a id="MastheadRight_lnkChangePassword" href="#">Change
+						Password</a> <input type="submit" name="ctl00$MastheadRight$btnLogout"
+						value="Logout" id="MastheadRight_btnLogout"
+						class="secondaryBtn greyBtn logoutBtn" />
+					<div id="headerSupport">
+						<span id="MastheadRight_lblForCustomerSupport" class="redtext">Customer
+							Support:</span> <span id="MastheadRight_lblCustomerSupportNumber"
+							class="graytext">(800) 883-1984 / M-F 8:30am - 8:00pm</span>
+					</div>
+				</form>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+
+	<div id="wrapper">
+		<div class="appList">
+			<span id="ContentPlaceHolder1_lblTopTitle" class="appH1">Select
+				Reports to see the dashboard</span>
+			<ul id="ContentPlaceHolder1_ulButtons">
+				<li><a th:href="@{/report}">Reports</a></li>
+			</ul>
+			<div class="clear"></div>
+		</div>
+	</div>
+
+</body>
+</html>

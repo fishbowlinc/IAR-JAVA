@@ -22,7 +22,7 @@ public class SSOController {
 		String username = JwtUtil.getSubject(request, jwtTokenCookieName, signingKey);
 		if (username == null) {
 			model.addAttribute("error", "user is not authorised");
-			return "index";
+			return "login";
 		} else {
 			String token = SisenseUtil.generateToken(signingKey, username);
 			// This is the Sisense URL which can handle (decode and process) the JWT token

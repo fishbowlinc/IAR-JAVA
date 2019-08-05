@@ -16,6 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ReportController {
 	@RequestMapping("/report")
 	public String getReport(HttpServletResponse httpServletResponse) {
-		return "reports";
+		return "reportDashboard";
 	}
 }

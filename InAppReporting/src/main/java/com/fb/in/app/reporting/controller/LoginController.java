@@ -27,14 +27,19 @@ public class LoginController {
 		credentials.put("sisense@fishbowl.com", "GetMeIn123!");
 	}
 
+	@GetMapping("/")
+	public String processRequest(HttpServletRequest request, Model model) {
+		return "login";
+	}
+
 	@GetMapping("/login")
 	public String processLoginRequest(HttpServletRequest request, Model model) {
 		String uname = JwtUtil.getSubject(request, jwtTokenCookieName, signingKey);
 		if (uname == null) {
 			model.addAttribute("error", "please login first");
-			return "index";
+			return "login";
 		} else
-			return "home";
+			return "appSelect";
 	}
 
 	@PostMapping("/login")
@@ -44,11 +49,11 @@ public class LoginController {
 		String password = request.getParameter("pass");
 		if (username == null || !credentials.containsKey(username) || !credentials.get(username).equals(password)) {
 			model.addAttribute("error", "Invalid username or password!");
-			return "index";
+			return "login";
 		} else {
 			String token = JwtUtil.generateToken(signingKey, username);
-			CookieUtil.create(response, jwtTokenCookieName, token, false, -1, "10.40.0.87");
-			return "home";
+			CookieUtil.create(response, jwtTokenCookieName, token, false, -1, "localhost");
+			return "appSelect";
 		}
 	}
 }
