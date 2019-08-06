@@ -52,7 +52,7 @@ public class LoginController {
 			return "login";
 		} else {
 			String token = JwtUtil.generateToken(signingKey, username);
-			CookieUtil.create(response, jwtTokenCookieName, token, false, -1, "az-dev-linux-apps1.fishbowlcloud.com:8880");
+			CookieUtil.create(response, jwtTokenCookieName, token, false, -1, "az-dev-linux-apps1.fishbowlcloud.com");
 			return "appSelect";
 		}
 	}
