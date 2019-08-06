@@ -23,7 +23,7 @@ public class LoginController {
 
 	public LoginController() {
 		credentials.put("skumar3_ic@fishbowl.com", "Fishbowl1!");
-		credentials.put("proy@fishbowl.com", "Fishbowl1");
+		credentials.put("proy@fishbowl.com", "Fishbowl1!");
 		credentials.put("sisense@fishbowl.com", "GetMeIn123!");
 	}
 
@@ -52,7 +52,7 @@ public class LoginController {
 			return "login";
 		} else {
 			String token = JwtUtil.generateToken(signingKey, username);
-			CookieUtil.create(response, jwtTokenCookieName, token, false, -1, "az-dev-linux-apps1.fishbowlcloud.com");
+			CookieUtil.create(response, jwtTokenCookieName, token, false, -1, "az-dev-linux-apps1.fishbowlcloud.com:8880");
 			return "appSelect";
 		}
 	}
