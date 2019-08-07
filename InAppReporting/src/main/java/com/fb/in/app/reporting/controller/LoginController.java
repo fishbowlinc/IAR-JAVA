@@ -23,23 +23,13 @@ public class LoginController {
 
 	public LoginController() {
 		credentials.put("skumar3_ic@fishbowl.com", "Fishbowl1!");
-		credentials.put("proy@fishbowl.com", "Fishbowl1!");
+		credentials.put("proy@fishbowl.com", "Fishbowl1");
 		credentials.put("sisense@fishbowl.com", "GetMeIn123!");
 	}
 
 	@GetMapping("/")
 	public String processRequest(HttpServletRequest request, Model model) {
 		return "login";
-	}
-
-	@GetMapping("/login")
-	public String processLoginRequest(HttpServletRequest request, Model model) {
-		String uname = JwtUtil.getSubject(request, jwtTokenCookieName, signingKey);
-		if (uname == null) {
-			model.addAttribute("error", "please login first");
-			return "login";
-		} else
-			return "appSelect";
 	}
 
 	@PostMapping("/login")
