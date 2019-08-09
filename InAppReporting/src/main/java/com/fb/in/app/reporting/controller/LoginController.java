@@ -22,8 +22,7 @@ public class LoginController {
 	private static final Map<String, String> credentials = new HashMap<>();
 
 	public LoginController() {
-		credentials.put("skumar3_ic@fishbowl.com", "Fishbowl1!");
-		credentials.put("proy@fishbowl.com", "Fishbowl1");
+		credentials.put("demo", "demo@123");
 		credentials.put("sisense@fishbowl.com", "GetMeIn123!");
 	}
 
