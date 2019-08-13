@@ -22,7 +22,7 @@ public class LogoutController {
 
 	@RequestMapping("/logout")
 	public String getReport(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-		CookieUtil.clear(httpServletResponse, jwtTokenCookieName);
+		CookieUtil.clear(httpServletRequest, httpServletResponse, jwtTokenCookieName);
 		return "redirect:" + Logout_Url;
 	}
 }

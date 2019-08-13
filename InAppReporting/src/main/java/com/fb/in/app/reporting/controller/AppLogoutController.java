@@ -14,7 +14,7 @@ public class AppLogoutController {
 
 	@RequestMapping("/app-logout")
 	public String getReport(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-		CookieUtil.clear(httpServletResponse, jwtTokenCookieName);
+		CookieUtil.clear(httpServletRequest, httpServletResponse, jwtTokenCookieName);
 		return "login";
 	}
 }
