@@ -26,7 +26,7 @@ public class HomeController {
 		String username = JwtUtil.getSubject(request, jwtTokenCookieName, signingKey);
 		if (username == null) {
 			model.addAttribute("error", "user is not authorised");
-			return "login";
+			return "redirect:login";
 		} else {
 			return "appSelect";
 		}

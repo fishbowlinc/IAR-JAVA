@@ -28,6 +28,11 @@ public class LoginController {
 
 	@GetMapping("/")
 	public String processRequest(HttpServletRequest request, Model model) {
+		return "redirect:home";
+	}
+
+	@GetMapping("/login")
+	public String processLogin(HttpServletRequest request, Model model) {
 		return "login";
 	}
 
@@ -42,7 +47,7 @@ public class LoginController {
 		} else {
 			String token = JwtUtil.generateToken(signingKey, username);
 			CookieUtil.create(response, jwtTokenCookieName, token, false, -1, "az-dev-linux-apps1.fishbowlcloud.com");
-			return "appSelect";
+			return "redirect:home";
 		}
 	}
 }
