@@ -70,6 +70,7 @@ public class ReportController {
 
 		Cookie[] cookies = request.getCookies();
 		String domain = request.getServerName();
+		logger.info("domain : " + domain);
 		fishFrameSessionEnv = AuthUtil.getFishFrameSessionEnv(domain);
 		irDomain = AuthUtil.getDomain(domain);
 		redirectServerName = AuthUtil.getRedirectServerName(domain);

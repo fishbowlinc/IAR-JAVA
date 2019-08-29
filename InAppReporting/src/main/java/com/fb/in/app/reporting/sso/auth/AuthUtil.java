@@ -295,7 +295,6 @@ public class AuthUtil {
 
 	public static String getRedirectServerName(String domain) {
 		String redirectServerName = null;
-
 		if (domain != null) {
 			if (domain.contains("qa")) {
 				redirectServerName = "az-dev-linux-apps1.fishbowlcloud.com";
