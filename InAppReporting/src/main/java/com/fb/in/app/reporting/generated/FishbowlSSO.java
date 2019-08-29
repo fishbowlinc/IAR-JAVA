@@ -13,7 +13,7 @@ import javax.xml.ws.Service;
  * Generated source version: 2.7.0
  * 
  */
-@WebServiceClient(name = "FishbowlSSO", wsdlLocation = "file:/D:/Projects/Fishbowl/FbInsights_Repository/IAR-JAVA/InAppReporting/src/main/resources/wsdl/fishbowlsso.wsdl", targetNamespace = "http://tempuri.org/")
+@WebServiceClient(name = "FishbowlSSO", wsdlLocation = "https://github.com/fishbowlinc/IAR-JAVA/tree/development/InAppReporting/src/main/resources/wsdl/fishbowlsso.wsdl", targetNamespace = "http://tempuri.org/")
 public class FishbowlSSO extends Service {
 
 	public final static URL WSDL_LOCATION;
@@ -25,11 +25,11 @@ public class FishbowlSSO extends Service {
 		URL url = null;
 		try {
 			url = new URL(
-					"file:/D:/Projects/Fishbowl/FbInsights_Repository/IAR-JAVA/InAppReporting/src/main/resources/wsdl/fishbowlsso.wsdl");
+					"https://github.com/fishbowlinc/IAR-JAVA/tree/development/InAppReporting/src/main/resources/wsdl/fishbowlsso.wsdl");
 		} catch (MalformedURLException e) {
 			java.util.logging.Logger.getLogger(FishbowlSSO.class.getName()).log(java.util.logging.Level.INFO,
 					"Can not initialize the default wsdl from {0}",
-					"file:/D:/Projects/Fishbowl/FbInsights_Repository/IAR-JAVA/InAppReporting/src/main/resources/wsdl/fishbowlsso.wsdl");
+					"https://github.com/fishbowlinc/IAR-JAVA/tree/development/InAppReporting/src/main/resources/wsdl/fishbowlsso.wsdl");
 		}
 		WSDL_LOCATION = url;
 	}
