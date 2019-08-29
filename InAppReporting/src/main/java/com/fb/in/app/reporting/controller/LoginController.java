@@ -46,7 +46,7 @@ public class LoginController {
 			return "login";
 		} else {
 			String token = JwtUtil.generateToken(signingKey, username);
-			CookieUtil.create(response, jwtTokenCookieName, token, false, -1, "az-dev-linux-apps1.fishbowlcloud.com");
+			CookieUtil.create(response, jwtTokenCookieName, token, false, -1, "localhost");
 			return "redirect:home";
 		}
 	}
