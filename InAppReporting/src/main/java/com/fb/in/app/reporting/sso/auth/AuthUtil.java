@@ -65,7 +65,7 @@ public class AuthUtil {
 
 	public static String getParentAppUrl(String domain) {
 		if (domain != null) {
-			if (domain.contains("qa")||domain.contains("dev")) {
+			if (domain.contains("qa")) {
 
 				return "loginqa.fishbowl.com";
 			} else if (domain.contains("staging")) {
@@ -260,13 +260,13 @@ public class AuthUtil {
 		String irDomain = null;
 
 		if (domain != null) {
-			if (domain.contains("qa")||domain.contains("dev")) {
+			if (domain.contains("qa")) {
 
 				// setting to run on local system..we will delete after sometime
 				/// ---------------------------------------------UNDO----------------------------------
 //					paDomain = "fishbowl.com";
 //					-----------------------------------------------------------------------------------------
-				irDomain = "az-dev-linux-apps1.fishbowlcloud.com";
+				irDomain = "ir2qa.fishbowl.com";
 			} else if (domain.contains("staging")) {
 				irDomain = "ir2stg.fishbowl.com";
 			} else {
@@ -281,7 +281,7 @@ public class AuthUtil {
 		String fishFrameSessionEnv = null;
 
 		if (domain != null) {
-			if (domain.contains("dev")) {
+			if (domain.contains("qa")) {
 				fishFrameSessionEnv = "FishbowlQA";
 			} else if (domain.contains("staging")) {
 				fishFrameSessionEnv = "FishbowlStaging";
@@ -296,8 +296,8 @@ public class AuthUtil {
 	public static String getRedirectServerName(String domain) {
 		String redirectServerName = null;
 		if (domain != null) {
-			if (domain.contains("dev")) {
-				redirectServerName = "az-dev-linux-apps1.fishbowlcloud.com";
+			if (domain.contains("qa")) {
+				redirectServerName = "ir2qa.fishbowl.com";
 			} else if (domain.contains("staging")) {
 				redirectServerName = "ir2stg.fishbowl.com";
 			} else {
@@ -312,7 +312,7 @@ public class AuthUtil {
 		String soapUrl = null;
 
 		if (domain != null) {
-			if (domain.contains("dev")) {
+			if (domain.contains("qa")) {
 				soapUrl = "loginqa.fishbowl.com";
 			} else if (domain.contains("staging")) {
 				soapUrl = "loginstaging.fishbowl.com";
@@ -325,7 +325,7 @@ public class AuthUtil {
 	}
 
 	public static String getaSPXFORMSAUTHString(String domain) {
-		if (domain.contains("qa") || domain.contains("dev")) {
+		if (domain.contains("qa")) {
 			return "QA.ASPXFORMSAUTH";
 
 		} else if (domain.contains("staging")) {
