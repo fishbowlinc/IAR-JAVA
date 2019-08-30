@@ -39,7 +39,6 @@ import com.fb.in.app.reporting.sso.auth.AuthUtil;
  *
  */
 @Controller
-//@RequestMapping("/ir/userAuth")
 public class ReportController {
 	@Autowired
 	UserService userService;
@@ -84,7 +83,7 @@ public class ReportController {
 
 		if (Id == null || Id.isEmpty()) {
 			String redirectURL = "https://" + soapUrl
-					+ "/SSO/Navigator/InitializeTargetApp?bid=34&ReturnUrl=/ir/userAuth/report";
+					+ "/SSO/Navigator/InitializeTargetApp?bid=34&ReturnUrl=/report";
 			if (SiteId != null && SiteId.trim().length() > 0) {
 				redirectURL = redirectURL + "&SiteId=" + SiteId;
 			}
