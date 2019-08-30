@@ -28,12 +28,18 @@ public class AuthUtil {
 		Cookie[] cookieList = request.getCookies();
 		String domain = request.getServerName();
 		String aSPXFORMSAUTH = getaSPXFORMSAUTHString(domain);
+		String fishbowlSessionCookie = getFishFrameSessionEnv(domain);
 		if (cookieList != null) {
 			for (Cookie cookie : cookieList) {
-				if (cookie.getName().equals("IR_SessionId") || cookie.getName().equals("BrandID")
-						|| aSPXFORMSAUTH.equalsIgnoreCase(cookie.getName())) {
+				if (cookie.getName().equals("IR_SessionId") || cookie.getName().equals("BrandID")) {
 					cookie.setMaxAge(0);
-					cookie.setDomain(AuthUtil.getDomain(request.getServerName()));
+					cookie.setDomain(getDomain(request.getServerName()));
+					cookie.setPath("/");
+					response.addCookie(cookie);
+				} else if (aSPXFORMSAUTH.equalsIgnoreCase(cookie.getName())
+						|| fishbowlSessionCookie.equalsIgnoreCase(cookie.getName())) {
+					cookie.setMaxAge(0);
+					cookie.setDomain(getParentAppUrl(domain));
 					cookie.setPath("/");
 					response.addCookie(cookie);
 				}
@@ -83,7 +89,6 @@ public class AuthUtil {
 		if (domain != null && cookieList != null) {
 			String fishFrameSessionEnv = getFishFrameSessionEnv(domain);
 			String aSPXFORMSAUTH = getaSPXFORMSAUTHString(domain);
-			;
 			logger.info("domain " + domain);
 			logger.info("aSPXFORMSAUTH " + aSPXFORMSAUTH);
 			logger.info("fishFrameSessionEnv" + fishFrameSessionEnv);
