@@ -261,11 +261,6 @@ public class AuthUtil {
 
 		if (domain != null) {
 			if (domain.contains("qa")) {
-
-				// setting to run on local system..we will delete after sometime
-				/// ---------------------------------------------UNDO----------------------------------
-//					paDomain = "fishbowl.com";
-//					-----------------------------------------------------------------------------------------
 				irDomain = "ir2qa.fishbowl.com";
 			} else if (domain.contains("staging")) {
 				irDomain = "ir2stg.fishbowl.com";
@@ -279,7 +274,6 @@ public class AuthUtil {
 
 	public static String getFishFrameSessionEnv(String domain) {
 		String fishFrameSessionEnv = null;
-
 		if (domain != null) {
 			if (domain.contains("qa")) {
 				fishFrameSessionEnv = "FishbowlQA";
