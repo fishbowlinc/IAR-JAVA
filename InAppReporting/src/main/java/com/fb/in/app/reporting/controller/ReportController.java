@@ -77,7 +77,7 @@ public class ReportController {
 		soapUrl = AuthUtil.getSoapUrl(domain);
 
 		logger.info("fishFrameSessionEnv : " + fishFrameSessionEnv);
-		logger.info("paDomain : " + irDomain);
+		logger.info("irDomain : " + irDomain);
 		logger.info("redirectServerName : " + redirectServerName);
 		logger.info("soapUrl : " + soapUrl);
 		logger.info("domain : " + domain);

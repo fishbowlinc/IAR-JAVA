@@ -65,7 +65,7 @@ public class AuthUtil {
 
 	public static String getParentAppUrl(String domain) {
 		if (domain != null) {
-			if (domain.contains("qa")) {
+			if (domain.contains("qa")||domain.contains("dev")) {
 
 				return "loginqa.fishbowl.com";
 			} else if (domain.contains("staging")) {
@@ -260,7 +260,7 @@ public class AuthUtil {
 		String irDomain = null;
 
 		if (domain != null) {
-			if (domain.contains("qa")) {
+			if (domain.contains("qa")||domain.contains("dev")) {
 
 				// setting to run on local system..we will delete after sometime
 				/// ---------------------------------------------UNDO----------------------------------
@@ -281,7 +281,7 @@ public class AuthUtil {
 		String fishFrameSessionEnv = null;
 
 		if (domain != null) {
-			if (domain.contains("qa")) {
+			if (domain.contains("dev")) {
 				fishFrameSessionEnv = "FishbowlQA";
 			} else if (domain.contains("staging")) {
 				fishFrameSessionEnv = "FishbowlStaging";
@@ -296,7 +296,7 @@ public class AuthUtil {
 	public static String getRedirectServerName(String domain) {
 		String redirectServerName = null;
 		if (domain != null) {
-			if (domain.contains("qa")) {
+			if (domain.contains("dev")) {
 				redirectServerName = "az-dev-linux-apps1.fishbowlcloud.com";
 			} else if (domain.contains("staging")) {
 				redirectServerName = "ir2stg.fishbowl.com";
@@ -312,7 +312,7 @@ public class AuthUtil {
 		String soapUrl = null;
 
 		if (domain != null) {
-			if (domain.contains("qa")) {
+			if (domain.contains("dev")) {
 				soapUrl = "loginqa.fishbowl.com";
 			} else if (domain.contains("staging")) {
 				soapUrl = "loginstaging.fishbowl.com";
@@ -325,7 +325,7 @@ public class AuthUtil {
 	}
 
 	public static String getaSPXFORMSAUTHString(String domain) {
-		if (domain.contains("qa") || domain.contains("az-dev-linux-apps1.fishbowlcloud.com")) {
+		if (domain.contains("qa") || domain.contains("dev")) {
 			return "QA.ASPXFORMSAUTH";
 
 		} else if (domain.contains("staging")) {
