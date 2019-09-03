@@ -60,7 +60,7 @@ public class SSOController {
 				String brandId = CookieUtil.getValue(request, brandCookieName);
 				if (null == brandId) {
 					BrandRequest brandRequest = new BrandRequest();
-					logger.info("userService  getBrand calling to get user Brands");
+					logger.info("userService getBrand calling to get user Brands");
 					BrandListResponse response = null;
 					try {
 						response = userService.getBrand(userAuth.getUserId(), userAuth.getClientId(), brandRequest);

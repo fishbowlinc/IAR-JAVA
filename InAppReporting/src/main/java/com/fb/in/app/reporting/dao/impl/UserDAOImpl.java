@@ -104,6 +104,7 @@ public class UserDAOImpl implements UserDAO {
 		}
 		logger.info("last sb  " + sb);
 		List<BrandVo> results = query.getResultList();
+		logger.info("brand count: " + results.size());
 		brandListResponse.setBrandsCount(results.size());
 		brandListResponse.setBrandList(results);
 		return brandListResponse;
