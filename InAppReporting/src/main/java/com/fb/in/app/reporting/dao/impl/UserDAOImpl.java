@@ -103,11 +103,8 @@ public class UserDAOImpl implements UserDAO {
 			logger.info("sb where clientid is -1 == " + sb);
 		}
 		logger.info("last sb  " + sb);
-		List<BrandVo> resultCount = query.getResultList();
-		query.setFirstResult((brandRequest.getPaging().getPageNo() - 1) * brandRequest.getPaging().getPageSize());
-		query.setMaxResults(brandRequest.getPaging().getPageSize());
 		List<BrandVo> results = query.getResultList();
-		brandListResponse.setBrandsCount(resultCount.size());
+		brandListResponse.setBrandsCount(results.size());
 		brandListResponse.setBrandList(results);
 		return brandListResponse;
 	}
