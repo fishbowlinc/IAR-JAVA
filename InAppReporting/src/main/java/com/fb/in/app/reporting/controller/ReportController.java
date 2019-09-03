@@ -29,7 +29,6 @@ import com.fb.in.app.reporting.generated.FishbowlSSOSoap;
 import com.fb.in.app.reporting.model.auth.UserAuth;
 import com.fb.in.app.reporting.model.vo.BrandVo;
 import com.fb.in.app.reporting.request.BrandRequest;
-import com.fb.in.app.reporting.request.PagingRequest;
 import com.fb.in.app.reporting.response.BrandListResponse;
 import com.fb.in.app.reporting.service.UserService;
 import com.fb.in.app.reporting.sso.auth.AuthUtil;
@@ -171,10 +170,6 @@ public class ReportController {
 					logger.info("Checking if user will have only one brand");
 					UserAuth userAuth = AuthUtil.getUserDetails(userDetails);
 					BrandRequest brandRequest = new BrandRequest();
-					PagingRequest paging = new PagingRequest();
-					paging.setPageNo(1);
-					paging.setPageSize(10);
-					brandRequest.setPaging(paging);
 					logger.info("userService  getBrand calling to get user Brands");
 					BrandListResponse response = null;
 					try {

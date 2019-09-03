@@ -17,7 +17,6 @@ import com.fb.in.app.reporting.model.auth.DataSecurityPayload;
 import com.fb.in.app.reporting.model.auth.UserAuth;
 import com.fb.in.app.reporting.model.vo.BrandVo;
 import com.fb.in.app.reporting.request.BrandRequest;
-import com.fb.in.app.reporting.request.PagingRequest;
 import com.fb.in.app.reporting.response.BrandListResponse;
 import com.fb.in.app.reporting.response.UserDetailsResponse;
 import com.fb.in.app.reporting.service.UserService;
@@ -61,10 +60,6 @@ public class SSOController {
 				String brandId = CookieUtil.getValue(request, brandCookieName);
 				if (null == brandId) {
 					BrandRequest brandRequest = new BrandRequest();
-					PagingRequest paging = new PagingRequest();
-					paging.setPageNo(1);
-					paging.setPageSize(10);
-					brandRequest.setPaging(paging);
 					logger.info("userService  getBrand calling to get user Brands");
 					BrandListResponse response = null;
 					try {
