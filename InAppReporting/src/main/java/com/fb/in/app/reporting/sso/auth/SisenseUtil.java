@@ -204,6 +204,7 @@ public class SisenseUtil {
 		shares.add(share);
 		securityPayload.setShares(shares);
 		securityPayload.setAllMembers(true);
+		securityPayload.setMembers(new ArrayList<String>());
 		return securityPayload;
 	}
 
