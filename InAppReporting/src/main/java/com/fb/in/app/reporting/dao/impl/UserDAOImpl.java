@@ -45,7 +45,6 @@ public class UserDAOImpl implements UserDAO {
 		sb.append("FROM AuthorizedBrand ab ").append("JOIN Brand b ON b.brandId = ab.brandId ")
 				.append("JOIN Client c ON c.clientId = b.clientId ");
 		sb.append("JOIN ClientStatus e ON e.clientStatusCode = c.clientStatusCode ")
-				.append("JOIN Brand b ON b.brandId = ab.brandId ")
 				.append("JOIN BrandStatus d ON d.brandStatusCode = b.brandStatusCode ");
 
 		if (searchRequest != null) {

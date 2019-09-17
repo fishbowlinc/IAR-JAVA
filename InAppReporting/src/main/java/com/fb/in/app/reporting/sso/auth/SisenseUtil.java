@@ -171,12 +171,13 @@ public class SisenseUtil {
 	}
 
 	public static DataSecurityPayload getDataSecurityPayload(List<BrandVo> brands, String sisenseUserId) {
+
 		DataSecurityPayload securityPayload = new DataSecurityPayload();
 		securityPayload.setServer("LocalHost");
-		securityPayload.setElasticube("Sample ECommerce");
-		securityPayload.setTable("Brand");
-		securityPayload.setColumn("Brand ID");
-		securityPayload.setDatatype("numeric");
+		securityPayload.setElasticube("Master Database");
+		securityPayload.setTable("Dim_Brand");
+		securityPayload.setColumn("Brand Name");
+		securityPayload.setDatatype("text");
 		List<Share> shares = new ArrayList<>();
 		Share share = new Share();
 		share.setParty(sisenseUserId);
@@ -184,10 +185,26 @@ public class SisenseUtil {
 		shares.add(share);
 		securityPayload.setShares(shares);
 		List<String> members = new ArrayList<>();
-		brands.forEach(brand -> members.add(String.valueOf(brand.getBrandId())));
+		brands.forEach(brand -> members.add(String.valueOf(brand.getBrandName())));
 		securityPayload.setMembers(members);
 		return securityPayload;
+	}
 
+	public static DataSecurityPayload getDataSecurityPayloadForAllMembers(String sisenseUserId) {
+		DataSecurityPayload securityPayload = new DataSecurityPayload();
+		securityPayload.setServer("LocalHost");
+		securityPayload.setElasticube("Master Database");
+		securityPayload.setTable("Dim_Client");
+		securityPayload.setColumn("Client Name");
+		securityPayload.setDatatype("numeric");
+		List<Share> shares = new ArrayList<>();
+		Share share = new Share();
+		share.setParty(sisenseUserId);
+		share.setType("user");
+		shares.add(share);
+		securityPayload.setShares(shares);
+		securityPayload.setAllMembers(true);
+		return securityPayload;
 	}
 
 	public static void createDataSecuirtyInSisenseElasticCube(String sisenseUserId,
@@ -196,9 +213,8 @@ public class SisenseUtil {
 			String authUrl = "http://10.200.10.21:8081/api/elasticubes/datasecurity";
 			HttpPost httpPost = new HttpPost(authUrl);
 			Gson gson = new Gson();
-			List<DataSecurityPayload>dataSecurityPayloads=new ArrayList<>();
+			List<DataSecurityPayload> dataSecurityPayloads = new ArrayList<>();
 			dataSecurityPayloads.add(securityPayload);
-			logger.info("data security payload: " + gson.toJson(dataSecurityPayloads));
 			StringEntity postingString = new StringEntity(gson.toJson(dataSecurityPayloads));
 			httpPost.setEntity(postingString);
 			httpPost.setHeader("Authorization", "Bearer " + sisenseApiAccessToken);

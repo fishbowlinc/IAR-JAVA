@@ -18,6 +18,7 @@ public class DataSecurityPayload implements Serializable {
 	private static final long serialVersionUID = -759440647842383746L;
 
 	private String server;
+	private Boolean allMembers;
 	private String elasticube;
 	private String table;
 	private String column;
@@ -37,6 +38,20 @@ public class DataSecurityPayload implements Serializable {
 	 */
 	public void setServer(String server) {
 		this.server = server;
+	}
+
+	/**
+	 * @return the allMembers
+	 */
+	public Boolean getAllMembers() {
+		return allMembers;
+	}
+
+	/**
+	 * @param allMembers the allMembers to set
+	 */
+	public void setAllMembers(Boolean allMembers) {
+		this.allMembers = allMembers;
 	}
 
 	/**

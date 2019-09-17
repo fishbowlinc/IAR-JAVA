@@ -16,4 +16,5 @@ public interface UserService {
 	public BrandVo getBrandRecordBySiteId(String siteId) throws SQLException, Exception;
 
 	public UserDetailsResponse getUserDetails(String userId) throws SQLException, Exception;
+
 }

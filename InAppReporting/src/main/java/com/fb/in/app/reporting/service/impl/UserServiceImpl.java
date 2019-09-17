@@ -14,41 +14,38 @@ import com.fb.in.app.reporting.response.BrandListResponse;
 import com.fb.in.app.reporting.response.UserDetailsResponse;
 import com.fb.in.app.reporting.service.UserService;
 
-
 @Service
-public class UserServiceImpl implements UserService{
-	
+public class UserServiceImpl implements UserService {
+
 	@Autowired
 	UserDAO userDAO;
-	
-	private static Map<String,UserDetailsResponse> UserDetailsMap = new HashMap<String,UserDetailsResponse>();
-	
 
-
+	private static Map<String, UserDetailsResponse> UserDetailsMap = new HashMap<String, UserDetailsResponse>();
 
 	@Override
-	public BrandListResponse getBrand(String userId, String clientId, BrandRequest brandRequest) throws SQLException,Exception{
-		 
-		BrandListResponse userBrands = userDAO.getBrand(userId,clientId,brandRequest);
+	public BrandListResponse getBrand(String userId, String clientId, BrandRequest brandRequest)
+			throws SQLException, Exception {
+
+		BrandListResponse userBrands = userDAO.getBrand(userId, clientId, brandRequest);
 		return userBrands;
-	
+
 	}
-	
+
 	@Override
-	public BrandVo getBrandRecord(String brandId) throws SQLException,Exception{
+	public BrandVo getBrandRecord(String brandId) throws SQLException, Exception {
 		return userDAO.getBrandRecord(brandId);
 	}
 
 	@Override
-	public BrandVo getBrandRecordBySiteId(String siteId) throws SQLException,Exception{
+	public BrandVo getBrandRecordBySiteId(String siteId) throws SQLException, Exception {
 		return userDAO.getBrandRecordBySiteId(siteId);
 	}
 
 	@Override
-	public UserDetailsResponse getUserDetails(String userId) throws SQLException,Exception{
-		if(UserDetailsMap.containsKey(userId) && UserDetailsMap.get(userId)!=null) {
+	public UserDetailsResponse getUserDetails(String userId) throws SQLException, Exception {
+		if (UserDetailsMap.containsKey(userId) && UserDetailsMap.get(userId) != null) {
 			return UserDetailsMap.get(userId);
-		}else {
+		} else {
 			UserDetailsResponse userDetails = userDAO.getUserDetails(userId);
 			UserDetailsMap.put(userId, userDetails);
 			return userDetails;

@@ -19,4 +19,5 @@ public interface UserDAO {
 	public UserDetailsResponse getUserDetails(String userId) throws SQLException, Exception;
 
 	public UserDetailsResponse getUserDetailsByUserName(String userName) throws SQLException, Exception;
+
 }

@@ -81,8 +81,7 @@ public class ReportController {
 		logger.info("domain : " + domain);
 
 		if (Id == null || Id.isEmpty()) {
-			String redirectURL = "https://" + soapUrl
-					+ "/SSO/Navigator/InitializeTargetApp?bid=34&ReturnUrl=/report";
+			String redirectURL = "https://" + soapUrl + "/SSO/Navigator/InitializeTargetApp?bid=34&ReturnUrl=/report";
 			if (SiteId != null && SiteId.trim().length() > 0) {
 				redirectURL = redirectURL + "&SiteId=" + SiteId;
 			}
@@ -140,11 +139,6 @@ public class ReportController {
 				cookie.setDomain(irDomain);
 				cookie.setPath("/");
 				httpServletResponse.addCookie(cookie);
-				/*if (cookies != null) {
-					for (Cookie ck : cookies) {
-						httpServletResponse.addCookie(ck);
-					}
-				}*/
 				if (SiteId != null && SiteId.trim().length() > 0) {
 					BrandVo brandVo = null;
 					try {
@@ -157,8 +151,6 @@ public class ReportController {
 						e.printStackTrace();
 					}
 					if (brandVo != null && brandVo.getBrandId() > -1) {
-						// redirectUrl = "https://" + redirectServerName + "/#/home?ID=" + Id +
-						// "&bid=34&SiteId=" + SiteId;
 						httpServletResponse.addCookie(AuthUtil.getBrandIdCookies(brandVo.getBrandId() + "",
 								AuthUtil.getDomain(request.getServerName())));
 					} else {
@@ -175,26 +167,19 @@ public class ReportController {
 					try {
 						response = userService.getBrand(userAuth.getUserId(), userAuth.getClientId(), brandRequest);
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					if (response != null && response.getSuccessFlag() == true && response.getBrandsCount() == 1) {
 						logger.info("user is having single brand..");
 						SiteId = response.getBrandList().get(0).getSiteId().toString();
-						// redirectUrl = "https://" + redirectServerName + "/#/home?ID=" + Id +
-						// "&bid=34&SiteId=" + SiteId;
 						httpServletResponse.addCookie(
 								AuthUtil.getBrandIdCookies(response.getBrandList().get(0).getBrandId() + "", irDomain));
 
 					} else {
 						logger.info("user is having multiple brands..");
-						// redirectUrl = "https://" + redirectServerName + "/#/home?ID=" + Id +
-						// "&bid=34&SiteId=" + SiteId;
-
 					}
 				}
 				logger.info("redirectURL : " + redirectUrl);
-				// return "redirect:" + redirectUrl;
 				return "reportDashboard";
 
 			} else {
