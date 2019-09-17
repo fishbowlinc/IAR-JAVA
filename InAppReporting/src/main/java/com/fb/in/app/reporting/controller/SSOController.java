@@ -38,6 +38,7 @@ public class SSOController {
 		UserAuth userAuth = null;
 		String sisenseUserId = null;
 		String redirectUrl = null;
+		UserDetailsResponse userDetailResponse = null;
 		logger.info("getting ir cookie details...");
 		try {
 			String userAuthStr = CookieUtil.getValue(request, irSessionCookieName);
@@ -52,25 +53,31 @@ public class SSOController {
 				logger.info("Collected Sisense user id: " + sisenseUserId);
 				if (null == sisenseUserId) {
 					logger.info("getting user details by user id");
-					UserDetailsResponse response = userService.getUserDetails(userAuth.getUserId());
+					userDetailResponse = userService.getUserDetails(userAuth.getUserId());
 					logger.info("adding user in sisense");
-					sisenseUserId = SisenseUtil.createUserInSisense(response);
+					sisenseUserId = SisenseUtil.createUserInSisense(userDetailResponse);
 				}
 				logger.info("creating data security for the logged in user");
 				String brandId = CookieUtil.getValue(request, brandCookieName);
 				if (null == brandId) {
-					BrandRequest brandRequest = new BrandRequest();
-					logger.info("userService getBrand calling to get user Brands");
-					BrandListResponse response = null;
-					try {
-						response = userService.getBrand(userAuth.getUserId(), userAuth.getClientId(), brandRequest);
-						DataSecurityPayload securityPayload = SisenseUtil
-								.getDataSecurityPayload(response.getBrandList(), sisenseUserId);
-						SisenseUtil.createDataSecuirtyInSisenseElasticCube(sisenseUserId, securityPayload);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					DataSecurityPayload securityPayload = null;
+					if (userAuth.getClientId().equals("-1")) {
+						securityPayload = SisenseUtil.getDataSecurityPayloadForAllMembers(sisenseUserId);
+					} else {
+						BrandRequest brandRequest = new BrandRequest();
+						logger.info("userService getBrand calling to get user Brands");
+						BrandListResponse response = null;
+						try {
+							response = userService.getBrand(userAuth.getUserId(), userAuth.getClientId(), brandRequest);
+							securityPayload = SisenseUtil.getDataSecurityPayload(response.getBrandList(),
+									sisenseUserId);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
+					SisenseUtil.createDataSecuirtyInSisenseElasticCube(sisenseUserId, securityPayload);
+
 				} else {
 					BrandVo brandVo = new BrandVo();
 					brandVo.setBrandId(Integer.valueOf(brandId));
