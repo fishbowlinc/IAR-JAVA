@@ -1,8 +1,6 @@
 package com.fb.in.app.reporting.sso.auth;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -339,17 +337,10 @@ public class AuthUtil {
 
 	}
 
-	public static Cookie getBrandIdCookies(String brandName, String serverName) {
-		Cookie brandCookie = null;
-		try {
-			brandCookie = new Cookie("BrandName", URLEncoder.encode(brandName, "UTF-8"));
-			brandCookie.setDomain(AuthUtil.getDomain(serverName));
-			brandCookie.setPath("/");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+	public static Cookie getBrandIdCookies(int brandId, String serverName) {
+		Cookie brandCookie = new Cookie("BrandID", String.valueOf(brandId));
+		brandCookie.setDomain(AuthUtil.getDomain(serverName));
+		brandCookie.setPath("/");
 		return brandCookie;
 
 	}
