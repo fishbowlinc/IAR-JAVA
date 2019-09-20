@@ -1,6 +1,7 @@
 package com.fb.in.app.reporting.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,8 +81,10 @@ public class SSOController {
 
 				} else {
 					logger.info("brand name cookie value: " + brandName);
+					String decodedBrandName = URLDecoder.decode(brandName, "UTF-8");
+					logger.info("decoded brand name value: " + decodedBrandName);
 					BrandVo brandVo = new BrandVo();
-					brandVo.setBrandName(brandName);
+					brandVo.setBrandName(decodedBrandName);
 					List<BrandVo> brands = new ArrayList<BrandVo>();
 					brands.add(brandVo);
 					DataSecurityPayload securityPayload = SisenseUtil.getDataSecurityPayload(brands, sisenseUserId);
