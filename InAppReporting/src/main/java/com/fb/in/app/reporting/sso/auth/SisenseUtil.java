@@ -175,8 +175,8 @@ public class SisenseUtil {
 		securityPayload.setServer("LocalHost");
 		securityPayload.setElasticube("Master Database");
 		securityPayload.setTable("Dim_Brand");
-		securityPayload.setColumn("Brand Name");
-		securityPayload.setDatatype("text");
+		securityPayload.setColumn("Brand ID");
+		securityPayload.setDatatype("numeric");
 		List<Share> shares = new ArrayList<>();
 		Share share = new Share();
 		share.setParty(sisenseUserId);
@@ -184,7 +184,7 @@ public class SisenseUtil {
 		shares.add(share);
 		securityPayload.setShares(shares);
 		List<String> members = new ArrayList<>();
-		brands.forEach(brand -> members.add(brand.getBrandName()));
+		brands.forEach(brand -> members.add(String.valueOf(brand.getBrandId())));
 		securityPayload.setMembers(members);
 		return securityPayload;
 	}
@@ -194,8 +194,8 @@ public class SisenseUtil {
 		securityPayload.setServer("LocalHost");
 		securityPayload.setElasticube("Master Database");
 		securityPayload.setTable("Dim_Client");
-		securityPayload.setColumn("Client Name");
-		securityPayload.setDatatype("text");
+		securityPayload.setColumn("Client ID");
+		securityPayload.setDatatype("numeric");
 		List<Share> shares = new ArrayList<>();
 		Share share = new Share();
 		share.setParty(sisenseUserId);

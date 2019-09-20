@@ -1,7 +1,6 @@
 package com.fb.in.app.reporting.controller;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,7 @@ public class SSOController {
 	UserService userService;
 	private final static Logger logger = LoggerFactory.getLogger(SSOController.class);
 	private static final String irSessionCookieName = "IR_SessionId";
-	private static final String brandCookieName = "BrandName";
+	private static final String brandCookieName = "BrandID";
 	private static final String signingKey = "d652385f5169a19ba3739a0a803396f6e4a5e6f076e3d80f435d6be2324220a8";
 
 	@RequestMapping("/sso-handler")
@@ -59,8 +58,8 @@ public class SSOController {
 					sisenseUserId = SisenseUtil.createUserInSisense(userDetailResponse);
 				}
 				logger.info("creating data security for the logged in user");
-				String brandName = CookieUtil.getValue(request, brandCookieName);
-				if (null == brandName) {
+				String brandId = CookieUtil.getValue(request, brandCookieName);
+				if (null == brandId) {
 					DataSecurityPayload securityPayload = null;
 					if (userAuth.getClientId().equals("-1")) {
 						securityPayload = SisenseUtil.getDataSecurityPayloadForAllMembers(sisenseUserId);
@@ -77,14 +76,12 @@ public class SSOController {
 							e.printStackTrace();
 						}
 					}
+
 					SisenseUtil.createDataSecuirtyInSisenseElasticCube(sisenseUserId, securityPayload);
 
 				} else {
-					logger.info("brand name cookie value: " + brandName);
-					String decodedBrandName = URLDecoder.decode(brandName, "UTF-8");
-					logger.info("decoded brand name value: " + decodedBrandName);
 					BrandVo brandVo = new BrandVo();
-					brandVo.setBrandName(decodedBrandName);
+					brandVo.setBrandId(Integer.valueOf(brandId));
 					List<BrandVo> brands = new ArrayList<BrandVo>();
 					brands.add(brandVo);
 					DataSecurityPayload securityPayload = SisenseUtil.getDataSecurityPayload(brands, sisenseUserId);
