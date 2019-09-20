@@ -151,7 +151,7 @@ public class ReportController {
 						e.printStackTrace();
 					}
 					if (brandVo != null && brandVo.getBrandId() > -1) {
-						httpServletResponse.addCookie(AuthUtil.getBrandIdCookies(brandVo.getBrandId() + "",
+						httpServletResponse.addCookie(AuthUtil.getBrandIdCookies(brandVo.getBrandName() + "",
 								AuthUtil.getDomain(request.getServerName())));
 					} else {
 						// response is null or brand id is <0
@@ -173,7 +173,7 @@ public class ReportController {
 						logger.info("user is having single brand..");
 						SiteId = response.getBrandList().get(0).getSiteId().toString();
 						httpServletResponse.addCookie(
-								AuthUtil.getBrandIdCookies(response.getBrandList().get(0).getBrandId() + "", irDomain));
+								AuthUtil.getBrandIdCookies(response.getBrandList().get(0).getBrandName() + "", irDomain));
 
 					} else {
 						logger.info("user is having multiple brands..");
