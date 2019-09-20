@@ -171,7 +171,6 @@ public class SisenseUtil {
 	}
 
 	public static DataSecurityPayload getDataSecurityPayload(List<BrandVo> brands, String sisenseUserId) {
-
 		DataSecurityPayload securityPayload = new DataSecurityPayload();
 		securityPayload.setServer("LocalHost");
 		securityPayload.setElasticube("Master Database");
@@ -185,7 +184,7 @@ public class SisenseUtil {
 		shares.add(share);
 		securityPayload.setShares(shares);
 		List<String> members = new ArrayList<>();
-		brands.forEach(brand -> members.add(String.valueOf(brand.getBrandName())));
+		brands.forEach(brand -> members.add(brand.getBrandName()));
 		securityPayload.setMembers(members);
 		return securityPayload;
 	}
@@ -196,7 +195,7 @@ public class SisenseUtil {
 		securityPayload.setElasticube("Master Database");
 		securityPayload.setTable("Dim_Client");
 		securityPayload.setColumn("Client Name");
-		securityPayload.setDatatype("numeric");
+		securityPayload.setDatatype("text");
 		List<Share> shares = new ArrayList<>();
 		Share share = new Share();
 		share.setParty(sisenseUserId);

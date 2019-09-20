@@ -337,8 +337,8 @@ public class AuthUtil {
 
 	}
 
-	public static Cookie getBrandIdCookies(String brandId, String serverName) {
-		Cookie brandCookie = new Cookie("BrandID", brandId);
+	public static Cookie getBrandIdCookies(String brandName, String serverName) {
+		Cookie brandCookie = new Cookie("BrandName", brandName);
 		brandCookie.setDomain(AuthUtil.getDomain(serverName));
 		brandCookie.setPath("/");
 		return brandCookie;
