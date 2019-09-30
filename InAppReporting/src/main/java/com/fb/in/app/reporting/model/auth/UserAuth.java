@@ -13,9 +13,7 @@ import org.springframework.util.StringUtils;
  */
 
 public class UserAuth implements Serializable {
-
 	private static final long serialVersionUID = 1L;
-
 	String userId;
 	String userName;
 	int tenantId;

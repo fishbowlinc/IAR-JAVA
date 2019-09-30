@@ -6,7 +6,6 @@ package com.fb.in.app.reporting.controller;
 import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -64,7 +63,7 @@ public class ReportController {
 		String irDomain = null;
 		String redirectServerName = null;
 		String soapUrl = null;
-		String redirectUrl = null;
+		String redirectURL = null;
 
 		Cookie[] cookies = request.getCookies();
 		String domain = request.getServerName();
@@ -81,7 +80,7 @@ public class ReportController {
 		logger.info("domain : " + domain);
 
 		if (Id == null || Id.isEmpty()) {
-			String redirectURL = "https://" + soapUrl + "/SSO/Navigator/InitializeTargetApp?bid=34&ReturnUrl=/report";
+			redirectURL = "https://" + soapUrl + "/SSO/Navigator/InitializeTargetApp?bid=34&ReturnUrl=/report";
 			if (SiteId != null && SiteId.trim().length() > 0) {
 				redirectURL = redirectURL + "&SiteId=" + SiteId;
 			}
@@ -103,13 +102,13 @@ public class ReportController {
 			}
 			if (!isAspxCookiePresent) {
 				logger.info("AspxCookie is not present and hence redirecting to login page");
-				String redirectURL = "https://" + soapUrl + "/Public/Login.aspx?ReturnUrl=%2f";
+				redirectURL = "https://" + soapUrl + "/Public/Login.aspx?ReturnUrl=%2f";
 				logger.info("redirectURL : " + redirectURL);
 				return "redirect:" + redirectURL;
 			}
 		} else {
 			logger.info("There is no Cookie. Hence redirecting to login page");
-			String redirectURL = "https://" + soapUrl + "/Public/Login.aspx?ReturnUrl=%2f";
+			redirectURL = "https://" + soapUrl + "/Public/Login.aspx?ReturnUrl=%2f";
 			logger.info("redirectURL : " + redirectURL);
 			return "redirect:" + redirectURL;
 		}
@@ -139,16 +138,15 @@ public class ReportController {
 				cookie.setDomain(irDomain);
 				cookie.setPath("/");
 				httpServletResponse.addCookie(cookie);
+				if (cookies != null)
+					for (Cookie ck : cookies) {
+						httpServletResponse.addCookie(ck);
+					}
 				if (SiteId != null && SiteId.trim().length() > 0) {
 					BrandVo brandVo = null;
 					try {
 						brandVo = userService.getBrandRecordBySiteId(SiteId);
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
 					}
 					if (brandVo != null && brandVo.getBrandId() > -1) {
 						httpServletResponse.addCookie(AuthUtil.getBrandIdCookies(brandVo.getBrandId(),
@@ -156,6 +154,8 @@ public class ReportController {
 					} else {
 						// response is null or brand id is <0
 					}
+					redirectURL = "http://" + redirectServerName + "/#/reportList?ID=" + Id + "&bid=34&SiteId="
+							+ SiteId;
 
 				} else {
 					logger.info("Site ID is null");
@@ -177,18 +177,22 @@ public class ReportController {
 
 					} else {
 						logger.info("user is having multiple brands..");
+						SiteId = response.getBrandList().get(0).getSiteId().toString();
 					}
+					redirectURL = "http://" + redirectServerName + "/#/reportList?ID=" + Id + "&bid=34&SiteId="
+							+ SiteId;
 				}
-				logger.info("redirectURL : " + redirectUrl);
-				return "reportDashboard";
+
+				logger.info("redirectURL : " + redirectURL);
+				return "redirect:" + redirectURL;
 
 			} else {
-				String redirectURL = "https://" + soapUrl + "/Public/Login.aspx?ReturnUrl=%2f";
+				redirectURL = "https://" + soapUrl + "/Public/Login.aspx?ReturnUrl=%2f";
 				logger.info("redirectURL : " + redirectURL);
 				return "redirect:" + redirectURL;
 			}
 		} else {
-			String redirectURL = "https://" + soapUrl + "/Public/Login.aspx?ReturnUrl=%2f";
+			redirectURL = "https://" + soapUrl + "/Public/Login.aspx?ReturnUrl=%2f";
 			logger.info("redirectURL : " + redirectURL);
 			return "redirect:" + redirectURL;
 		}
