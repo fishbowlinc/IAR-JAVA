@@ -138,10 +138,6 @@ public class ReportController {
 				cookie.setDomain(irDomain);
 				cookie.setPath("/");
 				httpServletResponse.addCookie(cookie);
-				if (cookies != null)
-					for (Cookie ck : cookies) {
-						httpServletResponse.addCookie(ck);
-					}
 				if (SiteId != null && SiteId.trim().length() > 0) {
 					BrandVo brandVo = null;
 					try {
