@@ -173,7 +173,7 @@ public class ReportController {
 
 					} else {
 						logger.info("user is having multiple brands..");
-						SiteId = response.getBrandList().get(0).getSiteId().toString();
+						SiteId = response.getBrandList().get(response.getBrandList().size() - 1).getSiteId().toString();
 					}
 					redirectURL = "http://" + redirectServerName + "/#/reportList?ID=" + Id + "&bid=34&SiteId="
 							+ SiteId;
