@@ -30,6 +30,7 @@ public class SSOController {
 	UserService userService;
 	private final static Logger logger = LoggerFactory.getLogger(SSOController.class);
 	private static final String irSessionCookieName = "IR_SessionId";
+	private static final String eCubeCookieName = "eCube";
 	private static final String brandCookieName = "BrandID";
 	private static final String signingKey = "d652385f5169a19ba3739a0a803396f6e4a5e6f076e3d80f435d6be2324220a8";
 
@@ -42,11 +43,14 @@ public class SSOController {
 		logger.info("getting ir cookie details...");
 		try {
 			String userAuthStr = CookieUtil.getValue(request, irSessionCookieName);
-			if (null != userAuthStr) {
+			String eCubeStr = CookieUtil.getValue(request, eCubeCookieName);
+			if (null != userAuthStr && null != eCubeStr) {
 				logger.info(irSessionCookieName + " encrypted cookie details: " + userAuthStr);
-				logger.info("decrypted cookie value");
+				logger.info(eCubeCookieName + " encrypted cookie details: " + eCubeStr);
 				String userDetailsStr = AuthUtil.decrypted(userAuthStr.getBytes());
 				logger.info("decrypted userAuth details: " + userDetailsStr);
+				String eCubeNameStr = AuthUtil.decrypted(eCubeStr.getBytes());
+				logger.info("decrypted eCube details: " + eCubeNameStr);
 				userAuth = AuthUtil.getUserDetails(userDetailsStr);
 				logger.info("getting user id via sisense api for username: " + userAuth.getUserName());
 				sisenseUserId = SisenseUtil.getUserIdByUsername(userAuth.getUserName());
@@ -62,15 +66,16 @@ public class SSOController {
 				if (null == brandId) {
 					DataSecurityPayload securityPayload = null;
 					if (userAuth.getClientId().equals("-1")) {
-						securityPayload = SisenseUtil.getDataSecurityPayloadForAllMembers(sisenseUserId);
+						securityPayload = SisenseUtil.getDataSecurityPayloadForAllMembers(sisenseUserId,
+								eCubeNameStr.trim());
 					} else {
 						BrandRequest brandRequest = new BrandRequest();
 						logger.info("userService getBrand calling to get user Brands");
 						BrandListResponse response = null;
 						try {
 							response = userService.getBrand(userAuth.getUserId(), userAuth.getClientId(), brandRequest);
-							securityPayload = SisenseUtil.getDataSecurityPayload(response.getBrandList(),
-									sisenseUserId);
+							securityPayload = SisenseUtil.getDataSecurityPayload(response.getBrandList(), sisenseUserId,
+									eCubeNameStr.trim());
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -84,7 +89,8 @@ public class SSOController {
 					brandVo.setBrandId(Integer.valueOf(brandId));
 					List<BrandVo> brands = new ArrayList<BrandVo>();
 					brands.add(brandVo);
-					DataSecurityPayload securityPayload = SisenseUtil.getDataSecurityPayload(brands, sisenseUserId);
+					DataSecurityPayload securityPayload = SisenseUtil.getDataSecurityPayload(brands, sisenseUserId,
+							eCubeNameStr.trim());
 					SisenseUtil.createDataSecuirtyInSisenseElasticCube(sisenseUserId, securityPayload);
 				}
 				String token = SisenseUtil.generateToken(signingKey, userAuth.getUserName());

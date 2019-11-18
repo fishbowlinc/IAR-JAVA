@@ -170,10 +170,11 @@ public class SisenseUtil {
 		return null;
 	}
 
-	public static DataSecurityPayload getDataSecurityPayload(List<BrandVo> brands, String sisenseUserId) {
+	public static DataSecurityPayload getDataSecurityPayload(List<BrandVo> brands, String sisenseUserId,
+			String eCubeName) {
 		DataSecurityPayload securityPayload = new DataSecurityPayload();
 		securityPayload.setServer("LocalHost");
-		securityPayload.setElasticube("Master Database");
+		securityPayload.setElasticube(eCubeName);
 		securityPayload.setTable("Dim_Brand");
 		securityPayload.setColumn("Brand ID");
 		securityPayload.setDatatype("numeric");
@@ -189,12 +190,12 @@ public class SisenseUtil {
 		return securityPayload;
 	}
 
-	public static DataSecurityPayload getDataSecurityPayloadForAllMembers(String sisenseUserId) {
+	public static DataSecurityPayload getDataSecurityPayloadForAllMembers(String sisenseUserId, String eCubeName) {
 		DataSecurityPayload securityPayload = new DataSecurityPayload();
 		securityPayload.setServer("LocalHost");
-		securityPayload.setElasticube("Master Database");
-		securityPayload.setTable("Dim_Client");
-		securityPayload.setColumn("Client ID");
+		securityPayload.setElasticube(eCubeName);
+		securityPayload.setTable("Dim_Brand");
+		securityPayload.setColumn("Brand ID");
 		securityPayload.setDatatype("numeric");
 		List<Share> shares = new ArrayList<>();
 		Share share = new Share();
