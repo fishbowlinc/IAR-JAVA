@@ -170,7 +170,6 @@ public class ReportController {
 						SiteId = response.getBrandList().get(0).getSiteId().toString();
 						httpServletResponse.addCookie(
 								AuthUtil.getBrandIdCookies(response.getBrandList().get(0).getBrandId(), irDomain));
-
 					} else {
 						logger.info("user is having multiple brands..");
 						SiteId = response.getBrandList().get(response.getBrandList().size() - 1).getSiteId().toString();
