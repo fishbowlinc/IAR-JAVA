@@ -49,7 +49,7 @@ public class SSOController {
 				logger.info(eCubeCookieName + " encrypted cookie details: " + eCubeStr);
 				String userDetailsStr = AuthUtil.decrypted(userAuthStr.getBytes());
 				logger.info("decrypted userAuth details: " + userDetailsStr);
-				String eCubeNameStr = AuthUtil.decrypted(eCubeStr.getBytes());
+				String eCubeNameStr = AuthUtil.decryptCubeCookie(eCubeStr.getBytes());
 				logger.info("decrypted eCube details: " + eCubeNameStr);
 				userAuth = AuthUtil.getUserDetails(userDetailsStr);
 				logger.info("getting user id via sisense api for username: " + userAuth.getUserName());

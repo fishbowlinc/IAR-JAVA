@@ -182,6 +182,11 @@ public class AuthUtil {
 		return new String(data);
 	}
 
+	public static String decryptCubeCookie(byte[] kr) {
+		byte[] encryptedData = java.util.Base64.getDecoder().decode(kr);
+		return new String(encryptedData);
+	}
+
 	public static UserAuth getUserDetails(String userDetailsStr) {
 		UserAuth userAuth = new UserAuth();
 		logger.info("userDetailsStr : " + userDetailsStr);
