@@ -45,7 +45,7 @@ public class ReportController {
 	private static final String fbLoginCookieName = "ASPXFORMSAUTH";
 
 	@RequestMapping("/report")
-	public String getReport(@RequestParam(name = "ID", required = false) String Id,
+	public String getReport(@RequestParam(name = "Id", required = false) String Id,
 			@RequestParam(name = "ReturnUrl", required = false) String returnUrl,
 			@RequestParam(name = "SiteId", required = false) String SiteId, @RequestParam(name = "bid") int bid,
 			@RequestParam(name = "SessionId", required = false) String sessionId, HttpServletRequest request,
