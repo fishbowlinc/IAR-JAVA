@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fb.in.app.reporting.model.auth.UserAuth;
+import com.fb.in.app.reporting.model.vo.BrandVo;
 import com.google.gson.Gson;
 
 public class AuthUtil {
@@ -343,7 +344,7 @@ public class AuthUtil {
 	}
 
 	public static Cookie getBrandIdCookies(String brandList, String serverName) {
-		Cookie brandCookie = new Cookie("BrandList",brandList);
+		Cookie brandCookie = new Cookie("BrandList", brandList);
 		brandCookie.setDomain(AuthUtil.getDomain(serverName));
 		brandCookie.setPath("/");
 		return brandCookie;
@@ -360,6 +361,13 @@ public class AuthUtil {
 	public static String encryptedBrandDetials(String str) {
 		String encryptedData = java.util.Base64.getEncoder().encodeToString(str.getBytes());
 		return encryptedData;
+	}
+
+	public static String getJsonFromObjectList(List<BrandVo> brandVo) {
+		Gson gson = new Gson();
+		// convert your list to json
+		String jsonBrandList = gson.toJson(brandVo);
+		return jsonBrandList;
 	}
 
 }
