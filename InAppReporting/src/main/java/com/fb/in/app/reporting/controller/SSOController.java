@@ -2,8 +2,6 @@ package com.fb.in.app.reporting.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.fb.in.app.reporting.model.auth.DataSecurityPayload;
 import com.fb.in.app.reporting.model.auth.UserAuth;
-import com.fb.in.app.reporting.model.vo.BrandVo;
 import com.fb.in.app.reporting.request.BrandRequest;
 import com.fb.in.app.reporting.response.BrandListResponse;
 import com.fb.in.app.reporting.response.UserDetailsResponse;
@@ -31,7 +28,6 @@ public class SSOController {
 	private final static Logger logger = LoggerFactory.getLogger(SSOController.class);
 	private static final String irSessionCookieName = "IR_SessionId";
 	private static final String eCubeCookieName = "eCube";
-	private static final String brandCookieName = "BrandID";
 	private static final String signingKey = "d652385f5169a19ba3739a0a803396f6e4a5e6f076e3d80f435d6be2324220a8";
 
 	@RequestMapping("/sso-handler")
@@ -47,13 +43,21 @@ public class SSOController {
 			if (null != userAuthStr && null != eCubeStr) {
 				logger.info(irSessionCookieName + " encrypted cookie details: " + userAuthStr);
 				logger.info(eCubeCookieName + " encrypted cookie details: " + eCubeStr);
+
 				String userDetailsStr = AuthUtil.decrypted(userAuthStr.getBytes());
+
 				logger.info("decrypted userAuth details: " + userDetailsStr);
+
 				String eCubeNameStr = AuthUtil.decryptCubeCookie(eCubeStr.getBytes());
+
 				logger.info("decrypted eCube details: " + eCubeNameStr);
+
 				userAuth = AuthUtil.getUserDetails(userDetailsStr);
+
 				logger.info("getting user id via sisense api for username: " + userAuth.getUserName());
+
 				sisenseUserId = SisenseUtil.getUserIdByUsername(userAuth.getUserName());
+
 				logger.info("Collected Sisense user id: " + sisenseUserId);
 				if (null == sisenseUserId) {
 					logger.info("getting user details by user id");
@@ -62,37 +66,26 @@ public class SSOController {
 					sisenseUserId = SisenseUtil.createUserInSisense(userDetailResponse);
 				}
 				logger.info("creating data security for the logged in user");
-				String brandId = CookieUtil.getValue(request, brandCookieName);
-				if (null == brandId) {
-					DataSecurityPayload securityPayload = null;
-					if (userAuth.getClientId().equals("-1")) {
-						securityPayload = SisenseUtil.getDataSecurityPayloadForAllMembers(sisenseUserId,
-								eCubeNameStr.trim());
-					} else {
-						BrandRequest brandRequest = new BrandRequest();
-						logger.info("userService getBrand calling to get user Brands");
-						BrandListResponse response = null;
-						try {
-							response = userService.getBrand(userAuth.getUserId(), userAuth.getClientId(), brandRequest);
-							securityPayload = SisenseUtil.getDataSecurityPayload(response.getBrandList(), sisenseUserId,
-									eCubeNameStr.trim());
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
 
-					SisenseUtil.createDataSecuirtyInSisenseElasticCube(sisenseUserId, securityPayload);
-
-				} else {
-					BrandVo brandVo = new BrandVo();
-					brandVo.setBrandId(Integer.valueOf(brandId));
-					List<BrandVo> brands = new ArrayList<BrandVo>();
-					brands.add(brandVo);
-					DataSecurityPayload securityPayload = SisenseUtil.getDataSecurityPayload(brands, sisenseUserId,
+				DataSecurityPayload securityPayload = null;
+				if (userAuth.getClientId().equals("-1")) {
+					securityPayload = SisenseUtil.getDataSecurityPayloadForAllMembers(sisenseUserId,
 							eCubeNameStr.trim());
-					SisenseUtil.createDataSecuirtyInSisenseElasticCube(sisenseUserId, securityPayload);
+				} else {
+					BrandRequest brandRequest = new BrandRequest();
+					logger.info("userService getBrand calling to get user Brands");
+					BrandListResponse response = null;
+					try {
+						response = userService.getBrand(userAuth.getUserId(), userAuth.getClientId(), brandRequest);
+						securityPayload = SisenseUtil.getDataSecurityPayload(response.getBrandList(), sisenseUserId,
+								eCubeNameStr.trim());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
+				SisenseUtil.createDataSecuirtyInSisenseElasticCube(sisenseUserId, securityPayload);
+
 				String token = SisenseUtil.generateToken(signingKey, userAuth.getUserName());
 				// This is the Sisense URL which can handle (decode and process) the JWT token
 				redirectUrl = "http://10.200.10.21:8081/jwt?jwt=" + token;
