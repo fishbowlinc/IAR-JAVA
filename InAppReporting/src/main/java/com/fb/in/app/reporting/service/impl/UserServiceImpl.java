@@ -2,6 +2,7 @@ package com.fb.in.app.reporting.service.impl;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public BrandVo getBrandRecordBySiteId(String siteId) throws SQLException, Exception {
+	public List<BrandVo> getBrandRecordBySiteId(String siteId) throws SQLException, Exception {
 		return userDAO.getBrandRecordBySiteId(siteId);
 	}
 

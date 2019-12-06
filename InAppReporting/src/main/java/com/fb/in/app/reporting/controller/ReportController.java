@@ -6,6 +6,7 @@ package com.fb.in.app.reporting.controller;
 import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -141,20 +142,16 @@ public class ReportController {
 				cookie.setPath("/");
 				httpServletResponse.addCookie(cookie);
 				if (SiteId != null && SiteId.trim().length() > 0) {
-					BrandVo brandVo = null;
+					List<BrandVo> brandVo = null;
 					try {
 						brandVo = userService.getBrandRecordBySiteId(SiteId);
+						String encyrtpedBrandDetails = AuthUtil.encryptedBrandDetials(brandVo.toString());
+						httpServletResponse.addCookie(AuthUtil.getBrandIdCookies(encyrtpedBrandDetails, irDomain));
+
 					} catch (Exception e) {
-					}
-					if (brandVo != null && brandVo.getBrandId() > -1) {
-						httpServletResponse.addCookie(AuthUtil.getBrandIdCookies(brandVo.getBrandId(),
-								AuthUtil.getDomain(request.getServerName())));
-					} else {
-						// response is null or brand id is <0
 					}
 					redirectURL = "http://" + redirectServerName + "/#/reportList?ID=" + Id + "&bid=34&SiteId="
 							+ SiteId;
-
 				} else {
 					logger.info("Site ID is null");
 					logger.info("Checking if user will have only one brand");
@@ -170,12 +167,13 @@ public class ReportController {
 					if (response != null && response.getSuccessFlag() == true && response.getBrandsCount() == 1) {
 						logger.info("user is having single brand..");
 						SiteId = response.getBrandList().get(0).getSiteId().toString();
-						httpServletResponse.addCookie(
-								AuthUtil.getBrandIdCookies(response.getBrandList().get(0).getBrandId(), irDomain));
 					} else {
 						logger.info("user is having multiple brands..");
 						SiteId = response.getBrandList().get(response.getBrandList().size() - 1).getSiteId().toString();
 					}
+					String encyrtpedBrandDetails = AuthUtil.encryptedBrandDetials(response.getBrandList().toString());
+					httpServletResponse.addCookie(AuthUtil.getBrandIdCookies(encyrtpedBrandDetails, irDomain));
+
 					redirectURL = "http://" + redirectServerName + "/#/reportList?ID=" + Id + "&bid=34&SiteId="
 							+ SiteId;
 				}

@@ -1,6 +1,7 @@
 package com.fb.in.app.reporting.dao;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import com.fb.in.app.reporting.model.vo.BrandVo;
 import com.fb.in.app.reporting.request.BrandRequest;
@@ -14,7 +15,7 @@ public interface UserDAO {
 
 	public BrandVo getBrandRecord(String brandId) throws SQLException, Exception;
 
-	public BrandVo getBrandRecordBySiteId(String siteId) throws SQLException, Exception;
+	public List<BrandVo> getBrandRecordBySiteId(String siteId) throws SQLException, Exception;
 
 	public UserDetailsResponse getUserDetails(String userId) throws SQLException, Exception;
 

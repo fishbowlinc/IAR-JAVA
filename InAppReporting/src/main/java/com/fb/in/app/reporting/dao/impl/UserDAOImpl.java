@@ -137,7 +137,7 @@ public class UserDAOImpl implements UserDAO {
 	}
 
 	@Override
-	public BrandVo getBrandRecordBySiteId(String siteId) throws SQLException, Exception {
+	public List<BrandVo> getBrandRecordBySiteId(String siteId) throws SQLException, Exception {
 		List<BrandVo> results = null;
 		try {
 			StringBuilder sb = new StringBuilder(
@@ -158,7 +158,7 @@ public class UserDAOImpl implements UserDAO {
 
 			results = query.getResultList();
 			if (null != results) {
-				return results.get(0);
+				return results;
 			}
 
 		} catch (NumberFormatException e) {

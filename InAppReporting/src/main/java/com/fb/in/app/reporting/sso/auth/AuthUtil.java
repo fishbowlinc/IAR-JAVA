@@ -342,8 +342,8 @@ public class AuthUtil {
 
 	}
 
-	public static Cookie getBrandIdCookies(int brandId, String serverName) {
-		Cookie brandCookie = new Cookie("BrandID", String.valueOf(brandId));
+	public static Cookie getBrandIdCookies(String brandList, String serverName) {
+		Cookie brandCookie = new Cookie("BrandList",brandList);
 		brandCookie.setDomain(AuthUtil.getDomain(serverName));
 		brandCookie.setPath("/");
 		return brandCookie;
@@ -355,6 +355,11 @@ public class AuthUtil {
 		siteCookie.setDomain(AuthUtil.getDomain(domain));
 		siteCookie.setPath("/");
 		return siteCookie;
+	}
+
+	public static String encryptedBrandDetials(String str) {
+		String encryptedData = java.util.Base64.getEncoder().encodeToString(str.getBytes());
+		return encryptedData;
 	}
 
 }
