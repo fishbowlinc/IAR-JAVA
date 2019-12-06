@@ -145,7 +145,8 @@ public class ReportController {
 					List<BrandVo> brandVo = null;
 					try {
 						brandVo = userService.getBrandRecordBySiteId(SiteId);
-						String encyrtpedBrandDetails = AuthUtil.encryptedBrandDetials(brandVo.toString());
+						String brandList = AuthUtil.getJsonFromObjectList(brandVo);
+						String encyrtpedBrandDetails = AuthUtil.encryptedBrandDetials(brandList);
 						httpServletResponse.addCookie(AuthUtil.getBrandIdCookies(encyrtpedBrandDetails, irDomain));
 
 					} catch (Exception e) {
@@ -171,7 +172,8 @@ public class ReportController {
 						logger.info("user is having multiple brands..");
 						SiteId = response.getBrandList().get(response.getBrandList().size() - 1).getSiteId().toString();
 					}
-					String encyrtpedBrandDetails = AuthUtil.encryptedBrandDetials(response.getBrandList().toString());
+					String brandList = AuthUtil.getJsonFromObjectList(response.getBrandList());
+					String encyrtpedBrandDetails = AuthUtil.encryptedBrandDetials(brandList);
 					httpServletResponse.addCookie(AuthUtil.getBrandIdCookies(encyrtpedBrandDetails, irDomain));
 
 					redirectURL = "http://" + redirectServerName + "/#/reportList?ID=" + Id + "&bid=34&SiteId="
