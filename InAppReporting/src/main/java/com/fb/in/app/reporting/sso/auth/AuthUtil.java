@@ -18,6 +18,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fb.in.app.reporting.constants.AppConstants;
 import com.fb.in.app.reporting.model.auth.UserAuth;
 import com.fb.in.app.reporting.model.vo.BrandVo;
 import com.google.gson.Gson;
@@ -32,8 +33,9 @@ public class AuthUtil {
 		String fishbowlSessionCookie = getFishFrameSessionEnv(domain);
 		if (cookieList != null) {
 			for (Cookie cookie : cookieList) {
-				if (cookie.getName().equals("IR_SessionId") || cookie.getName().equals("BrandID")
-						|| cookie.getName().equals("eCube")) {
+				if (cookie.getName().equals(AppConstants.IR_SESSION_COOKIE_ID_COOKIE)
+						|| cookie.getName().equals(AppConstants.IR_BRAND_LIST_COOKIE)
+						|| cookie.getName().equals(AppConstants.IR_ECUBE_COOKIE)) {
 					cookie.setMaxAge(0);
 					cookie.setDomain(getDomain(request.getServerName()));
 					cookie.setPath("/");
@@ -344,7 +346,7 @@ public class AuthUtil {
 	}
 
 	public static Cookie getBrandIdCookies(String brandList, String serverName) {
-		Cookie brandCookie = new Cookie("BrandList", brandList);
+		Cookie brandCookie = new Cookie(AppConstants.IR_BRAND_LIST_COOKIE, brandList);
 		brandCookie.setDomain(AuthUtil.getDomain(serverName));
 		brandCookie.setPath("/");
 		return brandCookie;
@@ -352,7 +354,7 @@ public class AuthUtil {
 	}
 
 	public static Cookie getSiteIdCookies(String siteId, String domain) {
-		Cookie siteCookie = new Cookie("SiteID", siteId);
+		Cookie siteCookie = new Cookie(AppConstants.SITE_ID_COOKIE, siteId);
 		siteCookie.setDomain(AuthUtil.getDomain(domain));
 		siteCookie.setPath("/");
 		return siteCookie;

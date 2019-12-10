@@ -24,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.fb.in.app.reporting.constants.AppConstants;
 import com.fb.in.app.reporting.generated.FishbowlSSO;
 import com.fb.in.app.reporting.generated.FishbowlSSOSoap;
 import com.fb.in.app.reporting.model.auth.UserAuth;
@@ -137,7 +138,7 @@ public class ReportController {
 				logger.info("User Details : " + userDetails);
 				String encryptedStr = AuthUtil.encrypted(userDetails);
 				logger.info("Encrypted User Details  : " + encryptedStr);
-				Cookie cookie = new Cookie("IR_SessionId", encryptedStr);
+				Cookie cookie = new Cookie(AppConstants.IR_SESSION_COOKIE_ID_COOKIE, encryptedStr);
 				cookie.setDomain(irDomain);
 				cookie.setPath("/");
 				httpServletResponse.addCookie(cookie);
