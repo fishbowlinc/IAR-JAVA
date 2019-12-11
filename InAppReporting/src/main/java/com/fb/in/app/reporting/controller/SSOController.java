@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.fb.in.app.reporting.constants.AppConstants;
 import com.fb.in.app.reporting.model.auth.DataSecurityPayload;
 import com.fb.in.app.reporting.model.auth.UserAuth;
 import com.fb.in.app.reporting.request.BrandRequest;
@@ -26,9 +27,6 @@ public class SSOController {
 	@Autowired
 	UserService userService;
 	private final static Logger logger = LoggerFactory.getLogger(SSOController.class);
-	private static final String irSessionCookieName = "IR_SessionId";
-	private static final String eCubeCookieName = "eCube";
-	private static final String signingKey = "d652385f5169a19ba3739a0a803396f6e4a5e6f076e3d80f435d6be2324220a8";
 
 	@RequestMapping("/sso-handler")
 	public String processRequest(HttpServletRequest request) throws UnsupportedEncodingException {
@@ -38,11 +36,11 @@ public class SSOController {
 		UserDetailsResponse userDetailResponse = null;
 		logger.info("getting ir cookie details...");
 		try {
-			String userAuthStr = CookieUtil.getValue(request, irSessionCookieName);
-			String eCubeStr = CookieUtil.getValue(request, eCubeCookieName);
+			String userAuthStr = CookieUtil.getValue(request, AppConstants.IR_SESSION_ID_COOKIE);
+			String eCubeStr = CookieUtil.getValue(request, AppConstants.IR_ECUBE_COOKIE);
 			if (null != userAuthStr && null != eCubeStr) {
-				logger.info(irSessionCookieName + " encrypted cookie details: " + userAuthStr);
-				logger.info(eCubeCookieName + " encrypted cookie details: " + eCubeStr);
+				logger.info(AppConstants.IR_SESSION_ID_COOKIE + " encrypted cookie details: " + userAuthStr);
+				logger.info(AppConstants.IR_ECUBE_COOKIE + " encrypted cookie details: " + eCubeStr);
 
 				String userDetailsStr = AuthUtil.decrypted(userAuthStr.getBytes());
 
@@ -86,7 +84,7 @@ public class SSOController {
 				}
 				SisenseUtil.createDataSecuirtyInSisenseElasticCube(sisenseUserId, securityPayload);
 
-				String token = SisenseUtil.generateToken(signingKey, userAuth.getUserName());
+				String token = SisenseUtil.generateToken(AppConstants.SIGNING_KEY, userAuth.getUserName());
 				// This is the Sisense URL which can handle (decode and process) the JWT token
 				redirectUrl = "http://10.200.10.21:8081/jwt?jwt=" + token;
 				// Which URL the user was initially trying to open

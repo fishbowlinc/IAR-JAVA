@@ -138,7 +138,7 @@ public class ReportController {
 				logger.info("User Details : " + userDetails);
 				String encryptedStr = AuthUtil.encrypted(userDetails);
 				logger.info("Encrypted User Details  : " + encryptedStr);
-				Cookie cookie = new Cookie(AppConstants.IR_SESSION_COOKIE_ID_COOKIE, encryptedStr);
+				Cookie cookie = new Cookie(AppConstants.IR_SESSION_ID_COOKIE, encryptedStr);
 				cookie.setDomain(irDomain);
 				cookie.setPath("/");
 				httpServletResponse.addCookie(cookie);

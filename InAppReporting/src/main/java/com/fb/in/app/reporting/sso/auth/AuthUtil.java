@@ -33,7 +33,7 @@ public class AuthUtil {
 		String fishbowlSessionCookie = getFishFrameSessionEnv(domain);
 		if (cookieList != null) {
 			for (Cookie cookie : cookieList) {
-				if (cookie.getName().equals(AppConstants.IR_SESSION_COOKIE_ID_COOKIE)
+				if (cookie.getName().equals(AppConstants.IR_SESSION_ID_COOKIE)
 						|| cookie.getName().equals(AppConstants.IR_BRAND_LIST_COOKIE)
 						|| cookie.getName().equals(AppConstants.IR_ECUBE_COOKIE)) {
 					cookie.setMaxAge(0);
