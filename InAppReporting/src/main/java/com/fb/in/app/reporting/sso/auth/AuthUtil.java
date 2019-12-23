@@ -365,7 +365,7 @@ public class AuthUtil {
 		return encryptedData;
 	}
 
-	public static String getJsonFromObjectList(List<BrandVo> brandVo) {
+	public static String getJsonFromObjectList(BrandVo brandVo) {
 		Gson gson = new Gson();
 		// convert your list to json
 		String jsonBrandList = gson.toJson(brandVo);
