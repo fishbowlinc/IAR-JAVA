@@ -47,14 +47,16 @@ public class ReportController {
 	private static final String fbLoginCookieName = "ASPXFORMSAUTH";
 
 	@RequestMapping("/report")
-	public String getReport(@RequestParam(name = "Id", required = false) String Id,
+	public String getReport(@RequestParam(name = "Id", required = false) String ID,
+			@RequestParam(name = "ID", required = false) String Id,
 			@RequestParam(name = "ReturnUrl", required = false) String returnUrl,
 			@RequestParam(name = "SiteId", required = false) String SiteId, @RequestParam(name = "bid") int bid,
 			@RequestParam(name = "SessionId", required = false) String sessionId, HttpServletRequest request,
 			HttpServletResponse httpServletResponse) throws InvalidKeyException, IllegalBlockSizeException,
 			BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
 
-		logger.info("ID : " + Id);
+		final String tileId = ID == null ? Id : ID;
+		logger.info("Tile ID : " + tileId);
 		logger.info("SiteId : " + SiteId);
 		logger.info("bid : " + bid);
 
@@ -83,7 +85,7 @@ public class ReportController {
 		logger.info("soapUrl : " + soapUrl);
 		logger.info("domain : " + domain);
 
-		if (Id == null || Id.isEmpty()) {
+		if (tileId == null || tileId.isEmpty()) {
 			redirectURL = "https://" + soapUrl + "/SSO/Navigator/InitializeTargetApp?bid=34&ReturnUrl=/report";
 			if (SiteId != null && SiteId.trim().length() > 0) {
 				redirectURL = redirectURL + "&SiteId=" + SiteId;
@@ -146,9 +148,12 @@ public class ReportController {
 					List<BrandVo> brandVo = null;
 					try {
 						brandVo = userService.getBrandRecordBySiteId(SiteId);
-						String brandList = AuthUtil.getJsonFromObjectList(brandVo);
-						String encyrtpedBrandDetails = AuthUtil.encryptedBrandDetials(brandList);
-						httpServletResponse.addCookie(AuthUtil.getBrandIdCookies(encyrtpedBrandDetails, irDomain));
+						/*
+						 * String brandList = AuthUtil.getJsonFromObjectList(brandVo); String
+						 * encyrtpedBrandDetails = AuthUtil.encryptedBrandDetials(brandList);
+						 * httpServletResponse.addCookie(AuthUtil.getBrandIdCookies(
+						 * encyrtpedBrandDetails, irDomain));
+						 */
 
 					} catch (Exception e) {
 					}
@@ -173,9 +178,13 @@ public class ReportController {
 						logger.info("user is having multiple brands..");
 						SiteId = response.getBrandList().get(response.getBrandList().size() - 1).getSiteId().toString();
 					}
-					String brandList = AuthUtil.getJsonFromObjectList(response.getBrandList());
-					String encyrtpedBrandDetails = AuthUtil.encryptedBrandDetials(brandList);
-					httpServletResponse.addCookie(AuthUtil.getBrandIdCookies(encyrtpedBrandDetails, irDomain));
+					/*
+					 * String brandList =
+					 * AuthUtil.getJsonFromObjectList(response.getBrandList().get(0)); String
+					 * encyrtpedBrandDetails = AuthUtil.encryptedBrandDetials(brandList);
+					 * httpServletResponse.addCookie(AuthUtil.getBrandIdCookies(
+					 * encyrtpedBrandDetails, irDomain));
+					 */
 
 					redirectURL = "http://" + redirectServerName + "/#/reportList?ID=" + Id + "&bid=34&SiteId="
 							+ SiteId;
