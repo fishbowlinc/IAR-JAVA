@@ -134,7 +134,6 @@ public class AuthUtil {
 
 	public static boolean isPACookiesPresent(Cookie[] cookieList, String domain) {
 		logger.info("isBrandIDCookiesPresent method start");
-		boolean isBrandIDCookiesPresent = false;
 		boolean isPA_SessionIdCookiesPresent = false;
 		if (domain != null && cookieList != null) {
 

@@ -6,7 +6,6 @@ package com.fb.in.app.reporting.controller;
 import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -28,7 +27,6 @@ import com.fb.in.app.reporting.constants.AppConstants;
 import com.fb.in.app.reporting.generated.FishbowlSSO;
 import com.fb.in.app.reporting.generated.FishbowlSSOSoap;
 import com.fb.in.app.reporting.model.auth.UserAuth;
-import com.fb.in.app.reporting.model.vo.BrandVo;
 import com.fb.in.app.reporting.request.BrandRequest;
 import com.fb.in.app.reporting.response.BrandListResponse;
 import com.fb.in.app.reporting.service.UserService;
@@ -145,18 +143,17 @@ public class ReportController {
 				cookie.setPath("/");
 				httpServletResponse.addCookie(cookie);
 				if (SiteId != null && SiteId.trim().length() > 0) {
-					List<BrandVo> brandVo = null;
-					try {
-						brandVo = userService.getBrandRecordBySiteId(SiteId);
-						/*
-						 * String brandList = AuthUtil.getJsonFromObjectList(brandVo); String
-						 * encyrtpedBrandDetails = AuthUtil.encryptedBrandDetials(brandList);
-						 * httpServletResponse.addCookie(AuthUtil.getBrandIdCookies(
-						 * encyrtpedBrandDetails, irDomain));
-						 */
-
-					} catch (Exception e) {
-					}
+					/*
+					 * List<BrandVo> brandVo = null; try { brandVo =
+					 * userService.getBrandRecordBySiteId(SiteId);
+					 * 
+					 * String brandList = AuthUtil.getJsonFromObjectList(brandVo); String
+					 * encyrtpedBrandDetails = AuthUtil.encryptedBrandDetials(brandList);
+					 * httpServletResponse.addCookie(AuthUtil.getBrandIdCookies(
+					 * encyrtpedBrandDetails, irDomain));
+					 * 
+					 * } catch (Exception e) { }
+					 */
 					redirectURL = "http://" + redirectServerName + "/#/reportList?ID=" + Id + "&bid=34&SiteId="
 							+ SiteId;
 				} else {

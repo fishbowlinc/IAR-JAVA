@@ -86,7 +86,7 @@ public class SSOController {
 
 				String token = SisenseUtil.generateToken(AppConstants.SIGNING_KEY, userAuth.getUserName());
 				// This is the Sisense URL which can handle (decode and process) the JWT token
-				redirectUrl = "http://10.200.10.21:8081/jwt?jwt=" + token;
+				redirectUrl = AppConstants.SISENSE_JWT_REDIRECT_URL + token;
 				// Which URL the user was initially trying to open
 				String returnTo = request.getParameter("return_to");
 				if (returnTo != null) {

@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fb.in.app.reporting.constants.AppConstants;
 import com.fb.in.app.reporting.model.auth.DataSecurityPayload;
 import com.fb.in.app.reporting.model.auth.Share;
 import com.fb.in.app.reporting.model.auth.SisenseUser;
@@ -39,16 +40,11 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 public class SisenseUtil {
 	private final static Logger logger = LoggerFactory.getLogger(SisenseUtil.class);
-
-	private static final String sisenseApiAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNWQwYmU2ZTA0ZDI5OGIxMTgwZTZiMDE3IiwiYXBpU2VjcmV0IjoiNmZmN2UwYjAtNjRlMi0yNDVlLTUxNzgtZGJmNTAyNGE4NjdkIiwiaWF0IjoxNTY2ODkxNzU0fQ.C_p3TwO7hT0TUwNIJeLwnucN_9QvMftkLzKycptmpmk";
 	private static HttpURLConnection con;
-	private static final String username = "sisense@fishbowl.com";
-	private static final String password = "GetMeIn123!";
 
 	public static void logoutFromSisense() throws IOException {
-		String url = "http://10.200.10.21:8081/api/auth/logout";
 		try {
-			URL myurl = new URL(url);
+			URL myurl = new URL(AppConstants.SISENSE_LOGOUT_URL);
 			con = (HttpURLConnection) myurl.openConnection();
 			con.setRequestMethod("GET");
 
@@ -83,9 +79,9 @@ public class SisenseUtil {
 
 	public static String getApiAccessTokenFromSisense(String username, String password) {
 		try (CloseableHttpClient client = HttpClients.createDefault();) {
-			String authUrl = "http://10.200.10.21:8081/api/v1/authentication/login";
-			HttpPost httpPost = new HttpPost(authUrl);
-			String authEncodedString = encodeValue(username) + "&" + encodeValue(password);
+			HttpPost httpPost = new HttpPost(AppConstants.SISENSE_ACCESS_TOKEN_URL);
+			String authEncodedString = encodeValue(AppConstants.ADMIN_USERNAME) + "&"
+					+ encodeValue(AppConstants.ADMIN_PASSWORD);
 			StringEntity entity = new StringEntity(authEncodedString);
 			httpPost.setEntity(entity);
 			httpPost.setHeader("Accept", "application/json");
@@ -117,9 +113,9 @@ public class SisenseUtil {
 
 	public static String getUserIdByUsername(String userName) {
 		try (CloseableHttpClient client = HttpClients.createDefault();) {
-			String authUrl = "http://10.200.10.21:8081/api/users/" + userName.trim();
+			String authUrl = AppConstants.SISENSE_GET_USER_URL + userName.trim();
 			HttpGet httpGet = new HttpGet(authUrl);
-			httpGet.setHeader("Authorization", "Bearer " + sisenseApiAccessToken);
+			httpGet.setHeader("Authorization", "Bearer " + AppConstants.SISENSE_API_ACCESS_TOKEN);
 			httpGet.setHeader("Accept", "application/json");
 			httpGet.setHeader("Content-type", "application/json");
 			try (CloseableHttpResponse response = client.execute(httpGet);) {
@@ -139,18 +135,17 @@ public class SisenseUtil {
 
 	public static String createUserInSisense(UserDetailsResponse userDetailsResponse) {
 		try (CloseableHttpClient client = HttpClients.createDefault();) {
-			String authUrl = "http://10.200.10.21:8081/api/v1/users";
-			HttpPost httpPost = new HttpPost(authUrl);
+			HttpPost httpPost = new HttpPost(AppConstants.SISENSE_CREATE_USER_URL);
 			SisenseUser sisenseUser = new SisenseUser();
 			sisenseUser.setUserName(userDetailsResponse.getUserName());
 			sisenseUser.setFirstName(userDetailsResponse.getFirstName());
 			sisenseUser.setLastName(userDetailsResponse.getLastName());
 			sisenseUser.setEmail(userDetailsResponse.getEmail());
-			sisenseUser.setRoleId("5cda4d81b8238941605e533e");
+			sisenseUser.setRoleId(AppConstants.SISENSE_VIEWER_ROLE_ID);
 			Gson gson = new Gson();
 			StringEntity postingString = new StringEntity(gson.toJson(sisenseUser));
 			httpPost.setEntity(postingString);
-			httpPost.setHeader("Authorization", "Bearer " + sisenseApiAccessToken);
+			httpPost.setHeader("Authorization", "Bearer " + AppConstants.SISENSE_API_ACCESS_TOKEN);
 			httpPost.setHeader("Accept", "application/json");
 			httpPost.setHeader("Content-type", "application/json");
 			try (CloseableHttpResponse response = client.execute(httpPost);) {
@@ -173,7 +168,7 @@ public class SisenseUtil {
 	public static DataSecurityPayload getDataSecurityPayload(List<BrandVo> brands, String sisenseUserId,
 			String eCubeName) {
 		DataSecurityPayload securityPayload = new DataSecurityPayload();
-		securityPayload.setServer("LocalHost");
+		securityPayload.setServer(AppConstants.SISENSE_DATA_SECURITY_SERVER_URL);
 		securityPayload.setElasticube(eCubeName);
 		securityPayload.setTable("Dim_Brand");
 		securityPayload.setColumn("Brand ID");
@@ -192,7 +187,7 @@ public class SisenseUtil {
 
 	public static DataSecurityPayload getDataSecurityPayloadForAllMembers(String sisenseUserId, String eCubeName) {
 		DataSecurityPayload securityPayload = new DataSecurityPayload();
-		securityPayload.setServer("LocalHost");
+		securityPayload.setServer(AppConstants.SISENSE_DATA_SECURITY_SERVER_URL);
 		securityPayload.setElasticube(eCubeName);
 		securityPayload.setTable("Dim_Brand");
 		securityPayload.setColumn("Brand ID");
@@ -211,14 +206,13 @@ public class SisenseUtil {
 	public static void createDataSecuirtyInSisenseElasticCube(String sisenseUserId,
 			DataSecurityPayload securityPayload) {
 		try (CloseableHttpClient client = HttpClients.createDefault();) {
-			String authUrl = "http://10.200.10.21:8081/api/elasticubes/datasecurity";
-			HttpPost httpPost = new HttpPost(authUrl);
+			HttpPost httpPost = new HttpPost(AppConstants.SISENSE_DATA_SECURITY_URL);
 			Gson gson = new Gson();
 			List<DataSecurityPayload> dataSecurityPayloads = new ArrayList<>();
 			dataSecurityPayloads.add(securityPayload);
 			StringEntity postingString = new StringEntity(gson.toJson(dataSecurityPayloads));
 			httpPost.setEntity(postingString);
-			httpPost.setHeader("Authorization", "Bearer " + sisenseApiAccessToken);
+			httpPost.setHeader("Authorization", "Bearer " + AppConstants.SISENSE_API_ACCESS_TOKEN);
 			httpPost.setHeader("Accept", "application/json");
 			httpPost.setHeader("Content-type", "application/json");
 			try (CloseableHttpResponse response = client.execute(httpPost);) {
