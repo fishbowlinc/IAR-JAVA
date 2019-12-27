@@ -13,7 +13,6 @@ import com.fb.in.app.reporting.sso.auth.AuthUtil;
 
 @Controller
 public class SSOLogout {
-	// private static final String redirectURL = "https://loginqa.fishbowl.com";
 	private static Logger logger = LoggerFactory.getLogger(LogoutController.class);
 
 	@RequestMapping("/sso-logout")
