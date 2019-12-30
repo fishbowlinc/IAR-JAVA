@@ -154,7 +154,7 @@ public class ReportController {
 					 * 
 					 * } catch (Exception e) { }
 					 */
-					redirectURL = "https://" + redirectServerName + "/#/reportList?ID=" + Id + "&bid=34&SiteId="
+					redirectURL = "http://" + redirectServerName + "/#/reportList?ID=" + Id + "&bid=34&SiteId="
 							+ SiteId;
 				} else {
 					logger.info("Site ID is null");
@@ -183,7 +183,7 @@ public class ReportController {
 					 * encyrtpedBrandDetails, irDomain));
 					 */
 
-					redirectURL = "https://" + redirectServerName + "/#/reportList?ID=" + Id + "&bid=34&SiteId="
+					redirectURL = "http://" + redirectServerName + "/#/reportList?ID=" + Id + "&bid=34&SiteId="
 							+ SiteId;
 				}
 
