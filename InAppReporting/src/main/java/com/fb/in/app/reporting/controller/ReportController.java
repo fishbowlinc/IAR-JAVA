@@ -37,6 +37,7 @@ import com.fb.in.app.reporting.sso.auth.AuthUtil;
  *
  */
 @Controller
+@RequestMapping("/iar/ui")
 public class ReportController {
 	@Autowired
 	UserService userService;

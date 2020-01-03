@@ -23,6 +23,8 @@ import com.fb.in.app.reporting.sso.auth.CookieUtil;
 import com.fb.in.app.reporting.sso.auth.SisenseUtil;
 
 @Controller
+
+@RequestMapping("/iar/userauth")
 public class SSOController {
 	@Autowired
 	UserService userService;
