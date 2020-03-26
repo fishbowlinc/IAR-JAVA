@@ -143,7 +143,7 @@ public class ReportController {
 				cookie.setDomain(irDomain);
 				cookie.setPath("/");
 				httpServletResponse.addCookie(cookie);
-				httpServletResponse.setHeader("Set-Cookie", "HttpOnly; SameSite=None; Secure");
+				//httpServletResponse.setHeader("Set-Cookie", "SameSite=None; Secure");
 				if (SiteId != null && SiteId.trim().length() > 0) {
 					/*
 					 * List<BrandVo> brandVo = null; try { brandVo =
