@@ -141,7 +141,7 @@ public class ReportController {
 				logger.info("Encrypted User Details  : " + encryptedStr);
 				Cookie cookie = AuthUtil.setIRSessionCookie(irDomain, encryptedStr);
 				httpServletResponse.addCookie(cookie);
-				httpServletResponse.setHeader("Set-Cookie", "SameSite=None");
+				//httpServletResponse.setHeader("Set-Cookie", "SameSite=None");
 				if (SiteId != null && SiteId.trim().length() > 0) {
 					/*
 					 * List<BrandVo> brandVo = null; try { brandVo =
