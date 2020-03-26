@@ -139,8 +139,10 @@ public class ReportController {
 				logger.info("User Details : " + userDetails);
 				String encryptedStr = AuthUtil.encrypted(userDetails);
 				logger.info("Encrypted User Details  : " + encryptedStr);
-				Cookie cookie = AuthUtil.setIRSessionCookie(irDomain, encryptedStr);
-				httpServletResponse.addCookie(cookie);
+				// Cookie cookie = AuthUtil.setIRSessionCookie(irDomain, encryptedStr);
+				// httpServletResponse.addCookie(cookie);
+				httpServletResponse.addHeader("Set-Cookie", AppConstants.IR_SESSION_ID_COOKIE + "=" + encryptedStr
+						+ ";domain=" + irDomain + ";path=/;secure;HttpOnly;SameSite=None");
 				if (SiteId != null && SiteId.trim().length() > 0) {
 					/*
 					 * List<BrandVo> brandVo = null; try { brandVo =
