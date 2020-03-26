@@ -35,7 +35,7 @@ public class LogoutController {
 		Cookie[] cookieList = request.getCookies();
 		String redirectUrl = "https://" + AuthUtil.getParentAppUrl(request.getServerName()) + "/Public/Login.aspx";
 		if (cookieList != null)
-			response = AuthUtil.deleteCookies(request, response);
+			AuthUtil.deleteCookies(request, response);
 		return "redirect:" + redirectUrl;
 	}
 }
