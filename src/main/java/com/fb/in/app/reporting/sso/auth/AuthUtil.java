@@ -371,7 +371,7 @@ public class AuthUtil {
 		return jsonBrandList;
 	}
 
-	public static Cookie setIRSessionCookie(String irDomain, String encryptedStr) {
+	public static Cookie getIRSessionCookie(String irDomain, String encryptedStr) {
 		Cookie cookie = new Cookie(AppConstants.IR_SESSION_ID_COOKIE, encryptedStr);
 		cookie.setDomain(irDomain);
 		cookie.setPath("/");
