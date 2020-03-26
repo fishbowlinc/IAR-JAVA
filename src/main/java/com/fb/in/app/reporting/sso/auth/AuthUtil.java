@@ -272,7 +272,7 @@ public class AuthUtil {
 		String irDomain = null;
 
 		if (domain != null) {
-			if (domain.contains("qa") || domain.contains("localhost")) {
+			if (domain.contains("qa")) {
 				irDomain = "ir2qa.fishbowl.com";
 			} else if (domain.contains("staging")) {
 				irDomain = "ir2stg.fishbowl.com";
@@ -287,7 +287,7 @@ public class AuthUtil {
 	public static String getFishFrameSessionEnv(String domain) {
 		String fishFrameSessionEnv = null;
 		if (domain != null) {
-			if (domain.contains("qa") || domain.contains("localhost")) {
+			if (domain.contains("qa")) {
 				fishFrameSessionEnv = "FishbowlQA";
 			} else if (domain.contains("staging")) {
 				fishFrameSessionEnv = "FishbowlStaging";
@@ -302,7 +302,7 @@ public class AuthUtil {
 	public static String getRedirectServerName(String domain) {
 		String redirectServerName = null;
 		if (domain != null) {
-			if (domain.contains("qa") || domain.contains("localhost")) {
+			if (domain.contains("qa")) {
 				redirectServerName = "ir2qa.fishbowl.com";
 			} else if (domain.contains("staging")) {
 				redirectServerName = "ir2stg.fishbowl.com";
@@ -318,7 +318,7 @@ public class AuthUtil {
 		String soapUrl = null;
 
 		if (domain != null) {
-			if (domain.contains("qa") || domain.contains("localhost")) {
+			if (domain.contains("qa")) {
 				soapUrl = "loginqa.fishbowl.com";
 			} else if (domain.contains("staging")) {
 				soapUrl = "loginstaging.fishbowl.com";
@@ -331,7 +331,7 @@ public class AuthUtil {
 	}
 
 	public static String getaSPXFORMSAUTHString(String domain) {
-		if (domain.contains("qa") || domain.contains("localhost")) {
+		if (domain.contains("qa")) {
 			return "QA.ASPXFORMSAUTH";
 
 		} else if (domain.contains("staging")) {
