@@ -33,8 +33,7 @@ public class UserDAOImpl implements UserDAO {
 	private static Logger logger = LoggerFactory.getLogger(UserDAOImpl.class);
 
 	@Override
-	public BrandListResponse getBrand(String userId, String clientId, BrandRequest brandRequest)
-			throws SQLException, Exception {
+	public BrandListResponse getBrand(String userId, String clientId, BrandRequest brandRequest) {
 
 		BrandListResponse brandListResponse = new BrandListResponse();
 		SearchRequest searchRequest = brandRequest.getSearch();
@@ -94,18 +93,22 @@ public class UserDAOImpl implements UserDAO {
 				sb.append(" asc");
 			}
 		}
+		try {
+			TypedQuery<BrandVo> query = entityManager.createQuery(sb.toString(), BrandVo.class);
+			query.setParameter("user_id", Integer.parseInt(userId));
+			if (!clientId.equalsIgnoreCase("-1")) {
+				query.setParameter("client_id", Integer.parseInt(clientId));
+				logger.info("sb where clientid is -1 == " + sb);
+			}
+			logger.info("last sb  " + sb);
+			List<BrandVo> results = query.getResultList();
+			logger.info("brand count: " + results.size());
+			brandListResponse.setBrandsCount(results.size());
+			brandListResponse.setBrandList(results);
 
-		TypedQuery<BrandVo> query = entityManager.createQuery(sb.toString(), BrandVo.class);
-		query.setParameter("user_id", Integer.parseInt(userId));
-		if (!clientId.equalsIgnoreCase("-1")) {
-			query.setParameter("client_id", Integer.parseInt(clientId));
-			logger.info("sb where clientid is -1 == " + sb);
+		} catch (Exception e) {
+			logger.info(e.getMessage());
 		}
-		logger.info("last sb  " + sb);
-		List<BrandVo> results = query.getResultList();
-		logger.info("brand count: " + results.size());
-		brandListResponse.setBrandsCount(results.size());
-		brandListResponse.setBrandList(results);
 		return brandListResponse;
 	}
 
