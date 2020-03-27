@@ -95,7 +95,7 @@ public class SSOController {
 					redirectUrl += "&return_to=" + URLEncoder.encode(returnTo, "UTF-8");
 				}
 			} else {
-				String soapUrl = "loginqa.fishbowl.com";
+				String soapUrl =SisenseUtil.getSoapUrl(request.getServerName());
 				redirectUrl = "https://" + soapUrl + "/Public/Login.aspx?ReturnUrl=%2f";
 				logger.info("redirectURL : " + redirectUrl);
 			}
