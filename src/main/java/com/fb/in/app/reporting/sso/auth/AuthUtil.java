@@ -375,7 +375,7 @@ public class AuthUtil {
 		Cookie cookie = new Cookie(AppConstants.IR_SESSION_ID_COOKIE, encryptedStr);
 		cookie.setDomain(irDomain);
 		cookie.setPath("/");
-		cookie.setHttpOnly(true);
+		//cookie.setHttpOnly(true);
 		cookie.setSecure(true);
 		return cookie;
 	}

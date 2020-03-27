@@ -95,6 +95,8 @@ public class ReportController {
 			for (Cookie ck : cookies) {
 				logger.info("Cookie Name : " + ck.getName());
 				logger.info("Cookie Domain : " + ck.getDomain());
+				ck.setSecure(true);
+				httpServletResponse.addCookie(ck);
 				if (ck.getName().contains(fbLoginCookieName)) {
 					logger.info("AspxCookie is Present and hence proceeding");
 					isAspxCookiePresent = true;
@@ -140,8 +142,11 @@ public class ReportController {
 				logger.info("Encrypted User Details  : " + encryptedStr);
 				Cookie cookie = AuthUtil.getIRSessionCookie(irDomain, encryptedStr);
 				httpServletResponse.addCookie(cookie);
-				/*httpServletResponse.addHeader("Set-Cookie", AppConstants.IR_SESSION_ID_COOKIE + "=" + encryptedStr
-						+ ";domain=" + irDomain + ";path=/;secure;HttpOnly;SameSite=None");*/
+				/*
+				 * httpServletResponse.addHeader("Set-Cookie", AppConstants.IR_SESSION_ID_COOKIE
+				 * + "=" + encryptedStr + ";domain=" + irDomain +
+				 * ";path=/;secure;HttpOnly;SameSite=None");
+				 */
 				if (SiteId != null && SiteId.trim().length() > 0) {
 					/*
 					 * List<BrandVo> brandVo = null; try { brandVo =
