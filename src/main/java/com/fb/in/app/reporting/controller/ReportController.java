@@ -166,9 +166,7 @@ public class ReportController {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					if (response.getBrandsCount() == 0) {
-
-					}
+					
 					if (response != null && response.getSuccessFlag() == true && response.getBrandsCount() == 1) {
 						logger.info("user is having single brand..");
 						SiteId = response.getBrandList().get(0).getSiteId().toString();
