@@ -23,7 +23,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fb.in.app.reporting.constants.AppConstants;
 import com.fb.in.app.reporting.generated.FishbowlSSO;
 import com.fb.in.app.reporting.generated.FishbowlSSOSoap;
 import com.fb.in.app.reporting.model.auth.UserAuth;
@@ -139,10 +138,8 @@ public class ReportController {
 				logger.info("User Details : " + userDetails);
 				String encryptedStr = AuthUtil.encrypted(userDetails);
 				logger.info("Encrypted User Details  : " + encryptedStr);
-				// Cookie cookie = AuthUtil.setIRSessionCookie(irDomain, encryptedStr);
-				// httpServletResponse.addCookie(cookie);
-				httpServletResponse.addHeader("Set-Cookie", AppConstants.IR_SESSION_ID_COOKIE + "=" + encryptedStr
-						+ ";domain=" + irDomain + ";path=/;secure;HttpOnly;SameSite=None");
+				Cookie cookie = AuthUtil.setIRSessionCookie(irDomain, encryptedStr);
+				httpServletResponse.addCookie(cookie);
 				if (SiteId != null && SiteId.trim().length() > 0) {
 					/*
 					 * List<BrandVo> brandVo = null; try { brandVo =
@@ -168,6 +165,9 @@ public class ReportController {
 						response = userService.getBrand(userAuth.getUserId(), userAuth.getClientId(), brandRequest);
 					} catch (Exception e) {
 						e.printStackTrace();
+					}
+					if (response.getBrandsCount() == 0) {
+
 					}
 					if (response != null && response.getSuccessFlag() == true && response.getBrandsCount() == 1) {
 						logger.info("user is having single brand..");

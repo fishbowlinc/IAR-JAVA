@@ -33,6 +33,7 @@ public class AuthUtil {
 		String fishbowlSessionCookie = getFishFrameSessionEnv(domain);
 		if (cookieList != null) {
 			for (Cookie cookie : cookieList) {
+				logger.debug("Deleting cookie: " + cookie.getName());
 				if (cookie.getName().equals(AppConstants.IR_SESSION_ID_COOKIE)
 						|| cookie.getName().equals(AppConstants.IR_BRAND_LIST_COOKIE)
 						|| cookie.getName().equals(AppConstants.IR_ECUBE_COOKIE)) {
@@ -375,8 +376,8 @@ public class AuthUtil {
 		Cookie cookie = new Cookie(AppConstants.IR_SESSION_ID_COOKIE, encryptedStr);
 		cookie.setDomain(irDomain);
 		cookie.setPath("/");
-		cookie.setHttpOnly(true);
 		cookie.setSecure(true);
+		cookie.setComment("This cookie contains auth details");
 		return cookie;
 	}
 
