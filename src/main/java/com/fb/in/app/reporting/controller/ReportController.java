@@ -95,11 +95,6 @@ public class ReportController {
 			for (Cookie ck : cookies) {
 				logger.info("Cookie Name : " + ck.getName());
 				logger.info("Cookie Domain : " + ck.getDomain());
-				ck.setDomain(request.getServerName());
-				ck.setPath(ck.getPath());
-				ck.setValue(ck.getValue());
-				ck.setSecure(true);
-				httpServletResponse.addCookie(ck);
 				if (ck.getName().contains(fbLoginCookieName)) {
 					logger.info("AspxCookie is Present and hence proceeding");
 					isAspxCookiePresent = true;
