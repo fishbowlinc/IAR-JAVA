@@ -1,0 +1,1102 @@
+<wsdl:definitions
+	xmlns:s="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+	xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+	xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+	xmlns:tns="http://tempuri.org/"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
+	xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	targetNamespace="http://tempuri.org/">
+	<wsdl:types>
+		<s:schema elementFormDefault="qualified"
+			targetNamespace="http://tempuri.org/">
+			<s:element name="CheckMe">
+				<s:complexType />
+			</s:element>
+			<s:element name="CheckMeResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="CheckMeResult" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="GetTicketedUserName">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1" name="sessionID"
+							type="s:string" />
+						<s:element minOccurs="0" maxOccurs="1" name="ticket"
+							type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="GetTicketedUserNameResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="GetTicketedUserNameResult" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="GetTicket">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="1" maxOccurs="1" name="appl_id"
+							type="s:int" />
+						<s:element minOccurs="0" maxOccurs="1" name="sessionID"
+							type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="GetTicketResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="GetTicketResult" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="GetAuthTicket">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="1" maxOccurs="1" name="appl_id"
+							type="s:int" />
+						<s:element minOccurs="0" maxOccurs="1" name="sessionID"
+							type="s:string" />
+						<s:element minOccurs="1" maxOccurs="1"
+							name="fishFrameSessionID" nillable="true" type="s:decimal" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="GetAuthTicketResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="GetAuthTicketResult" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="EmailExists">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1" name="email"
+							type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="EmailExistsResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="EmailExistsResult" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="LoginExists">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1" name="userName"
+							type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="LoginExistsResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="LoginExistsResult" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="CreateUser">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="1" maxOccurs="1" name="appl_id"
+							type="s:int" />
+						<s:element minOccurs="0" maxOccurs="1" name="userName"
+							type="s:string" />
+						<s:element minOccurs="0" maxOccurs="1" name="password"
+							type="s:string" />
+						<s:element minOccurs="0" maxOccurs="1" name="email"
+							type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="CreateUserResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="CreateUserResult" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="UpdateUser">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="1" maxOccurs="1" name="appl_id"
+							type="s:int" />
+						<s:element minOccurs="0" maxOccurs="1"
+							name="oldUsername" type="s:string" />
+						<s:element minOccurs="0" maxOccurs="1"
+							name="newUsername" type="s:string" />
+						<s:element minOccurs="0" maxOccurs="1" name="password"
+							type="s:string" />
+						<s:element minOccurs="0" maxOccurs="1" name="email"
+							type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="UpdateUserResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="UpdateUserResult" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="DeleteUser">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="1" maxOccurs="1" name="appl_id"
+							type="s:int" />
+						<s:element minOccurs="0" maxOccurs="1" name="userName"
+							type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="DeleteUserResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="DeleteUserResult" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="GetEnterpriseToken">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1" name="username"
+							type="s:string" />
+						<s:element minOccurs="0" maxOccurs="1" name="password"
+							type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="GetEnterpriseTokenResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="GetEnterpriseTokenResult" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="GetActiveDirectoryToken">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1" name="username"
+							type="s:string" />
+						<s:element minOccurs="0" maxOccurs="1" name="password"
+							type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="GetActiveDirectoryTokenResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="GetActiveDirectoryTokenResult" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="DeprecateEnterpriseLogin">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1" name="username"
+							type="s:string" />
+						<s:element minOccurs="0" maxOccurs="1" name="token"
+							type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="DeprecateEnterpriseLoginResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="DeprecateEnterpriseLoginResult" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="LinkSSOToEnterprise">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="ssoUsername" type="s:string" />
+						<s:element minOccurs="0" maxOccurs="1"
+							name="entUsername" type="s:string" />
+						<s:element minOccurs="0" maxOccurs="1" name="token"
+							type="s:string" />
+						<s:element minOccurs="0" maxOccurs="1"
+							name="entPassword" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="LinkSSOToEnterpriseResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="LinkSSOToEnterpriseResult" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="LinkSSOToActiveDirectory">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="ssoUsername" type="s:string" />
+						<s:element minOccurs="0" maxOccurs="1" name="token"
+							type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="LinkSSOToActiveDirectoryResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="LinkSSOToActiveDirectoryResult" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="GetSSOToken">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1" name="username"
+							type="s:string" />
+						<s:element minOccurs="0" maxOccurs="1" name="password"
+							type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="GetSSOTokenResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="GetSSOTokenResult" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="GetEnterpriseEmail">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1" name="username"
+							type="s:string" />
+						<s:element minOccurs="0" maxOccurs="1" name="token"
+							type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="GetEnterpriseEmailResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="GetEnterpriseEmailResult" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="MigrateEnterpriseAccount">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="ssoUsername" type="s:string" />
+						<s:element minOccurs="0" maxOccurs="1" name="password"
+							type="s:string" />
+						<s:element minOccurs="0" maxOccurs="1"
+							name="entUsername" type="s:string" />
+						<s:element minOccurs="0" maxOccurs="1" name="token"
+							type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="MigrateEnterpriseAccountResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="MigrateEnterpriseAccountResult" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="HasSocialEnabled">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="1" maxOccurs="1" name="siteId"
+							type="s:long" />
+						<s:element minOccurs="1" maxOccurs="1" name="ssoUserId"
+							type="s:int" />
+						<s:element minOccurs="0" maxOccurs="1" name="username"
+							type="s:string" />
+						<s:element minOccurs="1" maxOccurs="1"
+							name="administratorId" type="s:int" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="HasSocialEnabledResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="1" maxOccurs="1"
+							name="HasSocialEnabledResult" type="s:boolean" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="HasSmsEnabled">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="1" maxOccurs="1" name="siteId"
+							type="s:long" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="HasSmsEnabledResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="1" maxOccurs="1"
+							name="HasSmsEnabledResult" type="s:boolean" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="GetActiveEnterpriseAccount">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1" name="username"
+							type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="GetActiveEnterpriseAccountResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="GetActiveEnterpriseAccountResult" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="ChangePassword">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1" name="userName"
+							type="s:string" />
+						<s:element minOccurs="0" maxOccurs="1"
+							name="oldPassword" type="s:string" />
+						<s:element minOccurs="0" maxOccurs="1"
+							name="newPassword" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+			<s:element name="ChangePasswordResponse">
+				<s:complexType>
+					<s:sequence>
+						<s:element minOccurs="0" maxOccurs="1"
+							name="ChangePasswordResult" type="s:string" />
+					</s:sequence>
+				</s:complexType>
+			</s:element>
+		</s:schema>
+	</wsdl:types>
+	<wsdl:message name="CheckMeSoapIn">
+		<wsdl:part name="parameters" element="tns:CheckMe" />
+	</wsdl:message>
+	<wsdl:message name="CheckMeSoapOut">
+		<wsdl:part name="parameters" element="tns:CheckMeResponse" />
+	</wsdl:message>
+	<wsdl:message name="GetTicketedUserNameSoapIn">
+		<wsdl:part name="parameters"
+			element="tns:GetTicketedUserName" />
+	</wsdl:message>
+	<wsdl:message name="GetTicketedUserNameSoapOut">
+		<wsdl:part name="parameters"
+			element="tns:GetTicketedUserNameResponse" />
+	</wsdl:message>
+	<wsdl:message name="GetTicketSoapIn">
+		<wsdl:part name="parameters" element="tns:GetTicket" />
+	</wsdl:message>
+	<wsdl:message name="GetTicketSoapOut">
+		<wsdl:part name="parameters" element="tns:GetTicketResponse" />
+	</wsdl:message>
+	<wsdl:message name="GetAuthTicketSoapIn">
+		<wsdl:part name="parameters" element="tns:GetAuthTicket" />
+	</wsdl:message>
+	<wsdl:message name="GetAuthTicketSoapOut">
+		<wsdl:part name="parameters"
+			element="tns:GetAuthTicketResponse" />
+	</wsdl:message>
+	<wsdl:message name="EmailExistsSoapIn">
+		<wsdl:part name="parameters" element="tns:EmailExists" />
+	</wsdl:message>
+	<wsdl:message name="EmailExistsSoapOut">
+		<wsdl:part name="parameters"
+			element="tns:EmailExistsResponse" />
+	</wsdl:message>
+	<wsdl:message name="LoginExistsSoapIn">
+		<wsdl:part name="parameters" element="tns:LoginExists" />
+	</wsdl:message>
+	<wsdl:message name="LoginExistsSoapOut">
+		<wsdl:part name="parameters"
+			element="tns:LoginExistsResponse" />
+	</wsdl:message>
+	<wsdl:message name="CreateUserSoapIn">
+		<wsdl:part name="parameters" element="tns:CreateUser" />
+	</wsdl:message>
+	<wsdl:message name="CreateUserSoapOut">
+		<wsdl:part name="parameters"
+			element="tns:CreateUserResponse" />
+	</wsdl:message>
+	<wsdl:message name="UpdateUserSoapIn">
+		<wsdl:part name="parameters" element="tns:UpdateUser" />
+	</wsdl:message>
+	<wsdl:message name="UpdateUserSoapOut">
+		<wsdl:part name="parameters"
+			element="tns:UpdateUserResponse" />
+	</wsdl:message>
+	<wsdl:message name="DeleteUserSoapIn">
+		<wsdl:part name="parameters" element="tns:DeleteUser" />
+	</wsdl:message>
+	<wsdl:message name="DeleteUserSoapOut">
+		<wsdl:part name="parameters"
+			element="tns:DeleteUserResponse" />
+	</wsdl:message>
+	<wsdl:message name="GetEnterpriseTokenSoapIn">
+		<wsdl:part name="parameters"
+			element="tns:GetEnterpriseToken" />
+	</wsdl:message>
+	<wsdl:message name="GetEnterpriseTokenSoapOut">
+		<wsdl:part name="parameters"
+			element="tns:GetEnterpriseTokenResponse" />
+	</wsdl:message>
+	<wsdl:message name="GetActiveDirectoryTokenSoapIn">
+		<wsdl:part name="parameters"
+			element="tns:GetActiveDirectoryToken" />
+	</wsdl:message>
+	<wsdl:message name="GetActiveDirectoryTokenSoapOut">
+		<wsdl:part name="parameters"
+			element="tns:GetActiveDirectoryTokenResponse" />
+	</wsdl:message>
+	<wsdl:message name="DeprecateEnterpriseLoginSoapIn">
+		<wsdl:part name="parameters"
+			element="tns:DeprecateEnterpriseLogin" />
+	</wsdl:message>
+	<wsdl:message name="DeprecateEnterpriseLoginSoapOut">
+		<wsdl:part name="parameters"
+			element="tns:DeprecateEnterpriseLoginResponse" />
+	</wsdl:message>
+	<wsdl:message name="LinkSSOToEnterpriseSoapIn">
+		<wsdl:part name="parameters"
+			element="tns:LinkSSOToEnterprise" />
+	</wsdl:message>
+	<wsdl:message name="LinkSSOToEnterpriseSoapOut">
+		<wsdl:part name="parameters"
+			element="tns:LinkSSOToEnterpriseResponse" />
+	</wsdl:message>
+	<wsdl:message name="LinkSSOToActiveDirectorySoapIn">
+		<wsdl:part name="parameters"
+			element="tns:LinkSSOToActiveDirectory" />
+	</wsdl:message>
+	<wsdl:message name="LinkSSOToActiveDirectorySoapOut">
+		<wsdl:part name="parameters"
+			element="tns:LinkSSOToActiveDirectoryResponse" />
+	</wsdl:message>
+	<wsdl:message name="GetSSOTokenSoapIn">
+		<wsdl:part name="parameters" element="tns:GetSSOToken" />
+	</wsdl:message>
+	<wsdl:message name="GetSSOTokenSoapOut">
+		<wsdl:part name="parameters"
+			element="tns:GetSSOTokenResponse" />
+	</wsdl:message>
+	<wsdl:message name="GetEnterpriseEmailSoapIn">
+		<wsdl:part name="parameters"
+			element="tns:GetEnterpriseEmail" />
+	</wsdl:message>
+	<wsdl:message name="GetEnterpriseEmailSoapOut">
+		<wsdl:part name="parameters"
+			element="tns:GetEnterpriseEmailResponse" />
+	</wsdl:message>
+	<wsdl:message name="MigrateEnterpriseAccountSoapIn">
+		<wsdl:part name="parameters"
+			element="tns:MigrateEnterpriseAccount" />
+	</wsdl:message>
+	<wsdl:message name="MigrateEnterpriseAccountSoapOut">
+		<wsdl:part name="parameters"
+			element="tns:MigrateEnterpriseAccountResponse" />
+	</wsdl:message>
+	<wsdl:message name="HasSocialEnabledSoapIn">
+		<wsdl:part name="parameters" element="tns:HasSocialEnabled" />
+	</wsdl:message>
+	<wsdl:message name="HasSocialEnabledSoapOut">
+		<wsdl:part name="parameters"
+			element="tns:HasSocialEnabledResponse" />
+	</wsdl:message>
+	<wsdl:message name="HasSmsEnabledSoapIn">
+		<wsdl:part name="parameters" element="tns:HasSmsEnabled" />
+	</wsdl:message>
+	<wsdl:message name="HasSmsEnabledSoapOut">
+		<wsdl:part name="parameters"
+			element="tns:HasSmsEnabledResponse" />
+	</wsdl:message>
+	<wsdl:message name="GetActiveEnterpriseAccountSoapIn">
+		<wsdl:part name="parameters"
+			element="tns:GetActiveEnterpriseAccount" />
+	</wsdl:message>
+	<wsdl:message name="GetActiveEnterpriseAccountSoapOut">
+		<wsdl:part name="parameters"
+			element="tns:GetActiveEnterpriseAccountResponse" />
+	</wsdl:message>
+	<wsdl:message name="ChangePasswordSoapIn">
+		<wsdl:part name="parameters" element="tns:ChangePassword" />
+	</wsdl:message>
+	<wsdl:message name="ChangePasswordSoapOut">
+		<wsdl:part name="parameters"
+			element="tns:ChangePasswordResponse" />
+	</wsdl:message>
+	<wsdl:portType name="FishbowlSSOSoap">
+		<wsdl:operation name="CheckMe">
+			<wsdl:input message="tns:CheckMeSoapIn" />
+			<wsdl:output message="tns:CheckMeSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="GetTicketedUserName">
+			<wsdl:input message="tns:GetTicketedUserNameSoapIn" />
+			<wsdl:output message="tns:GetTicketedUserNameSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="GetTicket">
+			<wsdl:input message="tns:GetTicketSoapIn" />
+			<wsdl:output message="tns:GetTicketSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="GetAuthTicket">
+			<wsdl:input message="tns:GetAuthTicketSoapIn" />
+			<wsdl:output message="tns:GetAuthTicketSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="EmailExists">
+			<wsdl:input message="tns:EmailExistsSoapIn" />
+			<wsdl:output message="tns:EmailExistsSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="LoginExists">
+			<wsdl:input message="tns:LoginExistsSoapIn" />
+			<wsdl:output message="tns:LoginExistsSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="CreateUser">
+			<wsdl:input message="tns:CreateUserSoapIn" />
+			<wsdl:output message="tns:CreateUserSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="UpdateUser">
+			<wsdl:input message="tns:UpdateUserSoapIn" />
+			<wsdl:output message="tns:UpdateUserSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="DeleteUser">
+			<wsdl:input message="tns:DeleteUserSoapIn" />
+			<wsdl:output message="tns:DeleteUserSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="GetEnterpriseToken">
+			<wsdl:input message="tns:GetEnterpriseTokenSoapIn" />
+			<wsdl:output message="tns:GetEnterpriseTokenSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="GetActiveDirectoryToken">
+			<wsdl:input message="tns:GetActiveDirectoryTokenSoapIn" />
+			<wsdl:output message="tns:GetActiveDirectoryTokenSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="DeprecateEnterpriseLogin">
+			<wsdl:input message="tns:DeprecateEnterpriseLoginSoapIn" />
+			<wsdl:output
+				message="tns:DeprecateEnterpriseLoginSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="LinkSSOToEnterprise">
+			<wsdl:input message="tns:LinkSSOToEnterpriseSoapIn" />
+			<wsdl:output message="tns:LinkSSOToEnterpriseSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="LinkSSOToActiveDirectory">
+			<wsdl:input message="tns:LinkSSOToActiveDirectorySoapIn" />
+			<wsdl:output
+				message="tns:LinkSSOToActiveDirectorySoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="GetSSOToken">
+			<wsdl:input message="tns:GetSSOTokenSoapIn" />
+			<wsdl:output message="tns:GetSSOTokenSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="GetEnterpriseEmail">
+			<wsdl:input message="tns:GetEnterpriseEmailSoapIn" />
+			<wsdl:output message="tns:GetEnterpriseEmailSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="MigrateEnterpriseAccount">
+			<wsdl:input message="tns:MigrateEnterpriseAccountSoapIn" />
+			<wsdl:output
+				message="tns:MigrateEnterpriseAccountSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="HasSocialEnabled">
+			<wsdl:input message="tns:HasSocialEnabledSoapIn" />
+			<wsdl:output message="tns:HasSocialEnabledSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="HasSmsEnabled">
+			<wsdl:input message="tns:HasSmsEnabledSoapIn" />
+			<wsdl:output message="tns:HasSmsEnabledSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="GetActiveEnterpriseAccount">
+			<wsdl:input message="tns:GetActiveEnterpriseAccountSoapIn" />
+			<wsdl:output
+				message="tns:GetActiveEnterpriseAccountSoapOut" />
+		</wsdl:operation>
+		<wsdl:operation name="ChangePassword">
+			<wsdl:input message="tns:ChangePasswordSoapIn" />
+			<wsdl:output message="tns:ChangePasswordSoapOut" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="FishbowlSSOSoap"
+		type="tns:FishbowlSSOSoap">
+		<soap:binding
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="CheckMe">
+			<soap:operation
+				soapAction="http://tempuri.org/CheckMe" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetTicketedUserName">
+			<soap:operation
+				soapAction="http://tempuri.org/GetTicketedUserName" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetTicket">
+			<soap:operation
+				soapAction="http://tempuri.org/GetTicket" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetAuthTicket">
+			<soap:operation
+				soapAction="http://tempuri.org/GetAuthTicket" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="EmailExists">
+			<soap:operation
+				soapAction="http://tempuri.org/EmailExists" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="LoginExists">
+			<soap:operation
+				soapAction="http://tempuri.org/LoginExists" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="CreateUser">
+			<soap:operation
+				soapAction="http://tempuri.org/CreateUser" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="UpdateUser">
+			<soap:operation
+				soapAction="http://tempuri.org/UpdateUser" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="DeleteUser">
+			<soap:operation
+				soapAction="http://tempuri.org/DeleteUser" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetEnterpriseToken">
+			<soap:operation
+				soapAction="http://tempuri.org/GetEnterpriseToken" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetActiveDirectoryToken">
+			<soap:operation
+				soapAction="http://tempuri.org/GetActiveDirectoryToken"
+				style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="DeprecateEnterpriseLogin">
+			<soap:operation
+				soapAction="http://tempuri.org/DeprecateEnterpriseLogin"
+				style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="LinkSSOToEnterprise">
+			<soap:operation
+				soapAction="http://tempuri.org/LinkSSOToEnterprise" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="LinkSSOToActiveDirectory">
+			<soap:operation
+				soapAction="http://tempuri.org/LinkSSOToActiveDirectory"
+				style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetSSOToken">
+			<soap:operation
+				soapAction="http://tempuri.org/GetSSOToken" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetEnterpriseEmail">
+			<soap:operation
+				soapAction="http://tempuri.org/GetEnterpriseEmail" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="MigrateEnterpriseAccount">
+			<soap:operation
+				soapAction="http://tempuri.org/MigrateEnterpriseAccount"
+				style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="HasSocialEnabled">
+			<soap:operation
+				soapAction="http://tempuri.org/HasSocialEnabled" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="HasSmsEnabled">
+			<soap:operation
+				soapAction="http://tempuri.org/HasSmsEnabled" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetActiveEnterpriseAccount">
+			<soap:operation
+				soapAction="http://tempuri.org/GetActiveEnterpriseAccount"
+				style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ChangePassword">
+			<soap:operation
+				soapAction="http://tempuri.org/ChangePassword" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:binding name="FishbowlSSOSoap12"
+		type="tns:FishbowlSSOSoap">
+		<soap12:binding
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="CheckMe">
+			<soap12:operation
+				soapAction="http://tempuri.org/CheckMe" style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetTicketedUserName">
+			<soap12:operation
+				soapAction="http://tempuri.org/GetTicketedUserName" style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetTicket">
+			<soap12:operation
+				soapAction="http://tempuri.org/GetTicket" style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetAuthTicket">
+			<soap12:operation
+				soapAction="http://tempuri.org/GetAuthTicket" style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="EmailExists">
+			<soap12:operation
+				soapAction="http://tempuri.org/EmailExists" style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="LoginExists">
+			<soap12:operation
+				soapAction="http://tempuri.org/LoginExists" style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="CreateUser">
+			<soap12:operation
+				soapAction="http://tempuri.org/CreateUser" style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="UpdateUser">
+			<soap12:operation
+				soapAction="http://tempuri.org/UpdateUser" style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="DeleteUser">
+			<soap12:operation
+				soapAction="http://tempuri.org/DeleteUser" style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetEnterpriseToken">
+			<soap12:operation
+				soapAction="http://tempuri.org/GetEnterpriseToken" style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetActiveDirectoryToken">
+			<soap12:operation
+				soapAction="http://tempuri.org/GetActiveDirectoryToken"
+				style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="DeprecateEnterpriseLogin">
+			<soap12:operation
+				soapAction="http://tempuri.org/DeprecateEnterpriseLogin"
+				style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="LinkSSOToEnterprise">
+			<soap12:operation
+				soapAction="http://tempuri.org/LinkSSOToEnterprise" style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="LinkSSOToActiveDirectory">
+			<soap12:operation
+				soapAction="http://tempuri.org/LinkSSOToActiveDirectory"
+				style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetSSOToken">
+			<soap12:operation
+				soapAction="http://tempuri.org/GetSSOToken" style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetEnterpriseEmail">
+			<soap12:operation
+				soapAction="http://tempuri.org/GetEnterpriseEmail" style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="MigrateEnterpriseAccount">
+			<soap12:operation
+				soapAction="http://tempuri.org/MigrateEnterpriseAccount"
+				style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="HasSocialEnabled">
+			<soap12:operation
+				soapAction="http://tempuri.org/HasSocialEnabled" style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="HasSmsEnabled">
+			<soap12:operation
+				soapAction="http://tempuri.org/HasSmsEnabled" style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetActiveEnterpriseAccount">
+			<soap12:operation
+				soapAction="http://tempuri.org/GetActiveEnterpriseAccount"
+				style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="ChangePassword">
+			<soap12:operation
+				soapAction="http://tempuri.org/ChangePassword" style="document" />
+			<wsdl:input>
+				<soap12:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap12:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="FishbowlSSO">
+		<wsdl:port name="FishbowlSSOSoap"
+			binding="tns:FishbowlSSOSoap">
+			<soap:address
+				location="http://login.fishbowl.com/Public/FishbowlSSO.asmx" />
+		</wsdl:port>
+		<wsdl:port name="FishbowlSSOSoap12"
+			binding="tns:FishbowlSSOSoap12">
+			<soap12:address
+				location="http://login.fishbowl.com/Public/FishbowlSSO.asmx" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
