@@ -15,7 +15,7 @@ import javax.xml.ws.Service;
  */
 
 //@WebServiceClient(name = "FishbowlSSO", wsdlLocation = "file:/D:/Projects/Fishbowl/FbInsights_Repository/IAR-JAVA/InAppReporting/src/main/resources/wsdl/fishbowlsso.wsdl", targetNamespace = "http://tempuri.org/")
-@WebServiceClient(name = "FishbowlSSO", wsdlLocation = "file:/home/fbpoweruser/IAR-JAVA/InAppReporting/src/main/resources/wsdl/fishbowlsso.wsdl", targetNamespace = "http://tempuri.org/")
+@WebServiceClient(name = "FishbowlSSO", wsdlLocation = "file:/home/fbpoweruser/IAR-JAVA/src/main/resources/wsdl/fishbowlsso.wsdl", targetNamespace = "http://tempuri.org/")
 public class FishbowlSSO extends Service {
 
 	public final static URL WSDL_LOCATION;
@@ -27,7 +27,7 @@ public class FishbowlSSO extends Service {
 		URL url = null;
 		try {
 
-			url = new URL("file:/home/fbpoweruser/IAR-JAVA/InAppReporting/src/main/resources/wsdl/fishbowlsso.wsdl");
+			url = new URL("file:/home/fbpoweruser/IAR-JAVA/src/main/resources/wsdl/fishbowlsso.wsdl");
 			/*
 			 * url = new URL(
 			 * "file:/D:/Projects/Fishbowl/FbInsights_Repository/IAR-JAVA/InAppReporting/src/main/resources/wsdl/fishbowlsso.wsdl"
