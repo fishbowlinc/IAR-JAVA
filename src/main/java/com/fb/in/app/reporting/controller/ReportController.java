@@ -95,7 +95,7 @@ public class ReportController {
 			for (Cookie ck : cookies) {
 				logger.info("Cookie Name : " + ck.getName());
 				logger.info("Cookie Domain : " + ck.getDomain());
-				ck.setDomain(ck.getDomain());
+				ck.setDomain(request.getServerName());
 				ck.setPath(ck.getPath());
 				ck.setValue(ck.getValue());
 				ck.setSecure(true);
