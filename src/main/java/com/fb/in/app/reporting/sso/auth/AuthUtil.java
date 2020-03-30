@@ -33,6 +33,7 @@ public class AuthUtil {
 		String fishbowlSessionCookie = getFishFrameSessionEnv(domain);
 		if (cookieList != null) {
 			for (Cookie cookie : cookieList) {
+				logger.debug("Deleting cookie: " + cookie.getName());
 				if (cookie.getName().equals(AppConstants.IR_SESSION_ID_COOKIE)
 						|| cookie.getName().equals(AppConstants.IR_BRAND_LIST_COOKIE)
 						|| cookie.getName().equals(AppConstants.IR_ECUBE_COOKIE)) {
@@ -75,7 +76,7 @@ public class AuthUtil {
 
 	public static String getParentAppUrl(String domain) {
 		if (domain != null) {
-			if (domain.contains("qa") || domain.contains("localhost")) {
+			if (domain.contains("qa")) {
 				return "loginqa.fishbowl.com";
 			} else if (domain.contains("staging")) {
 				return "loginstaging.fishbowl.com";
@@ -375,7 +376,7 @@ public class AuthUtil {
 		Cookie cookie = new Cookie(AppConstants.IR_SESSION_ID_COOKIE, encryptedStr);
 		cookie.setDomain(irDomain);
 		cookie.setPath("/");
-		//cookie.setHttpOnly(true);
+		// cookie.setHttpOnly(true);
 		cookie.setSecure(true);
 		return cookie;
 	}

@@ -95,6 +95,9 @@ public class ReportController {
 			for (Cookie ck : cookies) {
 				logger.info("Cookie Name : " + ck.getName());
 				logger.info("Cookie Domain : " + ck.getDomain());
+				ck.setDomain(ck.getDomain());
+				ck.setPath(ck.getPath());
+				ck.setValue(ck.getValue());
 				ck.setSecure(true);
 				httpServletResponse.addCookie(ck);
 				if (ck.getName().contains(fbLoginCookieName)) {
