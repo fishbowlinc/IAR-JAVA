@@ -103,6 +103,8 @@ public class ReportController {
 					fishFrameSessionId = ck.getValue().split("=")[1];
 					logger.info("fishFrameSessionId : " + fishFrameSessionId);
 				}
+				ck.setMaxAge(0);
+				httpServletResponse.addCookie(ck);
 			}
 			if (!isAspxCookiePresent) {
 				logger.info("AspxCookie is not present and hence redirecting to login page");
@@ -166,7 +168,7 @@ public class ReportController {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					
+
 					if (response != null && response.getSuccessFlag() == true && response.getBrandsCount() == 1) {
 						logger.info("user is having single brand..");
 						SiteId = response.getBrandList().get(0).getSiteId().toString();
