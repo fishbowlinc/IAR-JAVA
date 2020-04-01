@@ -3,6 +3,7 @@ package com.fb.in.app.reporting.sso.auth;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.List;
 
 import javax.crypto.BadPaddingException;
@@ -372,12 +373,17 @@ public class AuthUtil {
 		return jsonBrandList;
 	}
 
+	private static int getIRSessionCookieAge(int hours) {
+		return hours * 60 * 60;
+	}
+
 	public static Cookie setIRSessionCookie(String irDomain, String encryptedStr) {
 		Cookie cookie = new Cookie(AppConstants.IR_SESSION_ID_COOKIE, encryptedStr);
 		cookie.setDomain(irDomain);
 		cookie.setPath("/");
+		cookie.setMaxAge(getIRSessionCookieAge(3));
 		cookie.setSecure(true);
-		cookie.setComment("This cookie contains auth details");
+		cookie.setComment("This cookie contains user auth details");
 		return cookie;
 	}
 
