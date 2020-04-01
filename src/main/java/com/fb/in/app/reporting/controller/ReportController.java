@@ -103,8 +103,6 @@ public class ReportController {
 					fishFrameSessionId = ck.getValue().split("=")[1];
 					logger.info("fishFrameSessionId : " + fishFrameSessionId);
 				}
-				ck.setMaxAge(0);
-				httpServletResponse.addCookie(ck);
 			}
 			if (!isAspxCookiePresent) {
 				logger.info("AspxCookie is not present and hence redirecting to login page");
