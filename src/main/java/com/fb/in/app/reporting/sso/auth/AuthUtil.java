@@ -375,10 +375,14 @@ public class AuthUtil {
 	public static Cookie getIRSessionCookie(String irDomain, String encryptedStr) {
 		Cookie cookie = new Cookie(AppConstants.IR_SESSION_ID_COOKIE, encryptedStr);
 		cookie.setDomain(irDomain);
+		cookie.setMaxAge(getIRSessionCookieAge(3));
 		cookie.setPath("/");
-		// cookie.setHttpOnly(true);
 		cookie.setSecure(true);
 		return cookie;
+	}
+
+	private static int getIRSessionCookieAge(int hours) {
+		return hours * 60 * 60;
 	}
 
 }
