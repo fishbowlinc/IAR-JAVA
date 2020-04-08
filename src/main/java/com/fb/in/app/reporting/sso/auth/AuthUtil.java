@@ -30,7 +30,7 @@ import com.google.gson.Gson;
 
 public class AuthUtil {
 	private static Logger logger = LoggerFactory.getLogger(AuthUtil.class);
-	private static final String fishbowlDomain = "fishbowl.com";
+	private static final String irFishbowlDomain = "ir.fishbowl.com";
 	private static final Integer irSessionCookieAge = 3;
 
 	public static HttpServletResponse deleteCookies(HttpServletRequest request, HttpServletResponse response) {
@@ -381,7 +381,7 @@ public class AuthUtil {
 
 	public static Cookie getIRSessionCookie(String irDomain, String encryptedStr) {
 		Cookie cookie = new Cookie(AppConstants.IR_SESSION_ID_COOKIE, encryptedStr);
-		cookie.setDomain(fishbowlDomain);
+		cookie.setDomain(irFishbowlDomain);
 		cookie.setMaxAge(getIRSessionCookieAge(irSessionCookieAge));
 		cookie.setPath("/");
 		cookie.setSecure(true);
