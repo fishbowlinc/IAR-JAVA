@@ -42,8 +42,7 @@ public class SSOController {
 		try {
 			String userAuthStr = CookieUtil.getValue(request, AppConstants.IR_SESSION_ID_COOKIE);
 			String eCubeStr = CookieUtil.getValue(request, AppConstants.IR_ECUBE_COOKIE);
-			logger.info("IR Session Cookie: " + userAuthStr);
-			logger.info("\nIR Ecube Cookie: " + eCubeStr);
+
 			if (null != userAuthStr && null != eCubeStr) {
 				logger.info(AppConstants.IR_SESSION_ID_COOKIE + " encrypted cookie details: " + userAuthStr);
 				logger.info(AppConstants.IR_ECUBE_COOKIE + " encrypted cookie details: " + eCubeStr);
@@ -52,7 +51,7 @@ public class SSOController {
 
 				logger.info("decrypted userAuth details: " + userDetailsStr);
 
-				String eCubeNameStr = AuthUtil.decryptCubeCookie(eCubeStr.getBytes());
+				String eCubeNameStr = AuthUtil.decryptCubeCookie(eCubeStr);
 
 				logger.info("decrypted eCube details: " + eCubeNameStr);
 
