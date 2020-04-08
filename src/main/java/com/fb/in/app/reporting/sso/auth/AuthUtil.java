@@ -2,6 +2,7 @@ package com.fb.in.app.reporting.sso.auth;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -193,9 +194,16 @@ public class AuthUtil {
 		return new String(data);
 	}
 
-	public static String decryptCubeCookie(byte[] kr) {
-		byte[] encryptedData = java.util.Base64.getDecoder().decode(kr);
-		return new String(encryptedData);
+	public static String decryptCubeCookie(String eCube) {
+		String urlDecodedValue = null;
+		String encryptedValue = null;
+		try {
+			urlDecodedValue = URLDecoder.decode(eCube, "utf8");
+			encryptedValue = new String(java.util.Base64.getDecoder().decode(urlDecodedValue));
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		return encryptedValue;
 	}
 
 	public static UserAuth getUserDetails(String userDetailsStr) {
