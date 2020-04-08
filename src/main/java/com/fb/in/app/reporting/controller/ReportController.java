@@ -59,7 +59,6 @@ public class ReportController {
 
 		String fishFrameSessionEnv = null;
 		String fishFrameSessionId = null;
-		String irDomain = null;
 		String redirectServerName = null;
 		String soapUrl = null;
 		String redirectURL = null;
@@ -68,7 +67,7 @@ public class ReportController {
 		String domain = request.getServerName();
 		logger.info("domain : " + domain);
 		fishFrameSessionEnv = AuthUtil.getFishFrameSessionEnv(domain);
-	//	irDomain = AuthUtil.getDomain(domain);
+		// irDomain = AuthUtil.getDomain(domain);
 		redirectServerName = AuthUtil.getRedirectServerName(domain);
 		soapUrl = AuthUtil.getSoapUrl(domain);
 
@@ -119,7 +118,7 @@ public class ReportController {
 		if (null != userDetails) {
 			String encryptedStr = AuthUtil.encrypted(userDetails);
 			logger.info("Encrypted User Details  : " + encryptedStr);
-			Cookie cookie = AuthUtil.getIRSessionCookie(irDomain, encryptedStr);
+			Cookie cookie = AuthUtil.getIRSessionCookie(domain, encryptedStr);
 			httpServletResponse.addCookie(cookie);
 			if (SiteId != null && SiteId.trim().length() > 0) {
 				redirectURL = "https://" + redirectServerName + "/#/reportList?ID=" + Id + "&bid=34&SiteId=" + SiteId;

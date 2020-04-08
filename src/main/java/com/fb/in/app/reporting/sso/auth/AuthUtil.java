@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fb.in.app.reporting.constants.AppConstants;
+import com.fb.in.app.reporting.constants.CookieConstants;
 import com.fb.in.app.reporting.generated.FishbowlSSO;
 import com.fb.in.app.reporting.generated.FishbowlSSOSoap;
 import com.fb.in.app.reporting.model.auth.UserAuth;
@@ -34,31 +35,31 @@ public class AuthUtil {
 	private static final String irFishbowlDomain = "fishbowl.com";
 	private static final Integer irSessionCookieAge = 3;
 
-	public static HttpServletResponse deleteCookies(HttpServletRequest request, HttpServletResponse response) {
-		Cookie[] cookieList = request.getCookies();
+	public static HttpServletResponse deleteCookies(HttpServletRequest request, HttpServletResponse response,
+			Cookie[] cookieList) {
 		String domain = request.getServerName();
-		String aSPXFORMSAUTH = getaSPXFORMSAUTHString(domain);
-		String fishbowlSessionCookie = getFishFrameSessionEnv(domain);
-		if (cookieList != null) {
-			for (Cookie cookie : cookieList) {
-				logger.debug("Deleting cookie: " + cookie.getName());
-				if (cookie.getName().equals(AppConstants.IR_SESSION_ID_COOKIE)
-						|| cookie.getName().equals(AppConstants.IR_BRAND_LIST_COOKIE)
-						|| cookie.getName().equals(AppConstants.IR_ECUBE_COOKIE)) {
-					cookie.setMaxAge(0);
-					cookie.setDomain(getDomain(request.getServerName()));
-					cookie.setPath("/");
-					response.addCookie(cookie);
-				} else if (aSPXFORMSAUTH.equalsIgnoreCase(cookie.getName())
-						|| fishbowlSessionCookie.equalsIgnoreCase(cookie.getName())) {
-					cookie.setMaxAge(0);
-					cookie.setDomain(getParentAppUrl(domain));
-					cookie.setPath("/");
-					response.addCookie(cookie);
-				}
-			}
+		for (Cookie cookie : cookieList) {
+			String cookieName = cookie.getName();
+			logger.info("Cookie domain name: " + domain);
+			logger.info("Deleting cookie: " + cookieName);
+			cookie.setMaxAge(0);
+			cookie.setDomain(irFishbowlDomain);
+			cookie.setPath("/");
+			response.addCookie(cookie);
 		}
 		return response;
+	}
+
+	public static String getIREcubeCookieName(String domain) {
+		if (domain.contains("qa")) {
+			return CookieConstants.IR_QA_SESSION_ID_COOKIE;
+
+		} else if (domain.contains("staging")) {
+			return CookieConstants.IR_STG_SESSION_ID_COOKIE;
+
+		} else {
+			return CookieConstants.IR_PROD_SESSION_ID_COOKIE;
+		}
 	}
 
 	public static HttpServletResponse getJsonFromObjectWithResponse(HttpServletResponse response, Object object,
@@ -361,7 +362,7 @@ public class AuthUtil {
 	}
 
 	public static Cookie getBrandIdCookies(String brandList, String serverName) {
-		Cookie brandCookie = new Cookie(AppConstants.IR_BRAND_LIST_COOKIE, brandList);
+		Cookie brandCookie = new Cookie(CookieConstants.IR_BRAND_LIST_COOKIE, brandList);
 		brandCookie.setDomain(AuthUtil.getDomain(serverName));
 		brandCookie.setPath("/");
 		return brandCookie;
@@ -387,8 +388,21 @@ public class AuthUtil {
 		return jsonBrandList;
 	}
 
-	public static Cookie getIRSessionCookie(String irDomain, String encryptedStr) {
-		Cookie cookie = new Cookie(AppConstants.IR_SESSION_ID_COOKIE, encryptedStr);
+	public static String getIRSessionCookieName(String domain) {
+		if (domain.contains("qa")) {
+			return CookieConstants.IR_QA_SESSION_ID_COOKIE;
+
+		} else if (domain.contains("staging")) {
+			return CookieConstants.IR_STG_SESSION_ID_COOKIE;
+
+		} else {
+			return CookieConstants.IR_PROD_SESSION_ID_COOKIE;
+		}
+	}
+
+	public static Cookie getIRSessionCookie(String domain, String encryptedStr) {
+		String cookieName = AuthUtil.getIRSessionCookieName(domain);
+		Cookie cookie = new Cookie(cookieName, encryptedStr);
 		cookie.setDomain(irFishbowlDomain);
 		cookie.setMaxAge(getIRSessionCookieAge(irSessionCookieAge));
 		cookie.setPath("/");
