@@ -244,5 +244,20 @@ public class SisenseUtil {
 
 	}
 
+	public static String getfishbowlOneSoapUrl(String domain) {
+		String soapUrl = null;
+
+		if (domain != null) {
+			if (domain.contains("qa")) {
+				soapUrl = "oneqa.fishbowl.com";
+			} else if (domain.contains("staging")) {
+				soapUrl = "onestg.fishbowl.com";
+			} else {
+				soapUrl = "one.fishbowl.com";
+			}
+		}
+		return soapUrl;
+	}
+
 
 }

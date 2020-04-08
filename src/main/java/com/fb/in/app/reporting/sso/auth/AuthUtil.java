@@ -1,6 +1,7 @@
 package com.fb.in.app.reporting.sso.auth;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -13,18 +14,24 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.ws.BindingProvider;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fb.in.app.reporting.constants.AppConstants;
+import com.fb.in.app.reporting.generated.FishbowlSSO;
+import com.fb.in.app.reporting.generated.FishbowlSSOSoap;
 import com.fb.in.app.reporting.model.auth.UserAuth;
 import com.fb.in.app.reporting.model.vo.BrandVo;
 import com.google.gson.Gson;
 
 public class AuthUtil {
 	private static Logger logger = LoggerFactory.getLogger(AuthUtil.class);
+	private static final String fishbowlDomain = ".fishbowl.com";
+	private static final Integer irSessionCookieAge = 3;
 
 	public static HttpServletResponse deleteCookies(HttpServletRequest request, HttpServletResponse response) {
 		Cookie[] cookieList = request.getCookies();
@@ -374,8 +381,8 @@ public class AuthUtil {
 
 	public static Cookie getIRSessionCookie(String irDomain, String encryptedStr) {
 		Cookie cookie = new Cookie(AppConstants.IR_SESSION_ID_COOKIE, encryptedStr);
-		cookie.setDomain(irDomain);
-		cookie.setMaxAge(getIRSessionCookieAge(3));
+		cookie.setDomain(fishbowlDomain);
+		cookie.setMaxAge(getIRSessionCookieAge(irSessionCookieAge));
 		cookie.setPath("/");
 		cookie.setSecure(true);
 		return cookie;
@@ -383,6 +390,31 @@ public class AuthUtil {
 
 	private static int getIRSessionCookieAge(int hours) {
 		return hours * 60 * 60;
+	}
+
+	public static String getSsoUserDetails(String soapUrl, int appId, String id, String fishFrameSessionId) {
+		String userDetails = null;
+		FishbowlSSO fishbowlSSO = new FishbowlSSO();
+		FishbowlSSOSoap port = fishbowlSSO.getPort(FishbowlSSOSoap.class);
+		BindingProvider provider = (BindingProvider) port;
+
+		provider.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+				"https://" + soapUrl + "/Public/FishbowlSSO.asmx");
+
+		String responseString = port.getAuthTicket(appId, id, new BigDecimal(fishFrameSessionId));
+		logger.info("GetAuthTicket Response : " + responseString);
+		if (responseString != null) {
+			String tokenString = StringUtils.substringBetween(responseString, ">", "<");
+			logger.info("Auth Token : " + tokenString);
+			if (tokenString != null && !StringUtils.isEmpty(tokenString)) {
+				String userDetailsStr = port.getTicketedUserName(id, tokenString);
+				logger.info("GetTicketedUserName Response : " + userDetailsStr);
+				userDetails = StringUtils.substringBetween(userDetailsStr, ">", "<");
+				logger.info("User Details : " + userDetails);
+				return userDetails;
+			}
+		}
+		return userDetails;
 	}
 
 }
