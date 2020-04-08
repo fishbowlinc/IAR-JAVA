@@ -3,7 +3,6 @@
  */
 package com.fb.in.app.reporting.controller;
 
-import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -13,9 +12,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.ws.BindingProvider;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +20,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fb.in.app.reporting.generated.FishbowlSSO;
-import com.fb.in.app.reporting.generated.FishbowlSSOSoap;
 import com.fb.in.app.reporting.model.auth.UserAuth;
 import com.fb.in.app.reporting.request.BrandRequest;
 import com.fb.in.app.reporting.response.BrandListResponse;
@@ -54,9 +49,9 @@ public class ReportController {
 			BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
 
 		final String tileId = ID == null ? Id : ID;
-		logger.info("Tile ID : " + tileId);
-		logger.info("SiteId : " + SiteId);
-		logger.info("bid : " + bid);
+		logger.debug("Tile ID : " + tileId);
+		logger.debug("SiteId : " + SiteId);
+		logger.debug("bid : " + bid);
 
 		boolean isAspxCookiePresent = false;
 		// Need to fetch from properties file
@@ -71,136 +66,90 @@ public class ReportController {
 
 		Cookie[] cookies = request.getCookies();
 		String domain = request.getServerName();
-		logger.info("domain : " + domain);
+		logger.debug("domain : " + domain);
 		fishFrameSessionEnv = AuthUtil.getFishFrameSessionEnv(domain);
-		irDomain = AuthUtil.getDomain(domain);
+	//	irDomain = AuthUtil.getDomain(domain);
 		redirectServerName = AuthUtil.getRedirectServerName(domain);
 		soapUrl = AuthUtil.getSoapUrl(domain);
 
-		logger.info("fishFrameSessionEnv : " + fishFrameSessionEnv);
-		logger.info("irDomain : " + irDomain);
-		logger.info("redirectServerName : " + redirectServerName);
-		logger.info("soapUrl : " + soapUrl);
-		logger.info("domain : " + domain);
+		logger.debug("fishFrameSessionEnv : " + fishFrameSessionEnv);
+		logger.debug("redirectServerName : " + redirectServerName);
+		logger.debug("soapUrl : " + soapUrl);
+		logger.debug("domain : " + domain);
 
 		if (tileId == null || tileId.isEmpty()) {
 			redirectURL = "https://" + soapUrl + "/SSO/Navigator/InitializeTargetApp?bid=34&ReturnUrl=/report";
 			if (SiteId != null && SiteId.trim().length() > 0) {
 				redirectURL = redirectURL + "&SiteId=" + SiteId;
 			}
-			logger.info("redirectURL : " + redirectURL);
+			logger.debug("redirectURL : " + redirectURL);
 			return "redirect:" + redirectURL;
 		}
 		if (cookies != null) {
 			for (Cookie ck : cookies) {
-				logger.info("Cookie Name : " + ck.getName());
-				logger.info("Cookie Domain : " + ck.getDomain());
+				logger.debug("Cookie Name : " + ck.getName());
+				logger.debug("Cookie Domain : " + ck.getDomain());
 				if (ck.getName().contains(fbLoginCookieName)) {
-					logger.info("AspxCookie is Present and hence proceeding");
+					logger.debug("AspxCookie is Present and hence proceeding");
 					isAspxCookiePresent = true;
 				}
 				if (fishFrameSessionEnv.equalsIgnoreCase(ck.getName())) {
 					fishFrameSessionId = ck.getValue().split("=")[1];
-					logger.info("fishFrameSessionId : " + fishFrameSessionId);
+					logger.debug("fishFrameSessionId : " + fishFrameSessionId);
 				}
 			}
 			if (!isAspxCookiePresent) {
-				logger.info("AspxCookie is not present and hence redirecting to login page");
+				logger.debug("AspxCookie is not present and hence redirecting to login page");
 				redirectURL = "https://" + soapUrl + "/Public/Login.aspx?ReturnUrl=%2f";
-				logger.info("redirectURL : " + redirectURL);
+				logger.debug("redirectURL : " + redirectURL);
 				return "redirect:" + redirectURL;
 			}
 		} else {
-			logger.info("There is no Cookie. Hence redirecting to login page");
+			logger.debug("There is no Cookie. Hence redirecting to login page");
 			redirectURL = "https://" + soapUrl + "/Public/Login.aspx?ReturnUrl=%2f";
-			logger.info("redirectURL : " + redirectURL);
+			logger.debug("redirectURL : " + redirectURL);
 			return "redirect:" + redirectURL;
 		}
-		FishbowlSSO fishbowlSSO = new FishbowlSSO();
-		FishbowlSSOSoap port = fishbowlSSO.getPort(FishbowlSSOSoap.class);
-		BindingProvider provider = (BindingProvider) port;
 
-		provider.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-				"https://" + soapUrl + "/Public/FishbowlSSO.asmx");
+		logger.debug("AppId : " + appId);
+		logger.debug("Session Value : " + Id);
+		logger.debug("Fish Frame SessionId : " + fishFrameSessionId);
 
-		logger.info("AppId : " + appId);
-		logger.info("Session Value : " + Id);
-		logger.info("Fish Frame SessionId : " + fishFrameSessionId);
-		String responseString = port.getAuthTicket(appId, Id, new BigDecimal(fishFrameSessionId));
-		logger.info("GetAuthTicket Response : " + responseString);
-		if (responseString != null) {
-			String tokenString = StringUtils.substringBetween(responseString, ">", "<");
-			logger.info("Auth Token : " + tokenString);
-			if (tokenString != null && !StringUtils.isEmpty(tokenString)) {
-				String userDetailsStr = port.getTicketedUserName(Id, tokenString);
-				logger.info("GetTicketedUserName Response : " + userDetailsStr);
-				String userDetails = StringUtils.substringBetween(userDetailsStr, ">", "<");
-				logger.info("User Details : " + userDetails);
-				String encryptedStr = AuthUtil.encrypted(userDetails);
-				logger.info("Encrypted User Details  : " + encryptedStr);
-				Cookie cookie = AuthUtil.getIRSessionCookie(irDomain, encryptedStr);
-				httpServletResponse.addCookie(cookie);
-				/*
-				 * httpServletResponse.addHeader("Set-Cookie", AppConstants.IR_SESSION_ID_COOKIE
-				 * + "=" + encryptedStr + ";domain=" + irDomain +
-				 * ";path=/;secure;HttpOnly;SameSite=None");
-				 */
-				if (SiteId != null && SiteId.trim().length() > 0) {
-					/*
-					 * List<BrandVo> brandVo = null; try { brandVo =
-					 * userService.getBrandRecordBySiteId(SiteId);
-					 * 
-					 * String brandList = AuthUtil.getJsonFromObjectList(brandVo); String
-					 * encyrtpedBrandDetails = AuthUtil.encryptedBrandDetials(brandList);
-					 * httpServletResponse.addCookie(AuthUtil.getBrandIdCookies(
-					 * encyrtpedBrandDetails, irDomain));
-					 * 
-					 * } catch (Exception e) { }
-					 */
-					redirectURL = "https://" + redirectServerName + "/#/reportList?ID=" + Id + "&bid=34&SiteId="
-							+ SiteId;
-				} else {
-					logger.info("Site ID is null");
-					logger.info("Checking if user will have only one brand");
-					UserAuth userAuth = AuthUtil.getUserDetails(userDetails);
-					BrandRequest brandRequest = new BrandRequest();
-					logger.info("userService  getBrand calling to get user Brands");
-					BrandListResponse response = null;
-					try {
-						response = userService.getBrand(userAuth.getUserId(), userAuth.getClientId(), brandRequest);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					if (response != null && response.getSuccessFlag() == true && response.getBrandsCount() == 1) {
-						logger.info("user is having single brand..");
-						SiteId = response.getBrandList().get(0).getSiteId().toString();
-					} else {
-						logger.info("user is having multiple brands..");
-						SiteId = response.getBrandList().get(response.getBrandList().size() - 1).getSiteId().toString();
-					}
-					/*
-					 * String brandList =
-					 * AuthUtil.getJsonFromObjectList(response.getBrandList().get(0)); String
-					 * encyrtpedBrandDetails = AuthUtil.encryptedBrandDetials(brandList);
-					 * httpServletResponse.addCookie(AuthUtil.getBrandIdCookies(
-					 * encyrtpedBrandDetails, irDomain));
-					 */
-
-					redirectURL = "https://" + redirectServerName + "/#/reportList?ID=" + Id + "&bid=34&SiteId="
-							+ SiteId;
-				}
-
-				logger.info("redirectURL : " + redirectURL);
-				return "redirect:" + redirectURL;
-
+		String userDetails = AuthUtil.getSsoUserDetails(soapUrl, appId, Id, fishFrameSessionId);
+		if (null != userDetails) {
+			String encryptedStr = AuthUtil.encrypted(userDetails);
+			logger.debug("Encrypted User Details  : " + encryptedStr);
+			Cookie cookie = AuthUtil.getIRSessionCookie(irDomain, encryptedStr);
+			httpServletResponse.addCookie(cookie);
+			if (SiteId != null && SiteId.trim().length() > 0) {
+				redirectURL = "https://" + redirectServerName + "/#/reportList?ID=" + Id + "&bid=34&SiteId=" + SiteId;
 			} else {
-				redirectURL = "https://" + soapUrl + "/Public/Login.aspx?ReturnUrl=%2f";
-				logger.info("redirectURL : " + redirectURL);
-				return "redirect:" + redirectURL;
+				logger.debug("Site ID is null");
+				logger.debug("Checking if user will have only one brand");
+				UserAuth userAuth = AuthUtil.getUserDetails(userDetails);
+				BrandRequest brandRequest = new BrandRequest();
+				logger.debug("userService  getBrand calling to get user Brands");
+				BrandListResponse response = null;
+				try {
+					response = userService.getBrand(userAuth.getUserId(), userAuth.getClientId(), brandRequest);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				if (response != null && response.getSuccessFlag() == true && response.getBrandsCount() == 1) {
+					logger.debug("user is having single brand..");
+					SiteId = response.getBrandList().get(0).getSiteId().toString();
+				} else {
+					logger.debug("user is having multiple brands..");
+					SiteId = response.getBrandList().get(response.getBrandList().size() - 1).getSiteId().toString();
+				}
+				redirectURL = "https://" + redirectServerName + "/#/reportList?ID=" + Id + "&bid=34&SiteId=" + SiteId;
 			}
+			logger.debug("redirectURL : " + redirectURL);
+			return "redirect:" + redirectURL;
+
 		} else {
 			redirectURL = "https://" + soapUrl + "/Public/Login.aspx?ReturnUrl=%2f";
-			logger.info("redirectURL : " + redirectURL);
+			logger.debug("redirectURL : " + redirectURL);
 			return "redirect:" + redirectURL;
 		}
 	}
