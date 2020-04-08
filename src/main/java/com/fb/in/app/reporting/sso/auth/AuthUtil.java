@@ -381,7 +381,7 @@ public class AuthUtil {
 
 	public static Cookie getIRSessionCookie(String irDomain, String encryptedStr) {
 		Cookie cookie = new Cookie(AppConstants.IR_SESSION_ID_COOKIE, encryptedStr);
-		cookie.setDomain(fishbowlDomain);
+		cookie.setDomain(irFishbowlDomain);
 		cookie.setMaxAge(getIRSessionCookieAge(irSessionCookieAge));
 		cookie.setPath("/");
 		cookie.setSecure(true);
