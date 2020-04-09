@@ -36,16 +36,18 @@ public class SSOController {
 		String sisenseUserId = null;
 		String redirectUrl = null;
 		UserDetailsResponse userDetailResponse = null;
-		logger.info("getting ir cookie details...");
-		logger.info("domain" + request.getServerName());
-
 		try {
-			String userAuthStr = CookieUtil.getValue(request, AppConstants.IR_SESSION_ID_COOKIE);
-			String eCubeStr = CookieUtil.getValue(request, AppConstants.IR_ECUBE_COOKIE);
-
+			String domain = request.getServerName();
+			logger.info("domain: " + request.getServerName());
+			String irSessionCookieName = AuthUtil.getIRSessionCookieName(domain);
+			logger.info("ir session cookie name: " + irSessionCookieName);
+			String irECubeCookieName = AuthUtil.getIREcubeCookieName(domain);
+			logger.info("ir ecube cookie name: " + irECubeCookieName);
+			String userAuthStr = CookieUtil.getValue(request, irSessionCookieName);
+			String eCubeStr = CookieUtil.getValue(request, irECubeCookieName);
 			if (null != userAuthStr && null != eCubeStr) {
-				logger.info(AppConstants.IR_SESSION_ID_COOKIE + " encrypted cookie details: " + userAuthStr);
-				logger.info(AppConstants.IR_ECUBE_COOKIE + " encrypted cookie details: " + eCubeStr);
+				logger.info(irSessionCookieName + " encrypted cookie details: " + userAuthStr);
+				logger.info(irECubeCookieName + " encrypted cookie details: " + eCubeStr);
 
 				String userDetailsStr = AuthUtil.decrypted(userAuthStr.getBytes());
 
