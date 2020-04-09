@@ -39,12 +39,17 @@ public class SSOController {
 		try {
 			String domain = request.getServerName();
 			logger.info("domain: " + request.getServerName());
+			
 			String irSessionCookieName = AuthUtil.getIRSessionCookieName(domain);
 			logger.info("ir session cookie name: " + irSessionCookieName);
+			
 			String irECubeCookieName = AuthUtil.getIREcubeCookieName(domain);
 			logger.info("ir ecube cookie name: " + irECubeCookieName);
+			
 			String userAuthStr = CookieUtil.getValue(request, irSessionCookieName);
+			
 			String eCubeStr = CookieUtil.getValue(request, irECubeCookieName);
+			
 			if (null != userAuthStr && null != eCubeStr) {
 				logger.info(irSessionCookieName + " encrypted cookie details: " + userAuthStr);
 				logger.info(irECubeCookieName + " encrypted cookie details: " + eCubeStr);

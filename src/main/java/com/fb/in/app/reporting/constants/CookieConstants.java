@@ -29,7 +29,5 @@ public class CookieConstants {
 
 	public static final String IR_STG_ECUBE_ID_COOKIE = "_irstgecube";
 
-	public static final String IR_ECUBE_COOKIE = "_irecube";
-
 	public static final String IR_BRAND_LIST_COOKIE = "_irbrndlst";
 }
