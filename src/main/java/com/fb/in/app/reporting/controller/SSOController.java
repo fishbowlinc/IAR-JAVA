@@ -69,18 +69,18 @@ public class SSOController {
 				sisenseUserId = SisenseUtil.getUserIdByUsername(userAuth.getUserName());
 
 				logger.info("Collected Sisense user id: " + sisenseUserId);
-				if (null == sisenseUserId) {
+				if (sisenseUserId == null) {
 					logger.info("getting fishbowl user details by user id");
 					userDetailResponse = userService.getUserDetails(userAuth.getUserId());
-					logger.info("getting user details by email address: " + userDetailResponse.getEmail().trim());
-					sisenseUserId = SisenseUtil.getUserIdByEmail(userDetailResponse.getEmail().trim());
+					String emailAddress = userDetailResponse.getEmail();
+					logger.info("getting user details by email address: " + emailAddress);
+					if (emailAddress != null)
+						sisenseUserId = SisenseUtil.getUserIdByEmail(userDetailResponse.getEmail().trim());
 					if (null == sisenseUserId) {
 						logger.info("user doesnt exist in sisense so adding user");
 						sisenseUserId = SisenseUtil.createUserInSisense(userDetailResponse);
 					}
-
 				}
-
 				logger.info("creating data security for the logged in user");
 				DataSecurityPayload securityPayload = null;
 				if (userAuth.getClientId().equals("-1")) {
