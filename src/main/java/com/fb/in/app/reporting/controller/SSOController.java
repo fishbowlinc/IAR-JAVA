@@ -35,6 +35,8 @@ public class SSOController {
 		UserAuth userAuth = null;
 		String sisenseUserId = null;
 		String redirectUrl = null;
+		String emailAddress = null;
+		String subject = null;
 		UserDetailsResponse userDetailResponse = null;
 		try {
 			String domain = request.getServerName();
@@ -72,11 +74,14 @@ public class SSOController {
 				if (sisenseUserId == null) {
 					logger.info("getting fishbowl user details by user id");
 					userDetailResponse = userService.getUserDetails(userAuth.getUserId());
-					String emailAddress = userDetailResponse.getEmail();
+					emailAddress = userDetailResponse.getEmail();
 					logger.info("getting user details by email address: " + emailAddress);
-					if (emailAddress != null)
+					if (emailAddress != null) {
+						subject = emailAddress;
 						sisenseUserId = SisenseUtil.getUserIdByEmail(userDetailResponse.getEmail().trim());
-					if (null == sisenseUserId) {
+					}
+					logger.info("found id: " + sisenseUserId);
+					if (sisenseUserId == null) {
 						logger.info("user doesnt exist in sisense so adding user");
 						sisenseUserId = SisenseUtil.createUserInSisense(userDetailResponse);
 					}
@@ -100,8 +105,9 @@ public class SSOController {
 					}
 				}
 				SisenseUtil.createDataSecuirtyInSisenseElasticCube(sisenseUserId, securityPayload);
-
-				String token = SisenseUtil.generateToken(AppConstants.SIGNING_KEY, userAuth.getUserName());
+				if (subject == null)
+					subject = userAuth.getUserName();
+				String token = SisenseUtil.generateToken(AppConstants.SIGNING_KEY, subject);
 				// This is the Sisense URL which can handle (decode and process) the JWT token
 				redirectUrl = AppConstants.SISENSE_JWT_REDIRECT_URL + token;
 				// Which URL the user was initially trying to open
