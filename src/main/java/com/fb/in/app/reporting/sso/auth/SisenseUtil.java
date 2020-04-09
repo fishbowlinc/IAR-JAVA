@@ -115,10 +115,34 @@ public class SisenseUtil {
 		return null;
 	}
 
+	public static String getUserIdByEmail(String email) {
+		RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
+		try (CloseableHttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();) {
+			String authUrl = AppConstants.SISENSE_USER_API_URL + "?email=" + email.trim();
+			HttpGet httpGet = new HttpGet(authUrl);
+			httpGet.setHeader("Authorization", "Bearer " + AppConstants.SISENSE_API_ACCESS_TOKEN);
+			httpGet.setHeader("Accept", "application/json");
+			httpGet.setHeader("Content-type", "application/json");
+			try (CloseableHttpResponse response = client.execute(httpGet);) {
+				if (response.getStatusLine().getStatusCode() == 200) {
+					String result = EntityUtils.toString(response.getEntity());
+					JSONObject obj = new JSONObject(result);
+					return obj.get("_id").toString();
+				} else {
+					logger.info("couldn't find user" + response.getStatusLine());
+				}
+			}
+		} catch (Exception exception) {
+			exception.printStackTrace();
+			logger.info(exception.getMessage());
+		}
+		return null;
+	}
+
 	public static String getUserIdByUsername(String userName) {
 		RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
 		try (CloseableHttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();) {
-			String authUrl = AppConstants.SISENSE_GET_USER_URL + userName.trim();
+			String authUrl = AppConstants.SISENSE_USER_API_URL + "?userName=" + userName.trim();
 			HttpGet httpGet = new HttpGet(authUrl);
 			httpGet.setHeader("Authorization", "Bearer " + AppConstants.SISENSE_API_ACCESS_TOKEN);
 			httpGet.setHeader("Accept", "application/json");
@@ -142,7 +166,7 @@ public class SisenseUtil {
 	public static String createUserInSisense(UserDetailsResponse userDetailsResponse) {
 		RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
 		try (CloseableHttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();) {
-			HttpPost httpPost = new HttpPost(AppConstants.SISENSE_CREATE_USER_URL);
+			HttpPost httpPost = new HttpPost(AppConstants.SISENSE_USER_API_URL);
 			SisenseUser sisenseUser = new SisenseUser();
 			sisenseUser.setUserName(userDetailsResponse.getUserName());
 			sisenseUser.setFirstName(userDetailsResponse.getFirstName());
@@ -151,6 +175,7 @@ public class SisenseUtil {
 			sisenseUser.setRoleId(AppConstants.SISENSE_VIEWER_ROLE_ID);
 			Gson gson = new Gson();
 			StringEntity postingString = new StringEntity(gson.toJson(sisenseUser));
+			logger.info("creating user details: " + postingString);
 			httpPost.setEntity(postingString);
 			httpPost.setHeader("Authorization", "Bearer " + AppConstants.SISENSE_API_ACCESS_TOKEN);
 			httpPost.setHeader("Accept", "application/json");

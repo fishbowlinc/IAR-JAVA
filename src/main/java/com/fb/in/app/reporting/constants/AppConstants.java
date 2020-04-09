@@ -15,9 +15,7 @@ public class AppConstants {
 
 	public static final String SISENSE_DATA_SECURITY_URL = "https://sisense.fishbowl.com/api/elasticubes/datasecurity";
 
-	public static final String SISENSE_CREATE_USER_URL = "https://sisense.fishbowl.com/api/v1/users";
-
-	public static final String SISENSE_GET_USER_URL = "https://sisense.fishbowl.com/api/users/";
+	public static final String SISENSE_USER_API_URL = "https://sisense.fishbowl.com/api/v1/users";
 
 	public static final String SISENSE_ACCESS_TOKEN_URL = "https://sisense.fishbowl.com/api/v1/authentication/login";
 
