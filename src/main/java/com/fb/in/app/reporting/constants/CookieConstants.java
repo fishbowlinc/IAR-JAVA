@@ -19,7 +19,7 @@ public class CookieConstants {
 
 	public static final String IR_QA_SESSION_ID_COOKIE = "_irqasessionid";
 
-	public static final String IR_PROD_SESSION_ID_COOKIE = "_irsession_id";
+	public static final String IR_PROD_SESSION_ID_COOKIE = "_irsessionid";
 
 	public static final String IR_STG_SESSION_ID_COOKIE = "_irstgsessionid";
 
