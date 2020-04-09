@@ -99,6 +99,7 @@ public class SisenseUtil {
 				}
 			}
 		} catch (Exception exception) {
+			exception.printStackTrace();
 			logger.info(exception.getMessage());
 		}
 		return null;
@@ -132,6 +133,7 @@ public class SisenseUtil {
 				}
 			}
 		} catch (Exception exception) {
+			exception.printStackTrace();
 			logger.info(exception.getMessage());
 		}
 		return null;
@@ -165,6 +167,7 @@ public class SisenseUtil {
 				}
 			}
 		} catch (Exception exception) {
+			exception.printStackTrace();
 			logger.info(exception.getMessage());
 		}
 		return null;
@@ -230,6 +233,7 @@ public class SisenseUtil {
 				}
 			}
 		} catch (Exception exception) {
+			exception.printStackTrace();
 			logger.info(exception.getMessage());
 		}
 	}
