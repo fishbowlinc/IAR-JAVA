@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -78,7 +80,8 @@ public class SisenseUtil {
 	}
 
 	public static String getApiAccessTokenFromSisense(String username, String password) {
-		try (CloseableHttpClient client = HttpClients.createDefault();) {
+		try (CloseableHttpClient client = HttpClients.custom()
+				.setDefaultRequestConfig(RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build()).build();) {
 			HttpPost httpPost = new HttpPost(AppConstants.SISENSE_ACCESS_TOKEN_URL);
 			String authEncodedString = encodeValue(AppConstants.ADMIN_USERNAME) + "&"
 					+ encodeValue(AppConstants.ADMIN_PASSWORD);
@@ -112,7 +115,8 @@ public class SisenseUtil {
 	}
 
 	public static String getUserIdByUsername(String userName) {
-		try (CloseableHttpClient client = HttpClients.createDefault();) {
+		try (CloseableHttpClient client = HttpClients.custom()
+				.setDefaultRequestConfig(RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build()).build();) {
 			String authUrl = AppConstants.SISENSE_GET_USER_URL + userName.trim();
 			HttpGet httpGet = new HttpGet(authUrl);
 			httpGet.setHeader("Authorization", "Bearer " + AppConstants.SISENSE_API_ACCESS_TOKEN);
@@ -134,7 +138,8 @@ public class SisenseUtil {
 	}
 
 	public static String createUserInSisense(UserDetailsResponse userDetailsResponse) {
-		try (CloseableHttpClient client = HttpClients.createDefault();) {
+		try (CloseableHttpClient client = HttpClients.custom()
+				.setDefaultRequestConfig(RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build()).build();) {
 			HttpPost httpPost = new HttpPost(AppConstants.SISENSE_CREATE_USER_URL);
 			SisenseUser sisenseUser = new SisenseUser();
 			sisenseUser.setUserName(userDetailsResponse.getUserName());
@@ -205,7 +210,8 @@ public class SisenseUtil {
 
 	public static void createDataSecuirtyInSisenseElasticCube(String sisenseUserId,
 			DataSecurityPayload securityPayload) {
-		try (CloseableHttpClient client = HttpClients.createDefault();) {
+		try (CloseableHttpClient client = HttpClients.custom()
+				.setDefaultRequestConfig(RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build()).build();) {
 			HttpPost httpPost = new HttpPost(AppConstants.SISENSE_DATA_SECURITY_URL);
 			Gson gson = new Gson();
 			List<DataSecurityPayload> dataSecurityPayloads = new ArrayList<>();
@@ -258,6 +264,5 @@ public class SisenseUtil {
 		}
 		return soapUrl;
 	}
-
 
 }
