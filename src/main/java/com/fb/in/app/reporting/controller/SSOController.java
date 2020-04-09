@@ -35,20 +35,32 @@ public class SSOController {
 		UserAuth userAuth = null;
 		String sisenseUserId = null;
 		String redirectUrl = null;
+		String emailAddress = null;
+		String subject = null;
 		UserDetailsResponse userDetailResponse = null;
-		logger.info("getting ir cookie details...");
 		try {
-			String userAuthStr = CookieUtil.getValue(request, AppConstants.IR_SESSION_ID_COOKIE);
-			String eCubeStr = CookieUtil.getValue(request, AppConstants.IR_ECUBE_COOKIE);
+			String domain = request.getServerName();
+			logger.info("domain: " + request.getServerName());
+
+			String irSessionCookieName = AuthUtil.getIRSessionCookieName(domain);
+			logger.info("ir session cookie name: " + irSessionCookieName);
+
+			String irECubeCookieName = AuthUtil.getIREcubeCookieName(domain);
+			logger.info("ir ecube cookie name: " + irECubeCookieName);
+
+			String userAuthStr = CookieUtil.getValue(request, irSessionCookieName);
+
+			String eCubeStr = CookieUtil.getValue(request, irECubeCookieName);
+
 			if (null != userAuthStr && null != eCubeStr) {
-				logger.info(AppConstants.IR_SESSION_ID_COOKIE + " encrypted cookie details: " + userAuthStr);
-				logger.info(AppConstants.IR_ECUBE_COOKIE + " encrypted cookie details: " + eCubeStr);
+				logger.info(irSessionCookieName + " encrypted cookie details: " + userAuthStr);
+				logger.info(irECubeCookieName + " encrypted cookie details: " + eCubeStr);
 
 				String userDetailsStr = AuthUtil.decrypted(userAuthStr.getBytes());
 
 				logger.info("decrypted userAuth details: " + userDetailsStr);
 
-				String eCubeNameStr = AuthUtil.decryptCubeCookie(eCubeStr.getBytes());
+				String eCubeNameStr = AuthUtil.decryptCubeCookie(eCubeStr);
 
 				logger.info("decrypted eCube details: " + eCubeNameStr);
 
@@ -59,14 +71,22 @@ public class SSOController {
 				sisenseUserId = SisenseUtil.getUserIdByUsername(userAuth.getUserName());
 
 				logger.info("Collected Sisense user id: " + sisenseUserId);
-				if (null == sisenseUserId) {
-					logger.info("getting user details by user id");
+				if (sisenseUserId == null) {
+					logger.info("getting fishbowl user details by user id");
 					userDetailResponse = userService.getUserDetails(userAuth.getUserId());
-					logger.info("adding user in sisense");
-					sisenseUserId = SisenseUtil.createUserInSisense(userDetailResponse);
+					emailAddress = userDetailResponse.getEmail();
+					logger.info("getting user details by email address: " + emailAddress);
+					if (emailAddress != null) {
+						subject = emailAddress;
+						sisenseUserId = SisenseUtil.getUserIdByEmail(userDetailResponse.getEmail().trim());
+					}
+					logger.info("found id: " + sisenseUserId);
+					if (sisenseUserId == null) {
+						logger.info("user doesnt exist in sisense so adding user");
+						sisenseUserId = SisenseUtil.createUserInSisense(userDetailResponse);
+					}
 				}
 				logger.info("creating data security for the logged in user");
-
 				DataSecurityPayload securityPayload = null;
 				if (userAuth.getClientId().equals("-1")) {
 					securityPayload = SisenseUtil.getDataSecurityPayloadForAllMembers(sisenseUserId,
@@ -85,8 +105,9 @@ public class SSOController {
 					}
 				}
 				SisenseUtil.createDataSecuirtyInSisenseElasticCube(sisenseUserId, securityPayload);
-
-				String token = SisenseUtil.generateToken(AppConstants.SIGNING_KEY, userAuth.getUserName());
+				if (subject == null)
+					subject = userAuth.getUserName();
+				String token = SisenseUtil.generateToken(AppConstants.SIGNING_KEY, subject);
 				// This is the Sisense URL which can handle (decode and process) the JWT token
 				redirectUrl = AppConstants.SISENSE_JWT_REDIRECT_URL + token;
 				// Which URL the user was initially trying to open
@@ -95,7 +116,7 @@ public class SSOController {
 					redirectUrl += "&return_to=" + URLEncoder.encode(returnTo, "UTF-8");
 				}
 			} else {
-				String soapUrl = "loginqa.fishbowl.com";
+				String soapUrl = SisenseUtil.getSoapUrl(request.getServerName());
 				redirectUrl = "https://" + soapUrl + "/Public/Login.aspx?ReturnUrl=%2f";
 				logger.info("redirectURL : " + redirectUrl);
 			}

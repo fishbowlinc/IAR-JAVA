@@ -15,13 +15,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +81,8 @@ public class SisenseUtil {
 	}
 
 	public static String getApiAccessTokenFromSisense(String username, String password) {
-		try (CloseableHttpClient client = HttpClients.createDefault();) {
+		RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
+		try (CloseableHttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();) {
 			HttpPost httpPost = new HttpPost(AppConstants.SISENSE_ACCESS_TOKEN_URL);
 			String authEncodedString = encodeValue(AppConstants.ADMIN_USERNAME) + "&"
 					+ encodeValue(AppConstants.ADMIN_PASSWORD);
@@ -96,6 +100,7 @@ public class SisenseUtil {
 				}
 			}
 		} catch (Exception exception) {
+			exception.printStackTrace();
 			logger.info(exception.getMessage());
 		}
 		return null;
@@ -111,9 +116,10 @@ public class SisenseUtil {
 		return null;
 	}
 
-	public static String getUserIdByUsername(String userName) {
-		try (CloseableHttpClient client = HttpClients.createDefault();) {
-			String authUrl = AppConstants.SISENSE_GET_USER_URL + userName.trim();
+	public static String getUserIdByEmail(String email) {
+		RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
+		try (CloseableHttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();) {
+			String authUrl = AppConstants.SISENSE_USER_API_URL + "?email=" + email.trim();
 			HttpGet httpGet = new HttpGet(authUrl);
 			httpGet.setHeader("Authorization", "Bearer " + AppConstants.SISENSE_API_ACCESS_TOKEN);
 			httpGet.setHeader("Accept", "application/json");
@@ -121,21 +127,49 @@ public class SisenseUtil {
 			try (CloseableHttpResponse response = client.execute(httpGet);) {
 				if (response.getStatusLine().getStatusCode() == 200) {
 					String result = EntityUtils.toString(response.getEntity());
-					JSONObject obj = new JSONObject(result);
+					JSONArray array = new JSONArray(result);
+					JSONObject obj = array.getJSONObject(0);
 					return obj.get("_id").toString();
 				} else {
 					logger.info("couldn't find user" + response.getStatusLine());
 				}
 			}
 		} catch (Exception exception) {
+			exception.printStackTrace();
+			logger.info(exception.getMessage());
+		}
+		return null;
+	}
+
+	public static String getUserIdByUsername(String userName) {
+		RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
+		try (CloseableHttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();) {
+			String authUrl = AppConstants.SISENSE_USER_API_URL + "?userName=" + userName.trim();
+			HttpGet httpGet = new HttpGet(authUrl);
+			httpGet.setHeader("Authorization", "Bearer " + AppConstants.SISENSE_API_ACCESS_TOKEN);
+			httpGet.setHeader("Accept", "application/json");
+			httpGet.setHeader("Content-type", "application/json");
+			try (CloseableHttpResponse response = client.execute(httpGet);) {
+				if (response.getStatusLine().getStatusCode() == 200) {
+					String result = EntityUtils.toString(response.getEntity());
+					JSONArray array = new JSONArray(result);
+					JSONObject obj = new JSONObject(array.get(0));
+					return obj.get("_id").toString();
+				} else {
+					logger.info("couldn't find user" + response.getStatusLine());
+				}
+			}
+		} catch (Exception exception) {
+			exception.printStackTrace();
 			logger.info(exception.getMessage());
 		}
 		return null;
 	}
 
 	public static String createUserInSisense(UserDetailsResponse userDetailsResponse) {
-		try (CloseableHttpClient client = HttpClients.createDefault();) {
-			HttpPost httpPost = new HttpPost(AppConstants.SISENSE_CREATE_USER_URL);
+		RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
+		try (CloseableHttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();) {
+			HttpPost httpPost = new HttpPost(AppConstants.SISENSE_USER_API_URL);
 			SisenseUser sisenseUser = new SisenseUser();
 			sisenseUser.setUserName(userDetailsResponse.getUserName());
 			sisenseUser.setFirstName(userDetailsResponse.getFirstName());
@@ -144,6 +178,7 @@ public class SisenseUtil {
 			sisenseUser.setRoleId(AppConstants.SISENSE_VIEWER_ROLE_ID);
 			Gson gson = new Gson();
 			StringEntity postingString = new StringEntity(gson.toJson(sisenseUser));
+			logger.info("creating user details: " + postingString);
 			httpPost.setEntity(postingString);
 			httpPost.setHeader("Authorization", "Bearer " + AppConstants.SISENSE_API_ACCESS_TOKEN);
 			httpPost.setHeader("Accept", "application/json");
@@ -160,6 +195,7 @@ public class SisenseUtil {
 				}
 			}
 		} catch (Exception exception) {
+			exception.printStackTrace();
 			logger.info(exception.getMessage());
 		}
 		return null;
@@ -205,7 +241,8 @@ public class SisenseUtil {
 
 	public static void createDataSecuirtyInSisenseElasticCube(String sisenseUserId,
 			DataSecurityPayload securityPayload) {
-		try (CloseableHttpClient client = HttpClients.createDefault();) {
+		RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
+		try (CloseableHttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();) {
 			HttpPost httpPost = new HttpPost(AppConstants.SISENSE_DATA_SECURITY_URL);
 			Gson gson = new Gson();
 			List<DataSecurityPayload> dataSecurityPayloads = new ArrayList<>();
@@ -224,8 +261,40 @@ public class SisenseUtil {
 				}
 			}
 		} catch (Exception exception) {
+			exception.printStackTrace();
 			logger.info(exception.getMessage());
 		}
+	}
+
+	public static String getSoapUrl(String domain) {
+		String soapUrl = null;
+
+		if (domain != null) {
+			if (domain.contains("qa")) {
+				soapUrl = "loginqa.fishbowl.com";
+			} else if (domain.contains("staging")) {
+				soapUrl = "loginstaging.fishbowl.com";
+			} else {
+				soapUrl = "login.fishbowl.com";
+			}
+		}
+		return soapUrl;
+
+	}
+
+	public static String getfishbowlOneSoapUrl(String domain) {
+		String soapUrl = null;
+
+		if (domain != null) {
+			if (domain.contains("qa")) {
+				soapUrl = "oneqa.fishbowl.com";
+			} else if (domain.contains("staging")) {
+				soapUrl = "onestg.fishbowl.com";
+			} else {
+				soapUrl = "one.fishbowl.com";
+			}
+		}
+		return soapUrl;
 	}
 
 }

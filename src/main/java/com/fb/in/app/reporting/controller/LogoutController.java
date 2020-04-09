@@ -33,9 +33,10 @@ public class LogoutController {
 	public String siseneLogout(HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("LogoutController logout function starts :::");
 		Cookie[] cookieList = request.getCookies();
-		String redirectUrl = "https://" + AuthUtil.getParentAppUrl(request.getServerName()) + "/Public/Login.aspx";
 		if (cookieList != null)
-			AuthUtil.deleteCookies(request, response);
+			AuthUtil.deleteCookies(request, response, cookieList);
+		String redirectUrl = "https://" + AuthUtil.getParentAppUrl(request.getServerName()) + "/Public/Login.aspx";
+
 		return "redirect:" + redirectUrl;
 	}
 }
