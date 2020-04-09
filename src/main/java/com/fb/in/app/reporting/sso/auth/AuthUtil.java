@@ -1,9 +1,10 @@
 package com.fb.in.app.reporting.sso.auth;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
 import java.util.List;
 
 import javax.crypto.BadPaddingException;
@@ -14,44 +15,51 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.ws.BindingProvider;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fb.in.app.reporting.constants.AppConstants;
+import com.fb.in.app.reporting.constants.CookieConstants;
+import com.fb.in.app.reporting.generated.FishbowlSSO;
+import com.fb.in.app.reporting.generated.FishbowlSSOSoap;
 import com.fb.in.app.reporting.model.auth.UserAuth;
 import com.fb.in.app.reporting.model.vo.BrandVo;
 import com.google.gson.Gson;
 
 public class AuthUtil {
 	private static Logger logger = LoggerFactory.getLogger(AuthUtil.class);
+	private static final String irFishbowlDomain = "fishbowl.com";
+	private static final Integer irSessionCookieAge = 3;
 
-	public static HttpServletResponse deleteCookies(HttpServletRequest request, HttpServletResponse response) {
-		Cookie[] cookieList = request.getCookies();
+	public static HttpServletResponse deleteCookies(HttpServletRequest request, HttpServletResponse response,
+			Cookie[] cookieList) {
 		String domain = request.getServerName();
-		String aSPXFORMSAUTH = getaSPXFORMSAUTHString(domain);
-		String fishbowlSessionCookie = getFishFrameSessionEnv(domain);
-		if (cookieList != null) {
-			for (Cookie cookie : cookieList) {
-				logger.debug("Deleting cookie: " + cookie.getName());
-				if (cookie.getName().equals(AppConstants.IR_SESSION_ID_COOKIE)
-						|| cookie.getName().equals(AppConstants.IR_BRAND_LIST_COOKIE)
-						|| cookie.getName().equals(AppConstants.IR_ECUBE_COOKIE)) {
-					cookie.setMaxAge(0);
-					cookie.setDomain(getDomain(request.getServerName()));
-					cookie.setPath("/");
-					response.addCookie(cookie);
-				} else if (aSPXFORMSAUTH.equalsIgnoreCase(cookie.getName())
-						|| fishbowlSessionCookie.equalsIgnoreCase(cookie.getName())) {
-					cookie.setMaxAge(0);
-					cookie.setDomain(getParentAppUrl(domain));
-					cookie.setPath("/");
-					response.addCookie(cookie);
-				}
-			}
+		for (Cookie cookie : cookieList) {
+			String cookieName = cookie.getName();
+			logger.info("Cookie domain name: " + domain);
+			logger.info("Deleting cookie: " + cookieName);
+			cookie.setMaxAge(0);
+			cookie.setDomain(irFishbowlDomain);
+			cookie.setPath("/");
+			response.addCookie(cookie);
 		}
 		return response;
+	}
+
+	public static String getIREcubeCookieName(String domain) {
+		if (domain.contains("qa")) {
+			return CookieConstants.IR_QA_ECUBE_COOKIE;
+
+		} else if (domain.contains("staging")) {
+			return CookieConstants.IR_STG_ECUBE_ID_COOKIE;
+
+		} else {
+			return CookieConstants.IR_PROD_ECUBE_COOKIE;
+		}
 	}
 
 	public static HttpServletResponse getJsonFromObjectWithResponse(HttpServletResponse response, Object object,
@@ -77,7 +85,7 @@ public class AuthUtil {
 
 	public static String getParentAppUrl(String domain) {
 		if (domain != null) {
-			if (domain.contains("qa") || domain.contains("localhost")) {
+			if (domain.contains("qa")) {
 				return "loginqa.fishbowl.com";
 			} else if (domain.contains("staging")) {
 				return "loginstaging.fishbowl.com";
@@ -187,9 +195,16 @@ public class AuthUtil {
 		return new String(data);
 	}
 
-	public static String decryptCubeCookie(byte[] kr) {
-		byte[] encryptedData = java.util.Base64.getDecoder().decode(kr);
-		return new String(encryptedData);
+	public static String decryptCubeCookie(String eCube) {
+		String urlDecodedValue = null;
+		String encryptedValue = null;
+		try {
+			urlDecodedValue = URLDecoder.decode(eCube, "utf8");
+			encryptedValue = new String(java.util.Base64.getDecoder().decode(urlDecodedValue));
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		return encryptedValue;
 	}
 
 	public static UserAuth getUserDetails(String userDetailsStr) {
@@ -274,7 +289,7 @@ public class AuthUtil {
 		String irDomain = null;
 
 		if (domain != null) {
-			if (domain.contains("qa") || domain.contains("localhost")) {
+			if (domain.contains("qa")) {
 				irDomain = "ir2qa.fishbowl.com";
 			} else if (domain.contains("staging")) {
 				irDomain = "ir2stg.fishbowl.com";
@@ -289,7 +304,7 @@ public class AuthUtil {
 	public static String getFishFrameSessionEnv(String domain) {
 		String fishFrameSessionEnv = null;
 		if (domain != null) {
-			if (domain.contains("qa") || domain.contains("localhost")) {
+			if (domain.contains("qa")) {
 				fishFrameSessionEnv = "FishbowlQA";
 			} else if (domain.contains("staging")) {
 				fishFrameSessionEnv = "FishbowlStaging";
@@ -304,7 +319,7 @@ public class AuthUtil {
 	public static String getRedirectServerName(String domain) {
 		String redirectServerName = null;
 		if (domain != null) {
-			if (domain.contains("qa") || domain.contains("localhost")) {
+			if (domain.contains("qa")) {
 				redirectServerName = "ir2qa.fishbowl.com";
 			} else if (domain.contains("staging")) {
 				redirectServerName = "ir2stg.fishbowl.com";
@@ -320,7 +335,7 @@ public class AuthUtil {
 		String soapUrl = null;
 
 		if (domain != null) {
-			if (domain.contains("qa") || domain.contains("localhost")) {
+			if (domain.contains("qa")) {
 				soapUrl = "loginqa.fishbowl.com";
 			} else if (domain.contains("staging")) {
 				soapUrl = "loginstaging.fishbowl.com";
@@ -333,7 +348,7 @@ public class AuthUtil {
 	}
 
 	public static String getaSPXFORMSAUTHString(String domain) {
-		if (domain.contains("qa") || domain.contains("localhost")) {
+		if (domain.contains("qa")) {
 			return "QA.ASPXFORMSAUTH";
 
 		} else if (domain.contains("staging")) {
@@ -347,7 +362,7 @@ public class AuthUtil {
 	}
 
 	public static Cookie getBrandIdCookies(String brandList, String serverName) {
-		Cookie brandCookie = new Cookie(AppConstants.IR_BRAND_LIST_COOKIE, brandList);
+		Cookie brandCookie = new Cookie(CookieConstants.IR_BRAND_LIST_COOKIE, brandList);
 		brandCookie.setDomain(AuthUtil.getDomain(serverName));
 		brandCookie.setPath("/");
 		return brandCookie;
@@ -373,18 +388,55 @@ public class AuthUtil {
 		return jsonBrandList;
 	}
 
+	public static String getIRSessionCookieName(String domain) {
+		if (domain.contains("qa")) {
+			return CookieConstants.IR_QA_SESSION_ID_COOKIE;
+
+		} else if (domain.contains("staging")) {
+			return CookieConstants.IR_STG_SESSION_ID_COOKIE;
+
+		} else {
+			return CookieConstants.IR_PROD_SESSION_ID_COOKIE;
+		}
+	}
+
+	public static Cookie getIRSessionCookie(String domain, String encryptedStr) {
+		String cookieName = AuthUtil.getIRSessionCookieName(domain);
+		Cookie cookie = new Cookie(cookieName, encryptedStr);
+		cookie.setDomain(irFishbowlDomain);
+		cookie.setMaxAge(getIRSessionCookieAge(irSessionCookieAge));
+		cookie.setPath("/");
+		cookie.setSecure(true);
+		return cookie;
+	}
+
 	private static int getIRSessionCookieAge(int hours) {
 		return hours * 60 * 60;
 	}
 
-	public static Cookie setIRSessionCookie(String irDomain, String encryptedStr) {
-		Cookie cookie = new Cookie(AppConstants.IR_SESSION_ID_COOKIE, encryptedStr);
-		cookie.setDomain(irDomain);
-		cookie.setPath("/");
-		cookie.setMaxAge(getIRSessionCookieAge(3));
-		cookie.setSecure(true);
-		cookie.setComment("This cookie contains user auth details");
-		return cookie;
+	public static String getSsoUserDetails(String soapUrl, int appId, String id, String fishFrameSessionId) {
+		String userDetails = null;
+		FishbowlSSO fishbowlSSO = new FishbowlSSO();
+		FishbowlSSOSoap port = fishbowlSSO.getPort(FishbowlSSOSoap.class);
+		BindingProvider provider = (BindingProvider) port;
+
+		provider.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+				"https://" + soapUrl + "/Public/FishbowlSSO.asmx");
+
+		String responseString = port.getAuthTicket(appId, id, new BigDecimal(fishFrameSessionId));
+		logger.info("GetAuthTicket Response : " + responseString);
+		if (responseString != null) {
+			String tokenString = StringUtils.substringBetween(responseString, ">", "<");
+			logger.info("Auth Token : " + tokenString);
+			if (tokenString != null && !StringUtils.isEmpty(tokenString)) {
+				String userDetailsStr = port.getTicketedUserName(id, tokenString);
+				logger.info("GetTicketedUserName Response : " + userDetailsStr);
+				userDetails = StringUtils.substringBetween(userDetailsStr, ">", "<");
+				logger.info("User Details : " + userDetails);
+				return userDetails;
+			}
+		}
+		return userDetails;
 	}
 
 }
