@@ -52,13 +52,13 @@ public class AuthUtil {
 
 	public static String getIREcubeCookieName(String domain) {
 		if (domain.contains("qa")) {
-			return CookieConstants.IR_QA_SESSION_ID_COOKIE;
+			return CookieConstants.IR_QA_ECUBE_COOKIE;
 
 		} else if (domain.contains("staging")) {
-			return CookieConstants.IR_STG_SESSION_ID_COOKIE;
+			return CookieConstants.IR_STG_ECUBE_ID_COOKIE;
 
 		} else {
-			return CookieConstants.IR_PROD_SESSION_ID_COOKIE;
+			return CookieConstants.IR_PROD_ECUBE_COOKIE;
 		}
 	}
 
