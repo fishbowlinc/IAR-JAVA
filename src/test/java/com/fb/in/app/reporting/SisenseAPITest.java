@@ -5,12 +5,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class SisenseAPITest {
 
-	/*@Test
-	public void getSisenseUserIdByUsername() {
-		String userId = SisenseUtil.getUserIdByUsername("jhanna");
-		assertEquals(userId, "5dd3ad05685dc248f8b4a1a6");
-
-	}*/
+	/*
+	 * @Test public void getSisenseUserIdByUsername() { String userId =
+	 * SisenseUtil.getUserIdByEmail("kmrameshbabu_ic@fishbowl.com");
+	 * assertEquals(userId, "5d39878393e2591d48c0a614");
+	 * 
+	 * }
+	 */
 
 	/*
 	 * @Test public void getCreateUserInSisense() { UserDetailsResponse

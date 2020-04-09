@@ -24,6 +24,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,7 +127,8 @@ public class SisenseUtil {
 			try (CloseableHttpResponse response = client.execute(httpGet);) {
 				if (response.getStatusLine().getStatusCode() == 200) {
 					String result = EntityUtils.toString(response.getEntity());
-					JSONObject obj = new JSONObject(result);
+					JSONArray array = new JSONArray(result);
+					JSONObject obj = array.getJSONObject(0);
 					return obj.get("_id").toString();
 				} else {
 					logger.info("couldn't find user" + response.getStatusLine());
@@ -150,7 +152,8 @@ public class SisenseUtil {
 			try (CloseableHttpResponse response = client.execute(httpGet);) {
 				if (response.getStatusLine().getStatusCode() == 200) {
 					String result = EntityUtils.toString(response.getEntity());
-					JSONObject obj = new JSONObject(result);
+					JSONArray array = new JSONArray(result);
+					JSONObject obj = new JSONObject(array.get(0));
 					return obj.get("_id").toString();
 				} else {
 					logger.info("couldn't find user" + response.getStatusLine());
