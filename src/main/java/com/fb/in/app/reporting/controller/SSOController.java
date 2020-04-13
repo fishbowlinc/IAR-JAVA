@@ -2,7 +2,10 @@ package com.fb.in.app.reporting.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.List;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -29,6 +32,7 @@ public class SSOController {
 	@Autowired
 	UserService userService;
 	private final static Logger logger = LoggerFactory.getLogger(SSOController.class);
+	public static List<String> ecubes = Arrays.asList(new String[] { "foo", "bar" });
 
 	@RequestMapping("/sso-handler")
 	public String processRequest(HttpServletRequest request) throws UnsupportedEncodingException {
@@ -37,35 +41,56 @@ public class SSOController {
 		String redirectUrl = null;
 		String emailAddress = null;
 		String subject = null;
+		String soapUrl = null;
+		String fbOneSoapUrl = null;
+		String fbSessionId = null;
+		List<DataSecurityPayload> securityPayload = null;
+		int appId = 1000;
+		String appSessionId = null;
+		boolean isAspxCookiePresent = false;
 		UserDetailsResponse userDetailResponse = null;
 		try {
 			String domain = request.getServerName();
 			logger.info("domain: " + request.getServerName());
+			if (domain.contains("one") || domain.contains("localhost")) {
+				soapUrl = SisenseUtil.getSoapUrl(domain);
+				Cookie[] cookies = request.getCookies();
+				String fbSessionCookie = AuthUtil.getFishFrameSessionEnv(domain);
+				String fbFormAuthId = AuthUtil.getaSPXFORMSAUTHString(domain);
+				if (cookies != null) {
+					for (Cookie ck : cookies) {
+						logger.info("Cookie Name : " + ck.getName());
+						if (ck.getName().equalsIgnoreCase(fbFormAuthId)) {
+							logger.info("AspxCookie is Present and hence proceeding");
+							isAspxCookiePresent = true;
+						}
+						if ("ASP.NET_SessionId".equalsIgnoreCase(ck.getName())) {
+							appSessionId = ck.getValue();
+							logger.info("app session id : " + appSessionId);
+						}
+						if (fbSessionCookie.equalsIgnoreCase(ck.getName())) {
+							fbSessionId = ck.getValue().split("=")[1];
+							logger.info("fishFrameSessionId : " + fbSessionId);
+						}
+					}
+					if (!isAspxCookiePresent) {
+						fbOneSoapUrl = SisenseUtil.getFishbowlOneSoapUrl(domain);
+						logger.info("AspxCookie is not present and hence redirecting to login page");
+						redirectUrl = "https://" + fbOneSoapUrl + "/Login";
+						logger.info("redirectURL : " + redirectUrl);
+						return "redirect:" + redirectUrl;
+					}
+				} else {
+					fbOneSoapUrl = SisenseUtil.getFishbowlOneSoapUrl(domain);
+					logger.info("There is no Cookie. Hence redirecting to login page");
+					redirectUrl = "https://" + fbOneSoapUrl + "/Login";
+					logger.info("redirectURL : " + redirectUrl);
+					return "redirect:" + redirectUrl;
+				}
 
-			String irSessionCookieName = AuthUtil.getIRSessionCookieName(domain);
-			logger.info("ir session cookie name: " + irSessionCookieName);
-
-			String irECubeCookieName = AuthUtil.getIREcubeCookieName(domain);
-			logger.info("ir ecube cookie name: " + irECubeCookieName);
-
-			String userAuthStr = CookieUtil.getValue(request, irSessionCookieName);
-
-			String eCubeStr = CookieUtil.getValue(request, irECubeCookieName);
-
-			if (null != userAuthStr && null != eCubeStr) {
-				logger.info(irSessionCookieName + " encrypted cookie details: " + userAuthStr);
-				logger.info(irECubeCookieName + " encrypted cookie details: " + eCubeStr);
-
-				String userDetailsStr = AuthUtil.decrypted(userAuthStr.getBytes());
-
-				logger.info("decrypted userAuth details: " + userDetailsStr);
-
-				String eCubeNameStr = AuthUtil.decryptCubeCookie(eCubeStr);
-
-				logger.info("decrypted eCube details: " + eCubeNameStr);
-
-				userAuth = AuthUtil.getUserDetails(userDetailsStr);
-
+				String userDetails = AuthUtil.getSsoUserDetails(soapUrl, appId, appSessionId, fbSessionId);
+				logger.info(userDetails);
+				userAuth = AuthUtil.getUserDetails(userDetails);
 				logger.info("getting user id via sisense api for username: " + userAuth.getUserName());
 
 				sisenseUserId = SisenseUtil.getUserIdByUsername(userAuth.getUserName());
@@ -87,18 +112,16 @@ public class SSOController {
 					}
 				}
 				logger.info("creating data security for the logged in user");
-				DataSecurityPayload securityPayload = null;
 				if (userAuth.getClientId().equals("-1")) {
-					securityPayload = SisenseUtil.getDataSecurityPayloadForAllMembers(sisenseUserId,
-							eCubeNameStr.trim());
+					securityPayload = SisenseUtil.getFbOneDataSecurityPayloadForAllMembers(sisenseUserId, ecubes);
 				} else {
 					BrandRequest brandRequest = new BrandRequest();
 					logger.info("userService getBrand calling to get user Brands");
 					BrandListResponse response = null;
 					try {
 						response = userService.getBrand(userAuth.getUserId(), userAuth.getClientId(), brandRequest);
-						securityPayload = SisenseUtil.getDataSecurityPayload(response.getBrandList(), sisenseUserId,
-								eCubeNameStr.trim());
+						securityPayload = SisenseUtil.getFbOneDataSecurityPayload(response.getBrandList(),
+								sisenseUserId, ecubes);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -112,13 +135,87 @@ public class SSOController {
 				redirectUrl = AppConstants.SISENSE_JWT_REDIRECT_URL + token;
 				// Which URL the user was initially trying to open
 				String returnTo = request.getParameter("return_to");
-				if (returnTo != null) {
+				if (returnTo != null)
 					redirectUrl += "&return_to=" + URLEncoder.encode(returnTo, "UTF-8");
-				}
+
 			} else {
-				String soapUrl = SisenseUtil.getSoapUrl(request.getServerName());
-				redirectUrl = "https://" + soapUrl + "/Public/Login.aspx?ReturnUrl=%2f";
-				logger.info("redirectURL : " + redirectUrl);
+				String irSessionCookieName = AuthUtil.getIRSessionCookieName(domain);
+				logger.info("ir session cookie name: " + irSessionCookieName);
+
+				String irECubeCookieName = AuthUtil.getIREcubeCookieName(domain);
+				logger.info("ir ecube cookie name: " + irECubeCookieName);
+
+				String userAuthStr = CookieUtil.getValue(request, irSessionCookieName);
+
+				String eCubeStr = CookieUtil.getValue(request, irECubeCookieName);
+
+				if (null != userAuthStr && null != eCubeStr) {
+					logger.info(irSessionCookieName + " encrypted cookie details: " + userAuthStr);
+					logger.info(irECubeCookieName + " encrypted cookie details: " + eCubeStr);
+
+					String userDetailsStr = AuthUtil.decrypted(userAuthStr.getBytes());
+
+					logger.info("decrypted userAuth details: " + userDetailsStr);
+
+					String eCubeNameStr = AuthUtil.decryptCubeCookie(eCubeStr);
+
+					logger.info("decrypted eCube details: " + eCubeNameStr);
+
+					userAuth = AuthUtil.getUserDetails(userDetailsStr);
+
+					logger.info("getting user id via sisense api for username: " + userAuth.getUserName());
+
+					sisenseUserId = SisenseUtil.getUserIdByUsername(userAuth.getUserName());
+
+					logger.info("Collected Sisense user id: " + sisenseUserId);
+					if (sisenseUserId == null) {
+						logger.info("getting fishbowl user details by user id");
+						userDetailResponse = userService.getUserDetails(userAuth.getUserId());
+						emailAddress = userDetailResponse.getEmail();
+						logger.info("getting user details by email address: " + emailAddress);
+						if (emailAddress != null) {
+							subject = emailAddress;
+							sisenseUserId = SisenseUtil.getUserIdByEmail(userDetailResponse.getEmail().trim());
+						}
+						logger.info("found id: " + sisenseUserId);
+						if (sisenseUserId == null) {
+							logger.info("user doesnt exist in sisense so adding user");
+							sisenseUserId = SisenseUtil.createUserInSisense(userDetailResponse);
+						}
+					}
+					logger.info("creating data security for the logged in user");
+					if (userAuth.getClientId().equals("-1")) {
+						securityPayload = SisenseUtil.getDataSecurityPayloadForAllMembers(sisenseUserId,
+								eCubeNameStr.trim());
+					} else {
+						BrandRequest brandRequest = new BrandRequest();
+						logger.info("userService getBrand calling to get user Brands");
+						BrandListResponse response = null;
+						try {
+							response = userService.getBrand(userAuth.getUserId(), userAuth.getClientId(), brandRequest);
+							securityPayload = SisenseUtil.getDataSecurityPayload(response.getBrandList(), sisenseUserId,
+									eCubeNameStr.trim());
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					SisenseUtil.createDataSecuirtyInSisenseElasticCube(sisenseUserId, securityPayload);
+					if (subject == null)
+						subject = userAuth.getUserName();
+					String token = SisenseUtil.generateToken(AppConstants.SIGNING_KEY, subject);
+					// This is the Sisense URL which can handle (decode and process) the JWT token
+					redirectUrl = AppConstants.SISENSE_JWT_REDIRECT_URL + token;
+					// Which URL the user was initially trying to open
+					String returnTo = request.getParameter("return_to");
+					if (returnTo != null) {
+						redirectUrl += "&return_to=" + URLEncoder.encode(returnTo, "UTF-8");
+					}
+				} else {
+					soapUrl = SisenseUtil.getSoapUrl(request.getServerName());
+					redirectUrl = "https://" + soapUrl + "/Public/Login.aspx?ReturnUrl=%2f";
+					logger.info("redirectURL : " + redirectUrl);
+				}
 			}
 
 		} catch (Exception e) {
