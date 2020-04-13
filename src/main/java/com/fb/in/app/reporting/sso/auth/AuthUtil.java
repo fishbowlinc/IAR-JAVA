@@ -43,8 +43,6 @@ public class AuthUtil {
 			logger.info("Cookie domain name: " + domain);
 			logger.info("Deleting cookie: " + cookieName);
 			cookie.setMaxAge(0);
-			cookie.setDomain(irFishbowlDomain);
-			cookie.setPath("/");
 			response.addCookie(cookie);
 		}
 		return response;
