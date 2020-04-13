@@ -32,7 +32,7 @@ public class SSOController {
 	@Autowired
 	UserService userService;
 	private final static Logger logger = LoggerFactory.getLogger(SSOController.class);
-	public static List<String> ecubes = Arrays.asList(new String[] { "foo", "bar" });
+	public static List<String> ecubes = Arrays.asList(new String[] { "Monthly Summary", "Master Database" });
 
 	@RequestMapping("/sso-handler")
 	public String processRequest(HttpServletRequest request) throws UnsupportedEncodingException {
