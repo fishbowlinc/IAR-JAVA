@@ -42,6 +42,8 @@ public class AuthUtil {
 			String cookieName = cookie.getName();
 			logger.info("Cookie domain name: " + domain);
 			logger.info("Deleting cookie: " + cookieName);
+			cookie.setDomain(irFishbowlDomain);
+			cookie.setPath("/");
 			cookie.setMaxAge(0);
 			response.addCookie(cookie);
 		}
