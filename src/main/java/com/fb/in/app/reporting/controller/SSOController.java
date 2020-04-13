@@ -51,7 +51,7 @@ public class SSOController {
 		UserDetailsResponse userDetailResponse = null;
 		try {
 			String domain = request.getServerName();
-			logger.info("domain: " + request.getServerName());
+			logger.info("domain: " + domain);
 			if (domain.contains("one") || domain.contains("localhost")) {
 				soapUrl = SisenseUtil.getSoapUrl(domain);
 				Cookie[] cookies = request.getCookies();
@@ -60,6 +60,7 @@ public class SSOController {
 				if (cookies != null) {
 					for (Cookie ck : cookies) {
 						logger.info("Cookie Name : " + ck.getName());
+						logger.info("Cookie domain : " + ck.getDomain());
 						if (ck.getName().equalsIgnoreCase(fbFormAuthId)) {
 							logger.info("AspxCookie is Present and hence proceeding");
 							isAspxCookiePresent = true;
