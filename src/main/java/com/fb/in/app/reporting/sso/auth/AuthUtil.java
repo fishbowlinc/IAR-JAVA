@@ -42,6 +42,8 @@ public class AuthUtil {
 			String cookieName = cookie.getName();
 			logger.info("Cookie domain name: " + domain);
 			logger.info("Deleting cookie: " + cookieName);
+			cookie.setDomain(irFishbowlDomain);
+			cookie.setPath("/");
 			cookie.setMaxAge(0);
 			response.addCookie(cookie);
 		}
@@ -333,7 +335,7 @@ public class AuthUtil {
 		String soapUrl = null;
 
 		if (domain != null) {
-			if (domain.contains("qa")||domain.contains("qa") ) {
+			if (domain.contains("qa") || domain.contains("qa")) {
 				soapUrl = "loginqa.fishbowl.com";
 			} else if (domain.contains("staging")) {
 				soapUrl = "loginstaging.fishbowl.com";
@@ -346,7 +348,7 @@ public class AuthUtil {
 	}
 
 	public static String getaSPXFORMSAUTHString(String domain) {
-		if (domain.contains("qa")|| domain.contains("localhost")) {
+		if (domain.contains("qa") || domain.contains("localhost")) {
 			return "QA.ASPXFORMSAUTH";
 
 		} else if (domain.contains("staging")) {
