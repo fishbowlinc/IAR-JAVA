@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.http.HttpHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class SSOController {
 		boolean isAspxCookiePresent = false;
 		UserDetailsResponse userDetailResponse = null;
 		try {
-			String domain = request.getServerName();
+			String domain = request.getHeader(HttpHeaders.REFERER);
 			logger.info("domain: " + domain);
 			if (domain.contains("one") || domain.contains("localhost")) {
 				soapUrl = SisenseUtil.getSoapUrl(domain);
