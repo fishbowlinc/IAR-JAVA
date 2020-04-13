@@ -37,7 +37,6 @@ public class ReportController {
 	UserService userService;
 
 	private final static Logger logger = LoggerFactory.getLogger(ReportController.class);
-	private static final String fbLoginCookieName = "ASPXFORMSAUTH";
 
 	@RequestMapping("/report")
 	public String getReport(@RequestParam(name = "Id", required = false) String ID,
@@ -54,14 +53,13 @@ public class ReportController {
 		logger.info("bid : " + bid);
 
 		boolean isAspxCookiePresent = false;
-		// Need to fetch from properties file
-		int appId = 1000;
 
 		String fishFrameSessionEnv = null;
-		String fishFrameSessionId = null;
+
 		String redirectServerName = null;
 		String soapUrl = null;
 		String redirectURL = null;
+		String aspxFormsAuthValue = null;
 
 		Cookie[] cookies = request.getCookies();
 		String domain = request.getServerName();
@@ -85,16 +83,14 @@ public class ReportController {
 			return "redirect:" + redirectURL;
 		}
 		if (cookies != null) {
+			String aspxFormsAuthCookie = AuthUtil.getaSPXFORMSAUTHString(domain);
 			for (Cookie ck : cookies) {
 				logger.info("Cookie Name : " + ck.getName());
 				logger.info("Cookie Domain : " + ck.getDomain());
-				if (ck.getName().contains(fbLoginCookieName)) {
+				if (ck.getName().contains(aspxFormsAuthCookie)) {
 					logger.info("AspxCookie is Present and hence proceeding");
+					aspxFormsAuthValue = ck.getValue();
 					isAspxCookiePresent = true;
-				}
-				if (fishFrameSessionEnv.equalsIgnoreCase(ck.getName())) {
-					fishFrameSessionId = ck.getValue().split("=")[1];
-					logger.info("fishFrameSessionId : " + fishFrameSessionId);
 				}
 			}
 			if (!isAspxCookiePresent) {
@@ -110,11 +106,7 @@ public class ReportController {
 			return "redirect:" + redirectURL;
 		}
 
-		logger.info("AppId : " + appId);
-		logger.info("Session Value : " + Id);
-		logger.info("Fish Frame SessionId : " + fishFrameSessionId);
-
-		String userDetails = AuthUtil.getSsoUserDetails(soapUrl, appId, Id, fishFrameSessionId);
+		String userDetails = AuthUtil.getSsoUserDetails(soapUrl, aspxFormsAuthValue);
 		if (null != userDetails) {
 			String encryptedStr = AuthUtil.encrypted(userDetails);
 			logger.info("Encrypted User Details  : " + encryptedStr);

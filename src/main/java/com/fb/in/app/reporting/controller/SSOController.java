@@ -44,11 +44,9 @@ public class SSOController {
 		String subject = null;
 		String soapUrl = null;
 		String fbOneSoapUrl = null;
-		String fbSessionId = null;
 		List<DataSecurityPayload> securityPayload = null;
-		int appId = 1000;
-		String appSessionId = null;
 		boolean isAspxCookiePresent = false;
+		String aspxFormsAuthValue = null;
 		UserDetailsResponse userDetailResponse = null;
 		try {
 			String domain = request.getHeader(HttpHeaders.REFERER);
@@ -56,23 +54,15 @@ public class SSOController {
 			if (domain.contains("one") || domain.contains("localhost")) {
 				soapUrl = SisenseUtil.getSoapUrl(domain);
 				Cookie[] cookies = request.getCookies();
-				String fbSessionCookie = AuthUtil.getFishFrameSessionEnv(domain);
-				String fbFormAuthId = AuthUtil.getaSPXFORMSAUTHString(domain);
+				String aspxFormsAuthCookie = AuthUtil.getaSPXFORMSAUTHString(domain);
 				if (cookies != null) {
 					for (Cookie ck : cookies) {
 						logger.info("Cookie Name : " + ck.getName());
 						logger.info("Cookie domain : " + ck.getDomain());
-						if (ck.getName().equalsIgnoreCase(fbFormAuthId)) {
+						if (ck.getName().equalsIgnoreCase(aspxFormsAuthCookie)) {
 							logger.info("AspxCookie is Present and hence proceeding");
 							isAspxCookiePresent = true;
-						}
-						if ("ASP.NET_SessionId".equalsIgnoreCase(ck.getName())) {
-							appSessionId = ck.getValue();
-							logger.info("app session id : " + appSessionId);
-						}
-						if (fbSessionCookie.equalsIgnoreCase(ck.getName())) {
-							fbSessionId = ck.getValue().split("=")[1];
-							logger.info("fishFrameSessionId : " + fbSessionId);
+							aspxFormsAuthValue = ck.getValue();
 						}
 					}
 					if (!isAspxCookiePresent) {
@@ -90,7 +80,7 @@ public class SSOController {
 					return "redirect:" + redirectUrl;
 				}
 
-				String userDetails = AuthUtil.getSsoUserDetails(soapUrl, appId, appSessionId, fbSessionId);
+				String userDetails = AuthUtil.getSsoUserDetails(soapUrl, aspxFormsAuthValue);
 				logger.info(userDetails);
 				userAuth = AuthUtil.getUserDetails(userDetails);
 				logger.info("getting user id via sisense api for username: " + userAuth.getUserName());
