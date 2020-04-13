@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -201,8 +204,9 @@ public class SisenseUtil {
 		return null;
 	}
 
-	public static DataSecurityPayload getDataSecurityPayload(List<BrandVo> brands, String sisenseUserId,
+	public static List<DataSecurityPayload> getDataSecurityPayload(List<BrandVo> brands, String sisenseUserId,
 			String eCubeName) {
+		List<DataSecurityPayload> dataSecurityPayloads = new ArrayList<>();
 		DataSecurityPayload securityPayload = new DataSecurityPayload();
 		securityPayload.setServer(AppConstants.SISENSE_DATA_SECURITY_SERVER_URL);
 		securityPayload.setElasticube(eCubeName);
@@ -218,10 +222,13 @@ public class SisenseUtil {
 		List<String> members = new ArrayList<>();
 		brands.forEach(brand -> members.add(String.valueOf(brand.getBrandId())));
 		securityPayload.setMembers(members);
-		return securityPayload;
+		dataSecurityPayloads.add(securityPayload);
+		return dataSecurityPayloads;
 	}
 
-	public static DataSecurityPayload getDataSecurityPayloadForAllMembers(String sisenseUserId, String eCubeName) {
+	public static List<DataSecurityPayload> getDataSecurityPayloadForAllMembers(String sisenseUserId,
+			String eCubeName) {
+		List<DataSecurityPayload> dataSecurityPayloads = new ArrayList<>();
 		DataSecurityPayload securityPayload = new DataSecurityPayload();
 		securityPayload.setServer(AppConstants.SISENSE_DATA_SECURITY_SERVER_URL);
 		securityPayload.setElasticube(eCubeName);
@@ -236,17 +243,16 @@ public class SisenseUtil {
 		securityPayload.setShares(shares);
 		securityPayload.setAllMembers(true);
 		securityPayload.setMembers(new ArrayList<String>());
-		return securityPayload;
+		dataSecurityPayloads.add(securityPayload);
+		return dataSecurityPayloads;
 	}
 
 	public static void createDataSecuirtyInSisenseElasticCube(String sisenseUserId,
-			DataSecurityPayload securityPayload) {
+			List<DataSecurityPayload> dataSecurityPayloads) {
 		RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
 		try (CloseableHttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();) {
 			HttpPost httpPost = new HttpPost(AppConstants.SISENSE_DATA_SECURITY_URL);
 			Gson gson = new Gson();
-			List<DataSecurityPayload> dataSecurityPayloads = new ArrayList<>();
-			dataSecurityPayloads.add(securityPayload);
 			StringEntity postingString = new StringEntity(gson.toJson(dataSecurityPayloads));
 			httpPost.setEntity(postingString);
 			httpPost.setHeader("Authorization", "Bearer " + AppConstants.SISENSE_API_ACCESS_TOKEN);
@@ -270,7 +276,7 @@ public class SisenseUtil {
 		String soapUrl = null;
 
 		if (domain != null) {
-			if (domain.contains("qa")) {
+			if (domain.contains("qa") || domain.contains("localhost")) {
 				soapUrl = "loginqa.fishbowl.com";
 			} else if (domain.contains("staging")) {
 				soapUrl = "loginstaging.fishbowl.com";
@@ -282,11 +288,27 @@ public class SisenseUtil {
 
 	}
 
-	public static String getfishbowlOneSoapUrl(String domain) {
+	public static String getFishbownOneSoapUrl(String domain) {
 		String soapUrl = null;
 
 		if (domain != null) {
 			if (domain.contains("qa")) {
+				soapUrl = "oneqa.fishbowl.com/Login";
+			} else if (domain.contains("int")) {
+				soapUrl = "oneint.fishbowl.com/Login";
+			} else {
+				soapUrl = "one.fishbowl.com/Login";
+			}
+		}
+		return soapUrl;
+
+	}
+
+	public static String getFishbowlOneSoapUrl(String domain) {
+		String soapUrl = null;
+
+		if (domain != null) {
+			if (domain.contains("qa") | domain.contains("localhost")) {
 				soapUrl = "oneqa.fishbowl.com";
 			} else if (domain.contains("staging")) {
 				soapUrl = "onestg.fishbowl.com";
@@ -295,6 +317,69 @@ public class SisenseUtil {
 			}
 		}
 		return soapUrl;
+	}
+
+	public static String getFishbowlSessionId(HttpServletRequest request) {
+		String fbSessionId = null;
+		Cookie[] cookies = request.getCookies();
+		if (null != cookies && cookies.length > 0) {
+			String fbSessionCookie = AuthUtil.getFishFrameSessionEnv(request.getServerName());
+			for (Cookie ck : cookies) {
+				logger.info("Cookie Name : " + ck.getName());
+				if (ck.getName().equalsIgnoreCase(fbSessionCookie)) {
+					fbSessionId = ck.getValue().split("=")[1];
+					logger.info("fishFrameSessionId : " + fbSessionId);
+				}
+			}
+		}
+		return fbSessionId;
+	}
+
+	public static List<DataSecurityPayload> getFbOneDataSecurityPayloadForAllMembers(String sisenseUserId,
+			List<String> ecubes) {
+		List<DataSecurityPayload> dataSecurityPayloads = new ArrayList<>();
+		ecubes.forEach(ecube -> {
+			DataSecurityPayload securityPayload = new DataSecurityPayload();
+			securityPayload.setServer(AppConstants.SISENSE_DATA_SECURITY_SERVER_URL);
+			securityPayload.setElasticube(ecube);
+			securityPayload.setTable("Dim_Brand");
+			securityPayload.setColumn("Brand ID");
+			securityPayload.setDatatype("numeric");
+			List<Share> shares = new ArrayList<>();
+			Share share = new Share();
+			share.setParty(sisenseUserId);
+			share.setType("user");
+			shares.add(share);
+			securityPayload.setShares(shares);
+			securityPayload.setAllMembers(true);
+			securityPayload.setMembers(new ArrayList<String>());
+			dataSecurityPayloads.add(securityPayload);
+		});
+		return dataSecurityPayloads;
+	}
+
+	public static List<DataSecurityPayload> getFbOneDataSecurityPayload(List<BrandVo> brands, String sisenseUserId,
+			List<String> ecubes) {
+		List<DataSecurityPayload> dataSecurityPayloads = new ArrayList<>();
+		ecubes.forEach(ecube -> {
+			DataSecurityPayload securityPayload = new DataSecurityPayload();
+			securityPayload.setServer(AppConstants.SISENSE_DATA_SECURITY_SERVER_URL);
+			securityPayload.setElasticube(ecube);
+			securityPayload.setTable("Dim_Brand");
+			securityPayload.setColumn("Brand ID");
+			securityPayload.setDatatype("numeric");
+			List<Share> shares = new ArrayList<>();
+			Share share = new Share();
+			share.setParty(sisenseUserId);
+			share.setType("user");
+			shares.add(share);
+			securityPayload.setShares(shares);
+			List<String> members = new ArrayList<>();
+			brands.forEach(brand -> members.add(String.valueOf(brand.getBrandId())));
+			securityPayload.setMembers(members);
+			dataSecurityPayloads.add(securityPayload);
+		});
+		return dataSecurityPayloads;
 	}
 
 }
