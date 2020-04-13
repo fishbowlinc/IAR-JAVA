@@ -156,7 +156,7 @@ public class SisenseUtil {
 				if (response.getStatusLine().getStatusCode() == 200) {
 					String result = EntityUtils.toString(response.getEntity());
 					JSONArray array = new JSONArray(result);
-					JSONObject obj = new JSONObject(array.get(0));
+					JSONObject obj = array.getJSONObject(0);
 					return obj.get("_id").toString();
 				} else {
 					logger.info("couldn't find user" + response.getStatusLine());
