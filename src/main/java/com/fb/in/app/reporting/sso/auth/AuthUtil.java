@@ -1,7 +1,6 @@
 package com.fb.in.app.reporting.sso.auth;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -335,7 +334,7 @@ public class AuthUtil {
 		String soapUrl = null;
 
 		if (domain != null) {
-			if (domain.contains("qa") || domain.contains("qa")) {
+			if (domain.contains("qa") || domain.contains("localhost")) {
 				soapUrl = "loginqa.fishbowl.com";
 			} else if (domain.contains("staging")) {
 				soapUrl = "loginstaging.fishbowl.com";
@@ -414,7 +413,7 @@ public class AuthUtil {
 		return hours * 60 * 60;
 	}
 
-	public static String getSsoUserDetails(String soapUrl, int appId, String id, String fishFrameSessionId) {
+	public static String getSsoUserDetails(String soapUrl, String aspxFormsAuth) {
 		String userDetails = null;
 		FishbowlSSO fishbowlSSO = new FishbowlSSO();
 		FishbowlSSOSoap port = fishbowlSSO.getPort(FishbowlSSOSoap.class);
@@ -422,21 +421,24 @@ public class AuthUtil {
 
 		provider.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
 				"https://" + soapUrl + "/Public/FishbowlSSO.asmx");
-
-		String responseString = port.getAuthTicket(appId, id, new BigDecimal(fishFrameSessionId));
-		logger.info("GetAuthTicket Response : " + responseString);
-		if (responseString != null) {
-			String tokenString = StringUtils.substringBetween(responseString, ">", "<");
-			logger.info("Auth Token : " + tokenString);
-			if (tokenString != null && !StringUtils.isEmpty(tokenString)) {
-				String userDetailsStr = port.getTicketedUserName(id, tokenString);
-				logger.info("GetTicketedUserName Response : " + userDetailsStr);
-				userDetails = StringUtils.substringBetween(userDetailsStr, ">", "<");
-				logger.info("User Details : " + userDetails);
-				return userDetails;
-			}
-		}
+		String userDetailsStr = port.getTicketedUserName(null, aspxFormsAuth);
+		logger.info("GetTicketedUserName Response : " + userDetailsStr);
+		userDetails = StringUtils.substringBetween(userDetailsStr, ">", "<");
+		logger.info("User Details : " + userDetails);
 		return userDetails;
 	}
-
 }
+
+/*
+ * String responseString = port.getAuthTicket(appId, id, new
+ * BigDecimal(fishFrameSessionId)); logger.info("GetAuthTicket Response : " +
+ * responseString); if (responseString != null) { String tokenString =
+ * StringUtils.substringBetween(responseString, ">", "<");
+ * logger.info("Auth Token : " + tokenString); if (tokenString != null &&
+ * !StringUtils.isEmpty(tokenString)) { String userDetailsStr =
+ * port.getTicketedUserName(null, tokenString);
+ * logger.info("GetTicketedUserName Response : " + userDetailsStr); userDetails
+ * = StringUtils.substringBetween(userDetailsStr, ">", "<");
+ * logger.info("User Details : " + userDetails); return userDetails; } } return
+ * userDetails; }
+ */
