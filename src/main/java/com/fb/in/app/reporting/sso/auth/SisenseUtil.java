@@ -272,22 +272,6 @@ public class SisenseUtil {
 		}
 	}
 
-	public static String getSoapUrl(String domain) {
-		String soapUrl = null;
-
-		if (domain != null) {
-			if (domain.contains("qa") || domain.contains("localhost")) {
-				soapUrl = "loginqa.fishbowl.com";
-			} else if (domain.contains("staging")) {
-				soapUrl = "loginstaging.fishbowl.com";
-			} else {
-				soapUrl = "login.fishbowl.com";
-			}
-		}
-		return soapUrl;
-
-	}
-
 	public static String getFishbownOneSoapUrl(String domain) {
 		String soapUrl = null;
 

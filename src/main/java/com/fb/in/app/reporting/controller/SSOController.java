@@ -43,7 +43,6 @@ public class SSOController {
 		String emailAddress = null;
 		String subject = null;
 		String soapUrl = null;
-		String fbOneSoapUrl = null;
 		List<DataSecurityPayload> securityPayload = null;
 		boolean isAspxCookiePresent = false;
 		String aspxFormsAuthValue = null;
@@ -51,8 +50,8 @@ public class SSOController {
 		try {
 			String domain = request.getHeader(HttpHeaders.REFERER);
 			logger.info("domain: " + domain);
-			if (domain.contains("one") || domain.contains("localhost")) {
-				soapUrl = SisenseUtil.getSoapUrl(domain);
+			if (domain.contains(AppConstants.FISHBOWL_ONE_PRODUCT_NAME)) {
+				soapUrl = AuthUtil.getSoapUrl(domain);
 				Cookie[] cookies = request.getCookies();
 				String aspxFormsAuthCookie = AuthUtil.getaSPXFORMSAUTHString(domain);
 				if (cookies != null) {
@@ -66,16 +65,14 @@ public class SSOController {
 						}
 					}
 					if (!isAspxCookiePresent) {
-						fbOneSoapUrl = SisenseUtil.getFishbowlOneSoapUrl(domain);
+						redirectUrl = AuthUtil.getFbOneLoginUrl(domain);
 						logger.info("AspxCookie is not present and hence redirecting to login page");
-						redirectUrl = "https://" + fbOneSoapUrl + "/Login";
 						logger.info("redirectURL : " + redirectUrl);
 						return "redirect:" + redirectUrl;
 					}
 				} else {
-					fbOneSoapUrl = SisenseUtil.getFishbowlOneSoapUrl(domain);
+					redirectUrl = AuthUtil.getFbOneLoginUrl(domain);
 					logger.info("There is no Cookie. Hence redirecting to login page");
-					redirectUrl = "https://" + fbOneSoapUrl + "/Login";
 					logger.info("redirectURL : " + redirectUrl);
 					return "redirect:" + redirectUrl;
 				}
@@ -188,7 +185,7 @@ public class SSOController {
 							securityPayload = SisenseUtil.getDataSecurityPayload(response.getBrandList(), sisenseUserId,
 									eCubeNameStr.trim());
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
+							logger.info(e.getMessage());
 							e.printStackTrace();
 						}
 					}
@@ -204,14 +201,14 @@ public class SSOController {
 						redirectUrl += "&return_to=" + URLEncoder.encode(returnTo, "UTF-8");
 					}
 				} else {
-					soapUrl = SisenseUtil.getSoapUrl(request.getServerName());
-					redirectUrl = "https://" + soapUrl + "/Public/Login.aspx?ReturnUrl=%2f";
+					soapUrl = AuthUtil.getSoapUrl(request.getServerName());
+					redirectUrl = soapUrl + AppConstants.ENTERPRIZE_LOGIN_URL_EXTENSION + "?ReturnUrl=%2f";
 					logger.info("redirectURL : " + redirectUrl);
 				}
 			}
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			logger.info(e.getMessage());
 			e.printStackTrace();
 		}
 		return "redirect:" + redirectUrl;

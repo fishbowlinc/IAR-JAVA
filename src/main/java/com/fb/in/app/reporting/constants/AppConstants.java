@@ -34,4 +34,29 @@ public class AppConstants {
 	public static final String SISENSE_JWT_REDIRECT_URL = "https://sisense.fishbowl.com/jwt?jwt=";
 
 	public static final String SISENSE_APP_LOGOUT_URL = "https://sisense.fishbowl.com/api/v1/authentication/logout";
+	public static final String FISHBOWL_ONE_QA_LOGIN_URL = "https://oneqa.fishbowl.com/Login";
+	public static final String FISHBOWL_ONE_PRD_LOGIN_URL = "https://one.fishbowl.com/Login";
+	public static final String FISHBOWL_ONE_INT_LOGIN_URL = "https://oneint.fishbowl.com/Login";
+
+	public static final String ENTERPRIZE_QA_LOGIN_URL = "https://loginqa.fishbowl.com/";
+	public static final String ENTERPRIZE_PRD_LOGIN_URL = "https://login.fishbowl.com/";
+	public static final String ENTERPRIZE_STG_LOGIN_URL = "https://loginint.fishbowl.com/";
+
+	public static final String ENTERPRIZE_LOGIN_URL_EXTENSION = "Public/Login.aspx";
+	public static final String FISHBOWL_SSO_URL_EXTENSION = "Public/FishbowlSSO.asmx";
+	public static final String FISHBOWL_IN_APP_REPORING_ANGULAR_APP_EXTENSION = "#/reportList";
+	public static final String FISHBOWL_IAR_SSO_NAVIGATOR_EXTENSION = "SSO/Navigator/InitializeTargetApp?bid=34&ReturnUrl=/report";
+
+	public static final String APP_ENVIRONMENT_QA = "qa";
+	public static final String APP_ENVIRONMENT_INT = "int";
+	public static final String APP_ENVIRONMENT_STG = "stg";
+	public static final String APP_ENVIRONMENT_LOCAL = "localhost";
+
+	public static final String FISHBOWL_DOMAIN = "fishbowl.com";
+	public static final String FISHBOWL_ONE_PRODUCT_NAME = "one";
+
+	public static final String IN_APP_REPORTING_DOMAIN_QA = "https://ir2qa.fishbowl.com/";
+	public static final String IN_APP_REPORTING_DOMAIN_STG = "https://ir2stg.fishbowl.com/";
+	public static final String IN_APP_REPORTING_DOMAIN_PRD = "https://ir.fishbowl.com/";
+
 }
