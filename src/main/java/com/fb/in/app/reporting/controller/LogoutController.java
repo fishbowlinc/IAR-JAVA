@@ -26,6 +26,9 @@ public class LogoutController {
 
 	@RequestMapping("/logout-redirect")
 	public String getReport(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+		Cookie[] cookieList = httpServletRequest.getCookies();
+		if (cookieList != null)
+			AuthUtil.deleteCookies(httpServletRequest, httpServletResponse, cookieList);
 		return "redirect:" + AppConstants.SISENSE_APP_LOGOUT_URL;
 	}
 
@@ -35,8 +38,7 @@ public class LogoutController {
 		Cookie[] cookieList = request.getCookies();
 		if (cookieList != null)
 			AuthUtil.deleteCookies(request, response, cookieList);
-		String redirectUrl = "https://" + AuthUtil.getParentAppUrl(request.getServerName()) + "/Public/Login.aspx";
-
+		String redirectUrl = AuthUtil.getParentAppUrl(request.getServerName());
 		return "redirect:" + redirectUrl;
 	}
 }

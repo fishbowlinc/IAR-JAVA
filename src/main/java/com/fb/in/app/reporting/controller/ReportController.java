@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.fb.in.app.reporting.constants.AppConstants;
 import com.fb.in.app.reporting.model.auth.UserAuth;
 import com.fb.in.app.reporting.request.BrandRequest;
 import com.fb.in.app.reporting.response.BrandListResponse;
@@ -66,7 +67,7 @@ public class ReportController {
 		logger.info("domain : " + domain);
 		fishFrameSessionEnv = AuthUtil.getFishFrameSessionEnv(domain);
 		// irDomain = AuthUtil.getDomain(domain);
-		redirectServerName = AuthUtil.getRedirectServerName(domain);
+		redirectServerName = AuthUtil.getIRDomain(domain);
 		soapUrl = AuthUtil.getSoapUrl(domain);
 
 		logger.info("fishFrameSessionEnv : " + fishFrameSessionEnv);
@@ -75,7 +76,7 @@ public class ReportController {
 		logger.info("domain : " + domain);
 
 		if (tileId == null || tileId.isEmpty()) {
-			redirectURL = "https://" + soapUrl + "/SSO/Navigator/InitializeTargetApp?bid=34&ReturnUrl=/report";
+			redirectURL = soapUrl + AppConstants.FISHBOWL_IAR_SSO_NAVIGATOR_EXTENSION;
 			if (SiteId != null && SiteId.trim().length() > 0) {
 				redirectURL = redirectURL + "&SiteId=" + SiteId;
 			}
@@ -113,7 +114,8 @@ public class ReportController {
 			Cookie cookie = AuthUtil.getIRSessionCookie(domain, encryptedStr);
 			httpServletResponse.addCookie(cookie);
 			if (SiteId != null && SiteId.trim().length() > 0) {
-				redirectURL = "https://" + redirectServerName + "/#/reportList?ID=" + Id + "&bid=34&SiteId=" + SiteId;
+				redirectURL = redirectServerName + AppConstants.FISHBOWL_IN_APP_REPORING_ANGULAR_APP_EXTENSION + "?ID="
+						+ Id + "&bid=34&SiteId=" + SiteId;
 			} else {
 				logger.info("Site ID is null");
 				logger.info("Checking if user will have only one brand");
@@ -133,13 +135,14 @@ public class ReportController {
 					logger.info("user is having multiple brands..");
 					SiteId = response.getBrandList().get(response.getBrandList().size() - 1).getSiteId().toString();
 				}
-				redirectURL = "https://" + redirectServerName + "/#/reportList?ID=" + Id + "&bid=34&SiteId=" + SiteId;
+				redirectURL = redirectServerName + AppConstants.FISHBOWL_IN_APP_REPORING_ANGULAR_APP_EXTENSION + "?ID="
+						+ Id + "&bid=34&SiteId=" + SiteId;
 			}
 			logger.info("redirectURL : " + redirectURL);
 			return "redirect:" + redirectURL;
 
 		} else {
-			redirectURL = "https://" + soapUrl + "/Public/Login.aspx?ReturnUrl=%2f";
+			redirectURL = soapUrl + AppConstants.ENTERPRIZE_LOGIN_URL_EXTENSION + "?ReturnUrl=%2f";
 			logger.info("redirectURL : " + redirectURL);
 			return "redirect:" + redirectURL;
 		}
