@@ -1,5 +1,6 @@
 package com.fb.in.app.reporting.dao;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import com.fb.in.app.reporting.model.vo.BrandVo;
@@ -13,7 +14,7 @@ public interface UserDAO {
 
 	public BrandVo getBrandRecord(String brandId) throws Exception;
 
-	public Integer getMostRecentBrandId(String userId) throws Exception;
+	public BigInteger getMostRecentSiteId(String userId) throws Exception;
 
 	public List<BrandVo> getBrandRecordBySiteId(String siteId) throws Exception;
 

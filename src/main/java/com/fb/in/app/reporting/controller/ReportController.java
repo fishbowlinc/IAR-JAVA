@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fb.in.app.reporting.constants.AppConstants;
 import com.fb.in.app.reporting.model.auth.UserAuth;
-import com.fb.in.app.reporting.model.vo.BrandVo;
 import com.fb.in.app.reporting.service.UserService;
 import com.fb.in.app.reporting.sso.auth.AuthUtil;
 
@@ -121,22 +120,16 @@ public class ReportController {
 				logger.info("Checking if user will have only one brand");
 				UserAuth userAuth = AuthUtil.getUserDetails(userDetails);
 				logger.info("userService  getBrand calling to get user Brands");
-				Integer mostRecentBrandId = null;
+				BigInteger mostRecentSiteId = null;
 				try {
-					mostRecentBrandId = userService.getMostRecentBrandId(userAuth.getUserId());
-					if (null != mostRecentBrandId) {
-						BrandVo brandVo = userService.getBrandRecord(mostRecentBrandId.toString());
-						BigInteger mostResentSiteId = brandVo.getSiteId();
-						logger.info("Most Recent Site ID: " + mostResentSiteId);
-						if (null != mostResentSiteId)
-							redirectURL = redirectServerName
-									+ AppConstants.FISHBOWL_IN_APP_REPORING_ANGULAR_APP_EXTENSION + "?ID=" + Id
-									+ "&bid=34&SiteId=" + mostResentSiteId;
-						else
-							redirectURL = redirectServerName
-									+ AppConstants.FISHBOWL_IN_APP_REPORING_ANGULAR_APP_EXTENSION + "?ID=" + Id
-									+ "&bid=34";
-					}
+					mostRecentSiteId = userService.getMostRecentSiteId(userAuth.getUserId());
+					if (null != mostRecentSiteId) {
+						redirectURL = redirectServerName + AppConstants.FISHBOWL_IN_APP_REPORING_ANGULAR_APP_EXTENSION
+								+ "?ID=" + Id + "&bid=34&SiteId=" + mostRecentSiteId;
+					} else
+						redirectURL = redirectServerName + AppConstants.FISHBOWL_IN_APP_REPORING_ANGULAR_APP_EXTENSION
+								+ "?ID=" + Id + "&bid=34";
+
 				} catch (Exception e) {
 					logger.info(e.getMessage());
 					e.printStackTrace();
