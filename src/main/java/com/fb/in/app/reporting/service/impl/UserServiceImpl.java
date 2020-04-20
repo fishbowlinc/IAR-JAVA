@@ -1,6 +1,5 @@
 package com.fb.in.app.reporting.service.impl;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +23,7 @@ public class UserServiceImpl implements UserService {
 	private static Map<String, UserDetailsResponse> UserDetailsMap = new HashMap<String, UserDetailsResponse>();
 
 	@Override
-	public BrandListResponse getBrand(String userId, String clientId, BrandRequest brandRequest)
-			throws SQLException, Exception {
+	public BrandListResponse getBrand(String userId, String clientId, BrandRequest brandRequest) throws Exception {
 
 		BrandListResponse userBrands = userDAO.getBrand(userId, clientId, brandRequest);
 		return userBrands;
@@ -33,17 +31,17 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public BrandVo getBrandRecord(String brandId) throws SQLException, Exception {
+	public BrandVo getBrandRecord(String brandId) throws Exception {
 		return userDAO.getBrandRecord(brandId);
 	}
 
 	@Override
-	public List<BrandVo> getBrandRecordBySiteId(String siteId) throws SQLException, Exception {
+	public List<BrandVo> getBrandRecordBySiteId(String siteId) throws Exception {
 		return userDAO.getBrandRecordBySiteId(siteId);
 	}
 
 	@Override
-	public UserDetailsResponse getUserDetails(String userId) throws SQLException, Exception {
+	public UserDetailsResponse getUserDetails(String userId) throws Exception {
 		if (UserDetailsMap.containsKey(userId) && UserDetailsMap.get(userId) != null) {
 			return UserDetailsMap.get(userId);
 		} else {
@@ -54,7 +52,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Integer getMostRecentBrandId(String userId) {
+	public Integer getMostRecentBrandId(String userId) throws Exception {
 		return userDAO.getMostRecentBrandId(userId);
 	}
 }

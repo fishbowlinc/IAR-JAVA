@@ -111,9 +111,6 @@ public class UserDAOImpl implements UserDAO {
 
 	@Override
 	public BrandVo getBrandRecord(String brandId) throws SQLException, Exception {
-
-		BrandListResponse brandListResponse = new BrandListResponse();
-
 		StringBuilder sb = new StringBuilder(
 				"SELECT DISTINCT NEW com.fb.in.app.reporting.model.vo.BrandVo(b.brandId, b.brandName, b.siteId, d.brandStatusDesc as brandStatus, c.clientName, c.clientId,c.cmpCustomerId, e.clientStatusDesc as clientStatus )");
 		sb.append("FROM AuthorizedBrand ab ").append("JOIN Brand b ON b.brandId = ab.brandId ")
@@ -128,12 +125,8 @@ public class UserDAOImpl implements UserDAO {
 		query.setParameter("brandId", Integer.parseInt(brandId));
 
 		logger.info("last sb  " + sb);
-		List<BrandVo> resultCount = query.getResultList();
-
-		List<BrandVo> results = query.getResultList();
-		brandListResponse.setBrandsCount(resultCount.size());
-		brandListResponse.setBrandList(results);
-		return results.get(0);
+		BrandVo brandVo = query.getSingleResult();
+		return brandVo;
 	}
 
 	@Override
@@ -220,7 +213,7 @@ public class UserDAOImpl implements UserDAO {
 	}
 
 	@Override
-	public Integer getMostRecentBrandId(String userId) {
+	public Integer getMostRecentBrandId(String userId) throws Exception {
 		Integer mostRecentBrandId = null;
 		StringBuilder sb = new StringBuilder("SELECT mostRecentBrandId ");
 		sb.append("FROM User as U ").append("WHERE U.userId = :user_id");
@@ -228,9 +221,6 @@ public class UserDAOImpl implements UserDAO {
 		query.setParameter("user_id", Integer.parseInt(userId));
 		mostRecentBrandId = query.getSingleResult();
 		logger.info("most recent brand id: " + mostRecentBrandId);
-		if (mostRecentBrandId != null) {
-			return mostRecentBrandId;
-		}
 		return mostRecentBrandId;
 	}
 }

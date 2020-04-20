@@ -3,6 +3,7 @@
  */
 package com.fb.in.app.reporting.controller;
 
+import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fb.in.app.reporting.constants.AppConstants;
 import com.fb.in.app.reporting.model.auth.UserAuth;
+import com.fb.in.app.reporting.model.vo.BrandVo;
 import com.fb.in.app.reporting.service.UserService;
 import com.fb.in.app.reporting.sso.auth.AuthUtil;
 
@@ -123,11 +125,17 @@ public class ReportController {
 				try {
 					mostRecentBrandId = userService.getMostRecentBrandId(userAuth.getUserId());
 					if (null != mostRecentBrandId) {
-						redirectURL = redirectServerName + AppConstants.FISHBOWL_IN_APP_REPORING_ANGULAR_APP_EXTENSION
-								+ "?ID=" + Id + "&bid=34&SiteId=" + mostRecentBrandId;
-					} else {
-						redirectURL = redirectServerName + AppConstants.FISHBOWL_IN_APP_REPORING_ANGULAR_APP_EXTENSION
-								+ "?ID=" + Id + "&bid=34";
+						BrandVo brandVo = userService.getBrandRecord(mostRecentBrandId.toString());
+						BigInteger mostResentSiteId = brandVo.getSiteId();
+						logger.info("Most Recent Site ID: " + mostResentSiteId);
+						if (null != mostResentSiteId)
+							redirectURL = redirectServerName
+									+ AppConstants.FISHBOWL_IN_APP_REPORING_ANGULAR_APP_EXTENSION + "?ID=" + Id
+									+ "&bid=34&SiteId=" + mostResentSiteId;
+						else
+							redirectURL = redirectServerName
+									+ AppConstants.FISHBOWL_IN_APP_REPORING_ANGULAR_APP_EXTENSION + "?ID=" + Id
+									+ "&bid=34";
 					}
 				} catch (Exception e) {
 					logger.info(e.getMessage());
