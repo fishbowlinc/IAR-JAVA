@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fb.in.app.reporting.constants.AppConstants;
 import com.fb.in.app.reporting.model.auth.UserAuth;
-import com.fb.in.app.reporting.request.BrandRequest;
-import com.fb.in.app.reporting.response.BrandListResponse;
 import com.fb.in.app.reporting.service.UserService;
 import com.fb.in.app.reporting.sso.auth.AuthUtil;
 
@@ -120,23 +118,22 @@ public class ReportController {
 				logger.info("Site ID is null");
 				logger.info("Checking if user will have only one brand");
 				UserAuth userAuth = AuthUtil.getUserDetails(userDetails);
-				BrandRequest brandRequest = new BrandRequest();
 				logger.info("userService  getBrand calling to get user Brands");
-				BrandListResponse response = null;
+				Integer mostRecentBrandId = null;
 				try {
-					response = userService.getBrand(userAuth.getUserId(), userAuth.getClientId(), brandRequest);
+					mostRecentBrandId = userService.getMostRecentBrandId(userAuth.getUserId());
+					if (null != mostRecentBrandId) {
+						redirectURL = redirectServerName + AppConstants.FISHBOWL_IN_APP_REPORING_ANGULAR_APP_EXTENSION
+								+ "?ID=" + Id + "&bid=34&SiteId=" + mostRecentBrandId;
+					} else {
+						redirectURL = redirectServerName + AppConstants.FISHBOWL_IN_APP_REPORING_ANGULAR_APP_EXTENSION
+								+ "?ID=" + Id + "&bid=34";
+					}
 				} catch (Exception e) {
+					logger.info(e.getMessage());
 					e.printStackTrace();
 				}
-				if (response != null && response.getSuccessFlag() == true && response.getBrandsCount() == 1) {
-					logger.info("user is having single brand..");
-					SiteId = response.getBrandList().get(0).getSiteId().toString();
-				} else {
-					logger.info("user is having multiple brands..");
-					SiteId = response.getBrandList().get(response.getBrandList().size() - 1).getSiteId().toString();
-				}
-				redirectURL = redirectServerName + AppConstants.FISHBOWL_IN_APP_REPORING_ANGULAR_APP_EXTENSION + "?ID="
-						+ Id + "&bid=34&SiteId=" + SiteId;
+
 			}
 			logger.info("redirectURL : " + redirectURL);
 			return "redirect:" + redirectURL;

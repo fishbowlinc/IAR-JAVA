@@ -15,6 +15,8 @@ public interface UserDAO {
 
 	public BrandVo getBrandRecord(String brandId) throws SQLException, Exception;
 
+	public Integer getMostRecentBrandId(String userId);
+
 	public List<BrandVo> getBrandRecordBySiteId(String siteId) throws SQLException, Exception;
 
 	public UserDetailsResponse getUserDetails(String userId) throws SQLException, Exception;
