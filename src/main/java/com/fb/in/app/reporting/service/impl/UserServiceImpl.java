@@ -52,4 +52,9 @@ public class UserServiceImpl implements UserService {
 			return userDetails;
 		}
 	}
+
+	@Override
+	public Integer getMostRecentBrandId(String userId) {
+		return userDAO.getMostRecentBrandId(userId);
+	}
 }

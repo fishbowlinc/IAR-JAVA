@@ -218,4 +218,19 @@ public class UserDAOImpl implements UserDAO {
 		}
 		return userDetailsResponse;
 	}
+
+	@Override
+	public Integer getMostRecentBrandId(String userId) {
+		Integer mostRecentBrandId = null;
+		StringBuilder sb = new StringBuilder("SELECT mostRecentBrandId ");
+		sb.append("FROM User as U ").append("WHERE U.userId = :user_id");
+		TypedQuery<Integer> query = entityManager.createQuery(sb.toString(), Integer.class);
+		query.setParameter("user_id", Integer.parseInt(userId));
+		mostRecentBrandId = query.getSingleResult();
+		logger.info("most recent brand id: " + mostRecentBrandId);
+		if (mostRecentBrandId != null) {
+			return mostRecentBrandId;
+		}
+		return mostRecentBrandId;
+	}
 }

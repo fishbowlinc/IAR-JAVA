@@ -284,7 +284,8 @@ public class AuthUtil {
 	public static String getIRDomain(String domain) {
 		String redirectServerName = null;
 		if (domain != null) {
-			if (domain.contains(AppConstants.APP_ENVIRONMENT_QA))
+			if (domain.contains(AppConstants.APP_ENVIRONMENT_QA)
+					|| domain.equalsIgnoreCase(AppConstants.APP_ENVIRONMENT_LOCAL))
 				return AppConstants.IN_APP_REPORTING_DOMAIN_QA;
 			else if (domain.contains(AppConstants.APP_ENVIRONMENT_STG))
 				return AppConstants.IN_APP_REPORTING_DOMAIN_STG;
