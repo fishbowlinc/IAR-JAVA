@@ -26,15 +26,12 @@ public class FishbowlSSO extends Service {
 	static {
 		URL url = null;
 		try {
-
-			 url = new
-			 URL("file:/home/fbpoweruser/IAR-JAVA/src/main/resources/wsdl/fishbowlsso.wsdl");
-
+			url = new URL("file:/home/fbpoweruser/IAR-JAVA/src/main/resources/wsdl/fishbowlsso.wsdl");
 			/*
 			 * url = new URL(
 			 * "file:/D:/Projects/Fishbowl/FbInsights_Repository/IAR-JAVA/InAppReporting/src/main/resources/wsdl/fishbowlsso.wsdl"
 			 * );
-			 */	} catch (MalformedURLException e) {
+			 */ } catch (MalformedURLException e) {
 			java.util.logging.Logger.getLogger(FishbowlSSO.class.getName()).log(java.util.logging.Level.INFO,
 					"Can not initialize the default wsdl from {0}",
 					"file:/home/fbpoweruser/IAR-JAVA/InAppReporting/src/main/resources/wsdl/fishbowlsso.wsdl");
