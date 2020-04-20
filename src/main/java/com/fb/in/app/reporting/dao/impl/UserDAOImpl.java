@@ -213,14 +213,16 @@ public class UserDAOImpl implements UserDAO {
 	}
 
 	@Override
-	public Integer getMostRecentBrandId(String userId) throws Exception {
-		Integer mostRecentBrandId = null;
-		StringBuilder sb = new StringBuilder("SELECT mostRecentBrandId ");
-		sb.append("FROM User as U ").append("WHERE U.userId = :user_id");
-		TypedQuery<Integer> query = entityManager.createQuery(sb.toString(), Integer.class);
+	public BigInteger getMostRecentSiteId(String userId) throws Exception {
+		BigInteger mostRecentSiteId = null;
+		StringBuilder sb = new StringBuilder("SELECT siteId from Brand as b ");
+		sb.append("where b.brandId=");
+		sb.append("(SELECT mostRecentBrandId ");
+		sb.append("FROM User as U ").append("WHERE U.userId = :user_id)");
+		TypedQuery<BigInteger> query = entityManager.createQuery(sb.toString(), BigInteger.class);
 		query.setParameter("user_id", Integer.parseInt(userId));
-		mostRecentBrandId = query.getSingleResult();
-		logger.info("most recent brand id: " + mostRecentBrandId);
-		return mostRecentBrandId;
+		mostRecentSiteId = query.getSingleResult();
+		logger.info("most recent brand id: " + mostRecentSiteId);
+		return mostRecentSiteId;
 	}
 }

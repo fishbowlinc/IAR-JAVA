@@ -1,5 +1,6 @@
 package com.fb.in.app.reporting.service.impl;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +53,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Integer getMostRecentBrandId(String userId) throws Exception {
-		return userDAO.getMostRecentBrandId(userId);
+	public BigInteger getMostRecentSiteId(String userId) throws Exception {
+		return userDAO.getMostRecentSiteId(userId);
 	}
 }
