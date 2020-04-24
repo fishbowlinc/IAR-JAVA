@@ -36,6 +36,10 @@ import com.fb.in.app.reporting.constants.AppConstants;
 import com.fb.in.app.reporting.model.auth.DataSecurityPayload;
 import com.fb.in.app.reporting.model.auth.Share;
 import com.fb.in.app.reporting.model.auth.SisenseUser;
+import com.fb.in.app.reporting.model.mail.MailPayload;
+import com.fb.in.app.reporting.model.mail.Preferences;
+import com.fb.in.app.reporting.model.mail.Recipient;
+import com.fb.in.app.reporting.model.mail.SisenseMailObject;
 import com.fb.in.app.reporting.model.vo.BrandVo;
 import com.fb.in.app.reporting.response.UserDetailsResponse;
 import com.google.gson.Gson;
@@ -364,6 +368,49 @@ public class SisenseUtil {
 			dataSecurityPayloads.add(securityPayload);
 		});
 		return dataSecurityPayloads;
+	}
+
+	public static void sendMailToSisenseUser(MailPayload mailPayload) {
+		RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
+		try (CloseableHttpClient client = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();) {
+			HttpPost httpPost = new HttpPost(AppConstants.SISENSE_SEND_MAIL_URL);
+
+			Gson gson = new Gson();
+			StringEntity postingString = new StringEntity(gson.toJson(mailPayload));
+			httpPost.setEntity(postingString);
+			httpPost.setHeader("Authorization", "Bearer " + AppConstants.SISENSE_API_ACCESS_TOKEN);
+			httpPost.setHeader("Accept", "application/json");
+			httpPost.setHeader("Content-type", "application/json");
+			try (CloseableHttpResponse response = client.execute(httpPost);) {
+				if (response.getStatusLine().getStatusCode() == 200) {
+					logger.info("mail sent successfully");
+				} else {
+					logger.info("couldn't send mail");
+					logger.info("response status code: " + response.getStatusLine().getReasonPhrase());
+				}
+			}
+		} catch (Exception exception) {
+			exception.printStackTrace();
+			logger.info(exception.getMessage());
+		}
+
+	}
+
+	public static MailPayload generateMailPayload(SisenseMailObject mailObject) {
+		MailPayload mailPayload = new MailPayload();
+		mailPayload.setAssetId(mailObject.getDashboardId());
+		mailPayload.setAssetType("dashboard");
+		Recipient recipient = new Recipient();
+		recipient.setRecipient(mailObject.getUserId());
+		recipient.setType("user");
+		List<Recipient> recipients = new ArrayList<>();
+		recipients.add(recipient);
+		mailPayload.setRequestTimeout(0);
+		mailPayload.setRecipients(recipients);
+		Preferences preferences = new Preferences();
+		preferences.setInline(true);
+		mailPayload.setPreferences(preferences);
+		return mailPayload;
 	}
 
 }

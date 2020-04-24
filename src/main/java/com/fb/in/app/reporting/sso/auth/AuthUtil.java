@@ -47,15 +47,13 @@ public class AuthUtil {
 	}
 
 	public static String getIREcubeCookieName(String domain) {
-		if (domain.contains(AppConstants.APP_ENVIRONMENT_QA)) {
+		if (domain.contains(AppConstants.APP_ENVIRONMENT_QA))
 			return CookieConstants.IR_QA_ECUBE_COOKIE;
-
-		} else if (domain.contains(AppConstants.APP_ENVIRONMENT_STG)) {
+		else if (domain.contains(AppConstants.APP_ENVIRONMENT_STG))
 			return CookieConstants.IR_STG_ECUBE_ID_COOKIE;
-
-		} else {
+		else
 			return CookieConstants.IR_PROD_ECUBE_COOKIE;
-		}
+
 	}
 
 	public static HttpServletResponse getJsonFromObjectWithResponse(HttpServletResponse response, Object object,
@@ -82,7 +80,7 @@ public class AuthUtil {
 	public static String getFbOneLoginUrl(String domain) {
 		if (domain.contains(AppConstants.APP_ENVIRONMENT_QA))
 			return AppConstants.FISHBOWL_ONE_QA_LOGIN_URL;
-		if (domain.contains(AppConstants.APP_ENVIRONMENT_INT))
+		else if (domain.contains(AppConstants.APP_ENVIRONMENT_INT))
 			return AppConstants.FISHBOWL_ONE_INT_LOGIN_URL;
 		else
 			return AppConstants.FISHBOWL_ONE_PRD_LOGIN_URL;
@@ -93,10 +91,11 @@ public class AuthUtil {
 		String loginUrl = null;
 		if (domain.contains(AppConstants.APP_ENVIRONMENT_QA))
 			loginUrl = AppConstants.ENTERPRIZE_QA_LOGIN_URL;
-		if (domain.contains(AppConstants.APP_ENVIRONMENT_STG))
+		else if (domain.contains(AppConstants.APP_ENVIRONMENT_STG))
 			loginUrl = AppConstants.ENTERPRIZE_STG_LOGIN_URL;
 		else
 			loginUrl = AppConstants.ENTERPRIZE_PRD_LOGIN_URL;
+
 		if (null != loginUrl)
 			return loginUrl + AppConstants.ENTERPRIZE_LOGIN_URL_EXTENSION;
 		else
