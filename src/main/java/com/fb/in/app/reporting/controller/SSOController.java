@@ -50,10 +50,12 @@ public class SSOController {
 		try {
 			String domain = request.getHeader(HttpHeaders.REFERER);
 			logger.info("domain: " + domain);
-			if (domain.contains(AppConstants.FISHBOWL_ONE_PRODUCT_NAME)) {
+			if (AuthUtil.isFishbowlOneDomain(domain)) {
 				soapUrl = AuthUtil.getSoapUrl(domain);
 				Cookie[] cookies = request.getCookies();
 				String aspxFormsAuthCookie = AuthUtil.getaSPXFORMSAUTHString(domain);
+				logger.info("processRequest cookies= "+cookies);
+				logger.info("processRequest aspxFormsAuthCookie= "+aspxFormsAuthCookie);
 				if (cookies != null) {
 					for (Cookie ck : cookies) {
 						logger.info("Cookie Name : " + ck.getName());
