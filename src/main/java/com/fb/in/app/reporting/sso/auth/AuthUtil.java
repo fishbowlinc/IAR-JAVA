@@ -28,20 +28,67 @@ import com.fb.in.app.reporting.model.auth.UserAuth;
 import com.fb.in.app.reporting.model.vo.BrandVo;
 import com.google.gson.Gson;
 
+import fb.pricingAnalytics.utils.AuthUtils;
+
 public class AuthUtil {
 	private static Logger logger = LoggerFactory.getLogger(AuthUtil.class);
 
 	public static HttpServletResponse deleteCookies(HttpServletRequest request, HttpServletResponse response,
 			Cookie[] cookieList) {
 		String domain = request.getServerName();
+		
+		String aSPXFORMSAUTH= getaSPXFORMSAUTHString(domain);;
 		for (Cookie cookie : cookieList) {
 			String cookieName = cookie.getName();
 			logger.info("Cookie domain name: " + domain);
 			logger.info("Deleting cookie: " + cookieName);
-			cookie.setDomain(AppConstants.FISHBOWL_DOMAIN);
-			cookie.setPath("/");
-			cookie.setMaxAge(0);
-			response.addCookie(cookie);
+			if(domain.contains(AppConstants.APP_ENVIRONMENT_QA)){
+				if(cookie.getName().equals(CookieConstants.FISHBOWL_FORM_AUTH_QA_COOKIE) 
+						|| cookie.getName().equals(CookieConstants.FISHBOWL_QA_COOKIE)
+						|| cookie.getName().equals(CookieConstants.IR_QA_SESSION_ID_COOKIE)
+						||cookie.getName().equals(CookieConstants.IR_QA_ECUBE_COOKIE)
+				)
+				{
+
+					cookie.setDomain(AppConstants.FISHBOWL_DOMAIN);
+					cookie.setPath("/");
+					cookie.setMaxAge(0);
+					response.addCookie(cookie);
+				}
+				
+			}else if (domain.contains(AppConstants.APP_ENVIRONMENT_STG)){
+				if(
+				cookie.getName().equals(CookieConstants.FISHBOWL_FORM_AUTH_STG_COOKIE) 
+						|| cookie.getName().equals(CookieConstants.FISHBOWL_STG_COOKIE)
+						|| cookie.getName().equals(CookieConstants.IR_STG_SESSION_ID_COOKIE)
+						||cookie.getName().equals(CookieConstants.IR_STG_ECUBE_ID_COOKIE)
+				)
+				{
+					cookie.setDomain(AppConstants.FISHBOWL_DOMAIN);
+					cookie.setPath("/");
+					cookie.setMaxAge(0);
+					response.addCookie(cookie);
+				}
+			
+				
+			}else {
+				if(
+						cookie.getName().equals(CookieConstants.FISHBOWL_FORM_AUTH_PROD_COOKIE) 
+								|| cookie.getName().equals(CookieConstants.FISHBOWL_PROD_COOKIE)
+								|| cookie.getName().equals(CookieConstants.IR_PROD_SESSION_ID_COOKIE)
+								||cookie.getName().equals(CookieConstants.IR_PROD_ECUBE_COOKIE)
+					)
+						{
+							cookie.setDomain(AppConstants.FISHBOWL_DOMAIN);
+							cookie.setPath("/");
+							cookie.setMaxAge(0);
+							response.addCookie(cookie);
+						}
+					
+			}
+			
+			
+		
 		}
 		return response;
 	}
