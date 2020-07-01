@@ -41,7 +41,7 @@ public class AuthUtil {
 		for (Cookie cookie : cookieList) {
 			String cookieName = cookie.getName();
 			logger.info("Cookie domain name: " + domain);
-			logger.info("Deleting cookie: " + cookieName);
+			
 			if(domain.contains(AppConstants.APP_ENVIRONMENT_QA)){
 				if(cookie.getName().equals(CookieConstants.FISHBOWL_FORM_AUTH_QA_COOKIE) 
 						|| cookie.getName().equals(CookieConstants.FISHBOWL_QA_COOKIE)
@@ -54,6 +54,7 @@ public class AuthUtil {
 					cookie.setPath("/");
 					cookie.setMaxAge(0);
 					response.addCookie(cookie);
+					logger.info("Deleting cookie: " + cookieName);
 				}
 				
 			}else if (domain.contains(AppConstants.APP_ENVIRONMENT_STG)){
@@ -68,6 +69,7 @@ public class AuthUtil {
 					cookie.setPath("/");
 					cookie.setMaxAge(0);
 					response.addCookie(cookie);
+					logger.info("Deleting cookie: " + cookieName);
 				}
 			
 				
@@ -83,6 +85,7 @@ public class AuthUtil {
 							cookie.setPath("/");
 							cookie.setMaxAge(0);
 							response.addCookie(cookie);
+							logger.info("Deleting cookie: " + cookieName);
 						}
 					
 			}
