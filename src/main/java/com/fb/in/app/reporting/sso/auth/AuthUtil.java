@@ -78,23 +78,29 @@ public class AuthUtil {
 	}
 
 	public static String getFbOneLoginUrl(String domain) {
-		if (domain.contains(AppConstants.APP_ENVIRONMENT_QA))
-			return AppConstants.FISHBOWL_ONE_QA_LOGIN_URL;
+		if (domain.contains(AppConstants.APP_ENVIRONMENT_QA)){
+			return getFBOneQaLoginUrl(domain);
+		}
 		else if (domain.contains(AppConstants.APP_ENVIRONMENT_INT))
 			return AppConstants.FISHBOWL_ONE_INT_LOGIN_URL;
-		else
-			return AppConstants.FISHBOWL_ONE_PRD_LOGIN_URL;
+		else{
+			return getFBOneProdLoginUrl(domain);
+		}
+			
 
 	}
 
 	public static String getEnterprizeLoginUrl(String domain) {
 		String loginUrl = null;
-		if (domain.contains(AppConstants.APP_ENVIRONMENT_QA))
+		if (domain.contains(AppConstants.APP_ENVIRONMENT_QA)){
 			loginUrl = AppConstants.ENTERPRIZE_QA_LOGIN_URL;
+		}
 		else if (domain.contains(AppConstants.APP_ENVIRONMENT_STG))
 			loginUrl = AppConstants.ENTERPRIZE_STG_LOGIN_URL;
-		else
-			loginUrl = AppConstants.ENTERPRIZE_PRD_LOGIN_URL;
+		else{
+			loginUrl =  AppConstants.ENTERPRIZE_PRD_LOGIN_URL;
+		}
+			
 
 		if (null != loginUrl)
 			return loginUrl + AppConstants.ENTERPRIZE_LOGIN_URL_EXTENSION;
@@ -104,7 +110,7 @@ public class AuthUtil {
 
 	public static String getParentAppUrl(String domain) {
 		if (domain != null) {
-			if (domain.contains(AppConstants.FISHBOWL_ONE_PRODUCT_NAME))
+			if (isFishbowlOneDomain(domain))
 				return getFbOneLoginUrl(domain);
 			else
 				return getEnterprizeLoginUrl(domain);
@@ -296,14 +302,18 @@ public class AuthUtil {
 	}
 
 	public static String getSoapUrl(String domain) {
+		logger.info("getSoapUrl domain= "+domain);
 		String soapUrl = null;
 		if (domain != null) {
-			if (domain.contains(AppConstants.APP_ENVIRONMENT_QA) || domain.contains(AppConstants.APP_ENVIRONMENT_LOCAL))
+			if (domain.contains(AppConstants.APP_ENVIRONMENT_QA) || domain.contains(AppConstants.APP_ENVIRONMENT_LOCAL)){
 				return AppConstants.ENTERPRIZE_QA_LOGIN_URL;
+			}
 			else if (domain.contains(AppConstants.APP_ENVIRONMENT_STG))
 				return AppConstants.ENTERPRIZE_STG_LOGIN_URL;
-			else
-				return AppConstants.ENTERPRIZE_PRD_LOGIN_URL;
+			else{
+				return  AppConstants.ENTERPRIZE_PRD_LOGIN_URL;
+			}
+				
 		}
 		return soapUrl;
 
@@ -377,6 +387,35 @@ public class AuthUtil {
 		logger.info("User Details : " + userDetails);
 		return userDetails;
 	}
+	
+	public static boolean isFishbowlOneDomain(String domain){
+		boolean isDomainContains =false;
+		try {
+			logger.info("isFishbowlOneDomain  domain = "+domain);
+			 isDomainContains =   domain.contains(AppConstants.FISHBOWL_ONE_PRODUCT_NAME) || domain.contains(AppConstants.FISHBOWL_ENGAGE_PRODUCT_NAME) ;
+			logger.info("isFishbowlOneDomain  isDomainContains = "+isDomainContains);
+		} catch (Exception e) {
+			
+		}
+		return isDomainContains;
+	}
+	public static String getFBOneQaLoginUrl(String domain){
+		if(domain.indexOf(AppConstants.FISHBOWL_ONE_PRODUCT_NAME)>-1)
+			return AppConstants.FISHBOWL_ONE_QA_LOGIN_URL;
+		else
+			return AppConstants.FISHBOWL_ONE_QA_ENGAGE_LOGIN_URL;
+		
+	}
+	
+	
+	public static String getFBOneProdLoginUrl(String domain){
+		if(domain.indexOf(AppConstants.FISHBOWL_ONE_PRODUCT_NAME)>-1)
+			return AppConstants.FISHBOWL_ONE_PRD_LOGIN_URL;
+		else
+			return AppConstants.FISHBOWL_ONE_PRD_ENGAGE_LOGIN_URL;
+		
+	}
+	
 }
 
 /*

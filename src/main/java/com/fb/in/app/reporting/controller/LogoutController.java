@@ -45,6 +45,7 @@ public class LogoutController {
 		if (cookieList != null)
 			AuthUtil.deleteCookies(request, response, cookieList);
 		String redirectUrl = AuthUtil.getParentAppUrl(request.getServerName());
+		logger.debug("LogoutController logout function starts redirectUrl = " + redirectUrl);
 		return "redirect:" + redirectUrl;
 	}
 

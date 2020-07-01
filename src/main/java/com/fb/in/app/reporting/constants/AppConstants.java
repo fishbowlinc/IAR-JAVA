@@ -36,12 +36,20 @@ public class AppConstants {
 	public static final String SISENSE_JWT_REDIRECT_URL = "https://sisense.fishbowl.com/jwt?jwt=";
 
 	public static final String SISENSE_APP_LOGOUT_URL = "https://sisense.fishbowl.com/api/v1/authentication/logout";
+	
 	public static final String FISHBOWL_ONE_QA_LOGIN_URL = "https://oneqa.fishbowl.com/Login";
+	public static final String FISHBOWL_ONE_QA_ENGAGE_LOGIN_URL = "https://engageqa.fishbowl.com/Login";
+	
 	public static final String FISHBOWL_ONE_PRD_LOGIN_URL = "https://one.fishbowl.com/Login";
+	public static final String FISHBOWL_ONE_PRD_ENGAGE_LOGIN_URL = "https://engage.fishbowl.com/Login";
+	
 	public static final String FISHBOWL_ONE_INT_LOGIN_URL = "https://oneint.fishbowl.com/Login";
 
 	public static final String ENTERPRIZE_QA_LOGIN_URL = "https://loginqa.fishbowl.com/";
+	
 	public static final String ENTERPRIZE_PRD_LOGIN_URL = "https://login.fishbowl.com/";
+	
+	
 	public static final String ENTERPRIZE_STG_LOGIN_URL = "https://loginint.fishbowl.com/";
 
 	public static final String ENTERPRIZE_LOGIN_URL_EXTENSION = "Public/Login.aspx";
@@ -56,6 +64,7 @@ public class AppConstants {
 
 	public static final String FISHBOWL_DOMAIN = "fishbowl.com";
 	public static final String FISHBOWL_ONE_PRODUCT_NAME = "one";
+	public static final String FISHBOWL_ENGAGE_PRODUCT_NAME = "engage";
 
 	public static final String IN_APP_REPORTING_DOMAIN_QA = "https://ir2qa.fishbowl.com/";
 	public static final String IN_APP_REPORTING_DOMAIN_STG = "https://ir2stg.fishbowl.com/";
