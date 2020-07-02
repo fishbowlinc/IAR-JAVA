@@ -210,6 +210,7 @@ public class SisenseUtil {
 
 	public static List<DataSecurityPayload> getDataSecurityPayload(List<BrandVo> brands, String sisenseUserId,
 			String eCubeName) {
+		logger.info("getDataSecurityPayload brands = "+brands);
 		List<DataSecurityPayload> dataSecurityPayloads = new ArrayList<>();
 		DataSecurityPayload securityPayload = new DataSecurityPayload();
 		securityPayload.setServer(AppConstants.SISENSE_DATA_SECURITY_SERVER_URL);
@@ -230,6 +231,7 @@ public class SisenseUtil {
 			members.add(String.valueOf(brand.getBrandId()));}
 		);
 		securityPayload.setMembers(members);
+		logger.info("getDataSecurityPayload members count = "+members.size());
 		dataSecurityPayloads.add(securityPayload);
 		return dataSecurityPayloads;
 	}
@@ -352,6 +354,7 @@ public class SisenseUtil {
 
 	public static List<DataSecurityPayload> getFbOneDataSecurityPayload(List<BrandVo> brands, String sisenseUserId,
 			List<String> ecubes) {
+		logger.info("getFbOneDataSecurityPayload brands = "+brands);
 		List<DataSecurityPayload> dataSecurityPayloads = new ArrayList<>();
 		ecubes.forEach(ecube -> {
 			DataSecurityPayload securityPayload = new DataSecurityPayload();
@@ -372,6 +375,7 @@ public class SisenseUtil {
 				members.add(String.valueOf(brand.getBrandId()));
 			});
 			securityPayload.setMembers(members);
+			logger.info("getFbOneDataSecurityPayload members count = "+members.size());
 			dataSecurityPayloads.add(securityPayload);
 		});
 		return dataSecurityPayloads;
