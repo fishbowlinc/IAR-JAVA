@@ -224,7 +224,11 @@ public class SisenseUtil {
 		shares.add(share);
 		securityPayload.setShares(shares);
 		List<String> members = new ArrayList<>();
-		brands.forEach(brand -> members.add(String.valueOf(brand.getBrandId())));
+		brands.forEach(brand -> 
+		{
+			logger.info("getDataSecurityPayload brand "+ brand.getBrandId());
+			members.add(String.valueOf(brand.getBrandId()));}
+		);
 		securityPayload.setMembers(members);
 		dataSecurityPayloads.add(securityPayload);
 		return dataSecurityPayloads;
@@ -363,7 +367,10 @@ public class SisenseUtil {
 			shares.add(share);
 			securityPayload.setShares(shares);
 			List<String> members = new ArrayList<>();
-			brands.forEach(brand -> members.add(String.valueOf(brand.getBrandId())));
+			brands.forEach(brand -> {
+				logger.info("getFbOneDataSecurityPayload brand = "+brand.getBrandId());
+				members.add(String.valueOf(brand.getBrandId()));
+			});
 			securityPayload.setMembers(members);
 			dataSecurityPayloads.add(securityPayload);
 		});

@@ -104,6 +104,7 @@ public class SSOController {
 				}
 				logger.info("creating data security for the logged in user");
 				if (userAuth.getClientId().equals("-1")) {
+					logger.info("userService getBrand calling to get all Brands");
 					securityPayload = SisenseUtil.getFbOneDataSecurityPayloadForAllMembers(sisenseUserId, ecubes);
 				} else {
 					BrandRequest brandRequest = new BrandRequest();
@@ -176,6 +177,7 @@ public class SSOController {
 					}
 					logger.info("creating data security for the logged in user");
 					if (userAuth.getClientId().equals("-1")) {
+						logger.info("userService getBrand calling to get all Brands");
 						securityPayload = SisenseUtil.getDataSecurityPayloadForAllMembers(sisenseUserId,
 								eCubeNameStr.trim());
 					} else {
