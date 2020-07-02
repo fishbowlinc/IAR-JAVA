@@ -28,7 +28,6 @@ import com.fb.in.app.reporting.model.auth.UserAuth;
 import com.fb.in.app.reporting.model.vo.BrandVo;
 import com.google.gson.Gson;
 
-import fb.pricingAnalytics.utils.AuthUtils;
 
 public class AuthUtil {
 	private static Logger logger = LoggerFactory.getLogger(AuthUtil.class);
