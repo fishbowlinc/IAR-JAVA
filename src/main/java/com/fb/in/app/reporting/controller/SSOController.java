@@ -111,11 +111,14 @@ public class SSOController {
 					logger.info("userService getBrand calling to get user Brands");
 					BrandListResponse response = null;
 					try {
+						logger.info("userService getBrand calling to get user Brands");
 						response = userService.getBrand(userAuth.getUserId(), userAuth.getClientId(), brandRequest);
+						logger.info("userService getBrand calling to get user Brands response = "+response);
 						securityPayload = SisenseUtil.getFbOneDataSecurityPayload(response.getBrandList(),
 								sisenseUserId, ecubes);
+						logger.info("userService getBrand calling to get user Brands securityPayload = "+securityPayload);
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
+						logger.info("Erro : userService getBrand calling to get user Brands securityPayload error = "+securityPayload);
 						e.printStackTrace();
 					}
 				}
@@ -185,10 +188,14 @@ public class SSOController {
 						logger.info("userService getBrand calling to get user Brands");
 						BrandListResponse response = null;
 						try {
+							logger.info("userService getBrand calling to get user Brands");
 							response = userService.getBrand(userAuth.getUserId(), userAuth.getClientId(), brandRequest);
+							logger.info("userService getBrand calling to get user Brands response = "+response);
 							securityPayload = SisenseUtil.getDataSecurityPayload(response.getBrandList(), sisenseUserId,
 									eCubeNameStr.trim());
+							logger.info("userService getBrand calling to get user Brands securityPayload = "+securityPayload);
 						} catch (Exception e) {
+							logger.info("Error : userService getBrand calling to get user Brands securityPayload = "+securityPayload);
 							logger.info(e.getMessage());
 							e.printStackTrace();
 						}
