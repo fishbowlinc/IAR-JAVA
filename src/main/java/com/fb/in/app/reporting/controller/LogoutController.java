@@ -40,12 +40,12 @@ public class LogoutController {
 
 	@RequestMapping("/logout-handler")
 	public String siseneLogout(HttpServletRequest request, HttpServletResponse response) {
-		logger.debug("LogoutController logout function starts :::");
+		logger.info("LogoutController logout function starts :::");
 		Cookie[] cookieList = request.getCookies();
 		if (cookieList != null)
 			AuthUtil.deleteCookies(request, response, cookieList);
 		String redirectUrl = AuthUtil.getParentAppUrl(request.getServerName());
-		logger.debug("LogoutController logout function starts redirectUrl = " + redirectUrl);
+		logger.info("LogoutController logout function starts redirectUrl = " + redirectUrl);
 		return "redirect:" + redirectUrl;
 	}
 

@@ -104,17 +104,21 @@ public class SSOController {
 				}
 				logger.info("creating data security for the logged in user");
 				if (userAuth.getClientId().equals("-1")) {
+					logger.info("userService getBrand calling to get all Brands");
 					securityPayload = SisenseUtil.getFbOneDataSecurityPayloadForAllMembers(sisenseUserId, ecubes);
 				} else {
 					BrandRequest brandRequest = new BrandRequest();
-					logger.info("userService getBrand calling to get user Brands");
+					logger.info("Test : userService getBrand calling to get user Brands ");
 					BrandListResponse response = null;
 					try {
+						logger.info("Try : userService getBrand calling to get user Brands");
 						response = userService.getBrand(userAuth.getUserId(), userAuth.getClientId(), brandRequest);
+						logger.info("response : userService getBrand calling to get user Brands response = "+response);
 						securityPayload = SisenseUtil.getFbOneDataSecurityPayload(response.getBrandList(),
 								sisenseUserId, ecubes);
+						logger.info("securityPayload : userService getBrand calling to get user Brands securityPayload = "+securityPayload);
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
+						logger.info("Erro : userService getBrand calling to get user Brands securityPayload error = "+securityPayload);
 						e.printStackTrace();
 					}
 				}
@@ -176,17 +180,22 @@ public class SSOController {
 					}
 					logger.info("creating data security for the logged in user");
 					if (userAuth.getClientId().equals("-1")) {
+						logger.info("userService getBrand calling to get all Brands");
 						securityPayload = SisenseUtil.getDataSecurityPayloadForAllMembers(sisenseUserId,
 								eCubeNameStr.trim());
 					} else {
 						BrandRequest brandRequest = new BrandRequest();
-						logger.info("userService getBrand calling to get user Brands");
+						logger.info("Else Test : userService getBrand calling to get user Brands");
 						BrandListResponse response = null;
 						try {
+							logger.info("Else try :  userService getBrand calling to get user Brands");
 							response = userService.getBrand(userAuth.getUserId(), userAuth.getClientId(), brandRequest);
+							logger.info("Else response :  userService getBrand calling to get user Brands response = "+response);
 							securityPayload = SisenseUtil.getDataSecurityPayload(response.getBrandList(), sisenseUserId,
 									eCubeNameStr.trim());
+							logger.info("Else securityPayload : userService getBrand calling to get user Brands securityPayload = "+securityPayload);
 						} catch (Exception e) {
+							logger.info("Error : userService getBrand calling to get user Brands securityPayload = "+securityPayload);
 							logger.info(e.getMessage());
 							e.printStackTrace();
 						}
